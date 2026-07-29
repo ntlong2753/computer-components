@@ -27,10 +27,10 @@
     <tr th:each="cpu : ${cpus}">
         <td th:text="${cpu.id}"></td>
         <td>
-            <img th:if="${cpu.imageUrl != null}" th:src="@{${cpu.imageUrl}}" alt="Ảnh sản phẩm" width="50" height="50"/>
+            <img th:if="${cpu.images != null and !cpu.images.isEmpty()}" th:src="@{${cpu.images[0].imageUrl}}" alt="Ảnh sản phẩm" width="50" height="50"/>
         </td>
         <td th:text="${cpu.name}"></td>
-        <td th:text="${cpu.brand}"></td>
+        <td th:text="${cpu.brand != null ? cpu.brand.name : ''}"></td>
         <td th:text="${cpu.price}"></td>
         <td th:text="${cpu.stock}"></td>
         <td th:text="${cpu.socket}"></td>

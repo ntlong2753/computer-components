@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm Hãng Sản Phẩm</title>
+    <style>
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.4); 
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Thêm hãng sản phẩm mới</h1>
+    
+    <div th:if="${successMessage}" style="color: green; font-weight: bold; margin-bottom: 15px;">
+        <p th:text="${successMessage}"></p>
+        <br/>
+        <a th:href="@{/admin}" style="display: inline-block; text-decoration: none; padding: 8px 16px; background-color: #007bff; color: white; border-radius: 4px;">Quay về Home Admin</a>
+    </div>
+
+    <form th:action="@{/admin/brand}" th:object="${brand}" method="post">
+        <div>
+            <label>Danh mục sản phẩm:</label>
+            <select th:field="*{category.id}" id="categorySelect">
+                <option value="">-- Chọn danh mục --</option>
+                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+            </select>
+            <button type="button" id="btnAddCategory">+ Thêm danh mục sản phẩm</button>
+            <br/>
+            <span th:if="${#fields.hasErrors('category')}" th:errors="*{category}" style="color:red"></span>
+        </div>
+        <br/>
+
+        <div>
+            <label>Tên hãng:</label>
+            <input type="text" th:field="*{name}"/>
+            <br/>
+            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red"></span>
+        </div>
+        <br/>
+
+        <button type="submit">Lưu</button>
+        <a th:href="@{/admin/cpu}">Hủy</a>
+    </form>
+
+    <!-- Modal thêm danh mục -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h3>Thêm Danh Mục Mới</h3>
+            <input type="text" id="newCategoryName" placeholder="Tên danh mục (vd: CPU)" style="width:100%; margin-bottom: 10px;"/>
+            <button type="button" id="btnSaveCategory">Lưu Danh Mục</button>
+            <p id="categoryError" style="color:red; display:none;"></p>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById("categoryModal");
+        const btnAdd = document.getElementById("btnAddCategory");
+        const spanClose = document.getElementById("closeModal");
+        const btnSave = document.getElementById("btnSaveCategory");
+        const categorySelect = document.getElementById("categorySelect");
+        const errorMsg = document.getElementById("categoryError");
+
+        btnAdd.onclick = function() {
+            modal.style.display = "block";
+            document.getElementById("newCategoryName").value = "";
+            errorMsg.style.display = "none";
+        }
+
+        spanClose.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        btnSave.onclick = function() {
+            const name = document.getElementById("newCategoryName").value;
+            fetch('/api/category/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: name })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const newCat = data.category;
+                    const option = document.createElement("option");
+                    option.value = newCat.id;
+                    option.text = newCat.name;
+                    categorySelect.add(option);
+                    categorySelect.value = newCat.id;
+                    modal.style.display = "none";
+                } else {
+                    errorMsg.innerText = data.message;
+                    errorMsg.style.display = "block";
+                }
+            })
+            .catch(error => {
+                errorMsg.innerText = "Có lỗi xảy ra, vui lòng thử lại!";
+                errorMsg.style.display = "block";
+            });
+        }
+    </script>
+</body>
+</html>

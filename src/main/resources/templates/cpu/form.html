@@ -17,8 +17,11 @@
     </div>
 
     <div>
-        <label>Hãng:</label>
-        <input type="text" th:field="*{brand}"/>
+        <label>Hãng sản phẩm:</label>
+        <select th:field="*{brand.id}">
+            <option value="">-- Chọn hãng --</option>
+            <option th:each="b : ${brands}" th:value="${b.id}" th:text="${b.name}"></option>
+        </select>
     </div>
 
     <div>
@@ -39,12 +42,17 @@
     </div>
 
     <div>
-        <label>Ảnh sản phẩm:</label>
-        <input type="file" name="imageFile" accept="image/*"/>
-        <div th:if="${cpu.imageUrl != null}">
+        <label>Ảnh sản phẩm (Tối đa 10 ảnh, mỗi ảnh 10MB):</label>
+        <input type="file" name="imageFiles" accept="image/*" multiple="multiple"/>
+        <span th:if="${#fields.hasErrors('images')}" th:errors="*{images}" style="color:red"></span>
+        
+        <div th:if="${cpu.images != null and !cpu.images.isEmpty()}" style="margin-top: 10px;">
             <p>Ảnh hiện tại:</p>
-            <img th:src="@{${cpu.imageUrl}}" alt="Current Image" width="150"/>
-            <input type="hidden" th:field="*{imageUrl}"/>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <div th:each="img : ${cpu.images}" style="border: 1px solid #ccc; padding: 5px;">
+                    <img th:src="@{${img.imageUrl}}" alt="Product Image" width="100"/>
+                </div>
+            </div>
         </div>
     </div>
 

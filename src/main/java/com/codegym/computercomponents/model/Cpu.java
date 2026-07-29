@@ -18,6 +18,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Table(name = "cpu")
 @PrimaryKeyJoinColumn(name = "product_id")
 public class Cpu extends Product {
