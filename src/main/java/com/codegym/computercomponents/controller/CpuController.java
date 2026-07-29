@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/cpu")
 public class CpuController {
     private final CpuService cpuService;
+    private final com.codegym.computercomponents.service.FileService fileService;
 
-    public CpuController(CpuService cpuService) {
+    public CpuController(CpuService cpuService, com.codegym.computercomponents.service.FileService fileService) {
         this.cpuService = cpuService;
+        this.fileService = fileService;
     }
 
     @GetMapping
@@ -30,10 +32,28 @@ public class CpuController {
     }
 
     @PostMapping
-    public String save(@Valid @ModelAttribute("cpu") Cpu cpu, BindingResult result) {
+    public String save(@Valid @ModelAttribute("cpu") Cpu cpu, BindingResult result, 
+                       @org.springframework.web.bind.annotation.RequestParam(value = "imageFile", required = false) org.springframework.web.multipart.MultipartFile imageFile) {
         if (result.hasErrors()) {
             return "cpu/form";
         }
+        
+        try {
+            if (imageFile != null && !imageFile.isEmpty()) {
+                String imageUrl = fileService.storeFile(imageFile);
+                cpu.setImageUrl(imageUrl);
+            } else if (cpu.getId() != null) {
+                Cpu existingCpu = cpuService.findById(cpu.getId());
+                if (existingCpu != null) {
+                    cpu.setImageUrl(existingCpu.getImageUrl());
+                }
+            }
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+            result.rejectValue("imageUrl", "error.cpu", "Không thể tải lên hình ảnh");
+            return "cpu/form";
+        }
+
         cpuService.save(cpu);
         return "redirect:/admin/cpu";
     }

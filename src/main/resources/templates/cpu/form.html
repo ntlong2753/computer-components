@@ -7,7 +7,7 @@
 <body>
 <h1 th:text="${cpu.id} != null ? 'Sửa CPU' : 'Thêm CPU mới'"></h1>
 <p><em>Thông tin sản phẩm</em></p>
-<form th:action="@{/admin/cpu}" th:object="${cpu}" method="post">
+<form th:action="@{/admin/cpu}" th:object="${cpu}" method="post" enctype="multipart/form-data">
     <input type="hidden" th:field="*{id}"/>
 
     <div>
@@ -39,8 +39,13 @@
     </div>
 
     <div>
-        <label>Ảnh (URL):</label>
-        <input type="text" th:field="*{imageUrl}"/>
+        <label>Ảnh sản phẩm:</label>
+        <input type="file" name="imageFile" accept="image/*"/>
+        <div th:if="${cpu.imageUrl != null}">
+            <p>Ảnh hiện tại:</p>
+            <img th:src="@{${cpu.imageUrl}}" alt="Current Image" width="150"/>
+            <input type="hidden" th:field="*{imageUrl}"/>
+        </div>
     </div>
 
     <hr/>
