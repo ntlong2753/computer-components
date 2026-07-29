@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Form CPU</title>
+</head>
+<body>
+<h1 th:text="${cpu.id} != null ? 'Sửa CPU' : 'Thêm CPU mới'"></h1>
+<form th:action="@{/cpu}" th:object="${cpu}" method="post">
+
+</form>
+</body>
+</html>
