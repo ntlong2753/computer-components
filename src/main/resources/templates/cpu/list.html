@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách CPU</title>
+</head>
+<body>
+<h1>Quản lý CPU</h1>
+<a th:href="@{/admin/cpu/create}">+ Thêm CPU mới</a>
+<table border="1" cellpadding="8" cellspacing="0" style="margin-top:16px; border-collapse: collapse;">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Tên</th>
+        <th>Hãng</th>
+        <th>Giá</th>
+        <th>Tồn kho</th>
+        <th>Socket</th>
+        <th>Số nhân</th>
+        <th>Số luồng</th>
+        <th>Xung nhịp (GHz)</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="cpu : ${cpus}">
+        <td th:text="${cpu.id}"></td>
+        <td th:text="${cpu.name}"></td>
+        <td th:text="${cpu.brand}"></td>
+        <td th:text="${cpu.price}"></td>
+        <td th:text="${cpu.stock}"></td>
+        <td th:text="${cpu.socket}"></td>
+        <td th:text="${cpu.coreCount}"></td>
+        <td th:text="${cpu.threadCount}"></td>
+        <td th:text="${cpu.baseClockGHz}"></td>
+        <td>
+            <a th:href="@{/admin/cpu/{id}/edit(id=${cpu.id})}">Sửa</a>
+            &nbsp;|&nbsp;
+            <form th:action="@{/admin/cpu/{id}/delete(id=${cpu.id})}" method="post" style="display:inline">
+                <button type="submit" onclick="return confirm('Xóa CPU này?')">Xóa</button>
+            </form>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(cpus)}">
+        <td colspan="10">Chưa có CPU nào.</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

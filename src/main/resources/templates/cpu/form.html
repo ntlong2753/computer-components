@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Thông tin CPU</title>
+</head>
+<body>
+<h1 th:text="${cpu.id} != null ? 'Sửa CPU' : 'Thêm CPU mới'"></h1>
+<p><em>Thông tin sản phẩm</em></p>
+<form th:action="@{/admin/cpu}" th:object="${cpu}" method="post">
+    <input type="hidden" th:field="*{id}"/>
+
+    <div>
+        <label>Tên sản phẩm:</label>
+        <input type="text" th:field="*{name}"/>
+        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red"></span>
+    </div>
+
+    <div>
+        <label>Hãng:</label>
+        <input type="text" th:field="*{brand}"/>
+    </div>
+
+    <div>
+        <label>Giá (VND):</label>
+        <input type="number" step="0.01" th:field="*{price}"/>
+        <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" style="color:red"></span>
+    </div>
+
+    <div>
+        <label>Tồn kho:</label>
+        <input type="number" th:field="*{stock}"/>
+        <span th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}" style="color:red"></span>
+    </div>
+
+    <div>
+        <label>Mô tả:</label>
+        <textarea th:field="*{description}"></textarea>
+    </div>
+
+    <div>
+        <label>Ảnh (URL):</label>
+        <input type="text" th:field="*{imageUrl}"/>
+    </div>
+
+    <hr/>
+    <p><em>Thông tin riêng của CPU:</em></p>
+
+    <div>
+        <label>Socket:</label>
+        <input type="text" th:field="*{socket}"/>
+        <span th:if="${#fields.hasErrors('socket')}" th:errors="*{socket}" style="color:red"></span>
+    </div>
+
+    <div>
+        <label>Số nhân (Core):</label>
+        <input type="number" th:field="*{coreCount}"/>
+    </div>
+
+    <div>
+        <label>Số luồng (Thread):</label>
+        <input type="number" th:field="*{threadCount}"/>
+    </div>
+
+    <div>
+        <label>Xung nhịp cơ bản (GHz):</label>
+        <input type="number" step="0.1" th:field="*{baseClockGHz}"/>
+    </div>
+
+    <br/>
+    <button type="submit">Lưu</button>
+    <a th:href="@{/admin/cpu}">Hủy</a>
+</form>
+</body>
+</html>
