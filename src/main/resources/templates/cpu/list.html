@@ -474,14 +474,18 @@
     let deletedImageIds = [];
     let isNameManuallyEdited = false;
 
-    // Dữ liệu cho Custom Dropdown - BAN ĐẦU ĐỂ TRỐNG (KHÔNG CODE CỨNG)
-    const customDropdownData = {
+    // Dữ liệu cho Custom Dropdown - BAN ĐẦU ĐỂ TRỐNG (KHÔNG CODE CỨNG), HOẶC TẢI TỪ LOCALSTORAGE
+    let customDropdownData = JSON.parse(localStorage.getItem('cpuCustomDropdownData')) || {
         brand: [],
         series: [],
         segment: [],
         suffix: [],
         socket: []
     };
+
+    function saveCustomDropdownData() {
+        localStorage.setItem('cpuCustomDropdownData', JSON.stringify(customDropdownData));
+    }
 
     const placeholders = {
         brand: "-- Chọn Hãng --",
@@ -588,6 +592,7 @@
         if (newVal !== "") {
             if (!customDropdownData[key].includes(newVal)) {
                 customDropdownData[key].push(newVal);
+                saveCustomDropdownData();
             }
             input.value = "";
             selectCustomOption(key, newVal);
@@ -606,6 +611,7 @@
             }
             renderCustomDropdown(key);
             autoGenerateCpuName();
+            saveCustomDropdownData();
         }
     }
 
@@ -619,6 +625,7 @@
             }
             renderCustomDropdown(key);
             autoGenerateCpuName();
+            saveCustomDropdownData();
         }
     }
 
@@ -893,6 +900,7 @@
                     const val = cpu[key] || "";
                     if (val && !customDropdownData[key].includes(val)) {
                         customDropdownData[key].push(val);
+                        saveCustomDropdownData();
                     }
                     selectCustomOption(key, val);
                 });
@@ -920,6 +928,30 @@
     // Initialize custom dropdowns & STT on load
     initCustomDropdowns();
     updateTableSTT();
+</script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const existingCpus = /*[[${cpus}]]*/ [];
+    /*]]>*/
+    
+    // Đồng bộ các tuỳ chọn đã có trong database vào localStorage (đề phòng mở trên máy khác)
+    if (existingCpus && Array.isArray(existingCpus)) {
+        let changed = false;
+        existingCpus.forEach(cpu => {
+            ['brand', 'series', 'segment', 'suffix', 'socket'].forEach(key => {
+                const val = cpu[key];
+                if (val && val.trim() !== "" && !customDropdownData[key].includes(val)) {
+                    customDropdownData[key].push(val);
+                    changed = true;
+                }
+            });
+        });
+        if (changed) {
+            saveCustomDropdownData();
+            initCustomDropdowns(); // re-render if updated
+        }
+    }
 </script>
 </body>
 </html>

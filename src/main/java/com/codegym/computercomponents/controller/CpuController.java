@@ -1,5 +1,6 @@
 package com.codegym.computercomponents.controller;
 
+import com.codegym.computercomponents.dto.CpuDto;
 import com.codegym.computercomponents.model.Cpu;
 import com.codegym.computercomponents.service.impl.CpuService;
 import jakarta.validation.Valid;
@@ -36,33 +37,35 @@ public class CpuController {
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
-        model.addAttribute("cpu", new Cpu());
+        model.addAttribute("cpu", new CpuDto());
         return "cpu/form";
     }
 
     @PostMapping
-    public String save(@Valid @ModelAttribute("cpu") Cpu cpu, BindingResult result) {
+    public String save(@Valid @ModelAttribute("cpu") CpuDto cpuDto, BindingResult result) {
         if (result.hasErrors()) {
             return "cpu/form";
         }
-        cpuService.save(cpu);
+        Cpu existingCpu = (cpuDto.getId() != null) ? cpuService.findById(cpuDto.getId()) : new Cpu();
+        cpuService.save(cpuDto.toEntity(existingCpu));
         return "redirect:/admin/cpu";
     }
 
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable Long id, Model model) {
-        model.addAttribute("cpu", cpuService.findById(id));
+    public String showEditForm(@PathVariable("id") Long id, Model model) {
+        Cpu cpu = cpuService.findById(id);
+        model.addAttribute("cpu", CpuDto.fromEntity(cpu));
         return "cpu/form";
     }
 
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable("id") Long id) {
         cpuService.deleteById(id);
         return "redirect:/admin/cpu";
     }
 
     @PostMapping("/{id}/images")
-    public String uploadImage(@PathVariable Long id, 
+    public String uploadImage(@PathVariable("id") Long id,
                               @RequestParam("file") MultipartFile file,
                               RedirectAttributes redirectAttributes) {
         if (file.isEmpty()) {
@@ -80,21 +83,21 @@ public class CpuController {
 
     @GetMapping("/api/{id}")
     @ResponseBody
-    public ResponseEntity<?> getCpuApi(@PathVariable Long id) {
+    public ResponseEntity<?> getCpuApi(@PathVariable("id") Long id) {
         Cpu cpu = cpuService.findById(id);
         if (cpu == null) {
             return ResponseEntity.notFound().build();
         }
         List<com.codegym.computercomponents.model.CpuImage> images = cpuImageService.getImagesByCpuId(id);
         Map<String, Object> response = new HashMap<>();
-        response.put("cpu", cpu);
+        response.put("cpu", CpuDto.fromEntity(cpu));
         response.put("images", images);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/api/save")
     @ResponseBody
-    public ResponseEntity<?> saveAjax(@Valid @ModelAttribute Cpu cpu, 
+    public ResponseEntity<?> saveAjax(@Valid @ModelAttribute CpuDto cpuDto, 
                                       BindingResult result,
                                       @RequestParam(value = "files", required = false) List<MultipartFile> files,
                                       @RequestParam(value = "deletedImageIds", required = false) List<Long> deletedImageIds) {
@@ -105,7 +108,8 @@ public class CpuController {
         }
 
         try {
-            Cpu savedCpu = cpuService.save(cpu);
+            Cpu existingCpu = (cpuDto.getId() != null) ? cpuService.findById(cpuDto.getId()) : new Cpu();
+            Cpu savedCpu = cpuService.save(cpuDto.toEntity(existingCpu));
 
             if (deletedImageIds != null && !deletedImageIds.isEmpty()) {
                 for (Long imageId : deletedImageIds) {
@@ -113,11 +117,11 @@ public class CpuController {
                 }
             }
 
-            // Delegate image bulk upload to the service
+            // Chuyển việc tải lên hàng loạt ảnh cho Service xử lý
             if (files != null && !files.isEmpty()) {
                 cpuImageService.addImagesToCpu(savedCpu.getId(), files);
             }
-            return ResponseEntity.ok(savedCpu);
+            return ResponseEntity.ok(CpuDto.fromEntity(savedCpu));
         } catch (Exception e) {
             Map<String, String> error = new HashMap<>();
             error.put("general", e.getMessage());
