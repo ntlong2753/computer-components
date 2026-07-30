@@ -19,7 +19,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @SuperBuilder // Dùng cho Builder pattern hỗ trợ kế thừa
 @Entity
-@SuppressWarnings("JpaDataSourceORMInspection")
 @Table(name = "product")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Product {
@@ -32,9 +31,8 @@ public abstract class Product {
     @Column(nullable = false, length = 255)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "brand_id")
-    private Brand brand;
+    @Column(length = 100)
+    private String brand;
 
     @Positive(message = "Giá phải lớn hơn 0")
     @DecimalMax(value = "999999999.99", message = "Giá không được vượt quá 999,999,999.99")
@@ -45,8 +43,8 @@ public abstract class Product {
     @Column(nullable = false)
     private Integer stock;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private java.util.List<ProductImage> images = new java.util.ArrayList<>();
+    @Column(columnDefinition = "TEXT")
+    private String imageUrl;
 
     @Column(columnDefinition = "TEXT")
     private String description;
