@@ -26,6 +26,18 @@ public class Cpu extends Product {
     @Column(nullable = false, length = 20)
     private String socket; // VD: LGA1700, AM5, AM4
 
+    @Column(length = 50)
+    private String series; // VD: Core, Ryzen, Xeon
+
+    @Column(length = 50)
+    private String segment; // VD: i5, Ryzen 5, i7
+
+    @Column(length = 50)
+    private String modelNumber; // VD: 12400, 5600X
+
+    @Column(length = 20)
+    private String suffix; // VD: F, K, KF, X
+
     @Min(value = 1, message = "Số nhân phải >= 1")
     private Integer coreCount;
 

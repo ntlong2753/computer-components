@@ -3,48 +3,850 @@
 <head>
     <meta charset="UTF-8">
     <title>Danh sách CPU</title>
+    <style>
+        /* Modal CSS */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.5); 
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 2% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 65%;
+            border-radius: 8px;
+            position: relative;
+        }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-btn:hover,
+        .close-btn:focus {
+            color: black;
+            text-decoration: none;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        /* Custom Select Component CSS */
+        .custom-select-container {
+            position: relative;
+            width: 100%;
+        }
+        .custom-select-trigger {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px 12px;
+            background-color: #fff;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            font-size: 14px;
+        }
+        .custom-select-trigger:hover {
+            border-color: #007bff;
+        }
+        .custom-dropdown-panel {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 1100;
+            background: #ffffff;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin-top: 3px;
+            overflow: hidden;
+        }
+        .custom-select-container.open .custom-dropdown-panel {
+            display: block;
+        }
+        .custom-options-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+        .custom-option-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.15s ease;
+        }
+        .custom-option-item:hover {
+            background-color: #eef6ff;
+        }
+        .custom-option-item.selected {
+            font-weight: bold;
+            color: #007bff;
+            background-color: #e6f0fa;
+        }
+        .empty-hint {
+            padding: 12px;
+            color: #888;
+            font-style: italic;
+            text-align: center;
+            font-size: 13px;
+        }
+        .option-text {
+            flex: 1;
+        }
+        .option-actions {
+            display: flex;
+            gap: 4px;
+        }
+        .action-icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 2px 6px;
+            font-size: 13px;
+            border-radius: 3px;
+            color: #666;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        .action-icon-btn.btn-edit:hover {
+            background-color: #ffc107;
+            color: #000;
+        }
+        .action-icon-btn.btn-delete:hover {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        .custom-add-box {
+            display: flex;
+            gap: 6px;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+        .custom-add-box input {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .custom-add-box button {
+            padding: 6px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+        .custom-add-box button:hover {
+            background-color: #0056b3;
+        }
+
+        .hint-text {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 2px;
+        }
+        .error-msg {
+            color: red;
+            font-size: 0.9em;
+            display: block;
+            margin-top: 3px;
+        }
+        .success-alert {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .modal-footer {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .modal-footer button {
+            padding: 8px 18px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        /* Image Preview Styles */
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .image-preview-item {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #f9f9f9;
+        }
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .image-preview-item .remove-btn {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(220, 53, 69, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            line-height: 1;
+        }
+    </style>
 </head>
 <body>
 <h1>Quản lý CPU</h1>
-<a th:href="@{/admin/cpu/create}">+ Thêm CPU mới</a>
-<table border="1" cellpadding="8" cellspacing="0" style="margin-top:16px; border-collapse: collapse;">
+<button id="openCreateModalBtn">+ Thêm CPU mới</button>
+<table border="1" cellpadding="8" cellspacing="0" style="margin-top:16px; border-collapse: collapse; width: 100%;" id="cpuTable">
     <thead>
     <tr>
         <th>ID</th>
-        <th>Tên</th>
+        <th>Tên CPU</th>
         <th>Hãng</th>
+        <th>Dòng</th>
+        <th>Phân khúc</th>
+        <th>Model</th>
+        <th>Hậu tố</th>
         <th>Giá</th>
         <th>Tồn kho</th>
         <th>Socket</th>
-        <th>Số nhân</th>
-        <th>Số luồng</th>
-        <th>Xung nhịp (GHz)</th>
+        <th>Mô tả</th>
         <th>Hành động</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="cpu : ${cpus}">
+    <tr th:each="cpu : ${cpus}" th:id="'cpu-row-' + ${cpu.id}">
         <td th:text="${cpu.id}"></td>
         <td th:text="${cpu.name}"></td>
         <td th:text="${cpu.brand}"></td>
+        <td th:text="${cpu.series}"></td>
+        <td th:text="${cpu.segment}"></td>
+        <td th:text="${cpu.modelNumber}"></td>
+        <td th:text="${cpu.suffix != null && !cpu.suffix.isBlank() ? cpu.suffix : 'không có'}"></td>
         <td th:text="${cpu.price}"></td>
         <td th:text="${cpu.stock}"></td>
         <td th:text="${cpu.socket}"></td>
-        <td th:text="${cpu.coreCount}"></td>
-        <td th:text="${cpu.threadCount}"></td>
-        <td th:text="${cpu.baseClockGHz}"></td>
+        <td th:text="${cpu.description != null && !cpu.description.isBlank() ? cpu.description : 'không có mô tả'}"></td>
         <td>
-            <a th:href="@{/admin/cpu/{id}/edit(id=${cpu.id})}">Sửa</a>
+            <button type="button" style="cursor:pointer;" th:onclick="'editCpuModal(' + ${cpu.id} + ')'">Sửa</button>
             &nbsp;|&nbsp;
             <form th:action="@{/admin/cpu/{id}/delete(id=${cpu.id})}" method="post" style="display:inline">
                 <button type="submit" onclick="return confirm('Xóa CPU này?')">Xóa</button>
             </form>
         </td>
     </tr>
-    <tr th:if="${#lists.isEmpty(cpus)}">
-        <td colspan="10">Chưa có CPU nào.</td>
+    <tr th:if="${#lists.isEmpty(cpus)}" id="emptyRow">
+        <td colspan="12">Chưa có CPU nào.</td>
     </tr>
     </tbody>
 </table>
+
+<!-- The Modal -->
+<div id="cpuModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" id="closeModalBtn">&times;</span>
+        <h2 id="modalTitle">Thêm CPU mới</h2>
+        
+        <div class="success-alert" id="successAlert">Lưu thành công!</div>
+
+        <form id="cpuAjaxForm">
+            <input type="hidden" name="id" id="cpuId" />
+            
+            <!-- 1. Tên CPU -->
+            <div class="form-group">
+                <label>Tên CPU (*):</label>
+                <input type="text" name="name" id="cpuName" placeholder="Tên CPU sẽ tự động sinh hoặc tự sửa..." />
+                <div class="hint-text">(Tự động sinh theo cấu trúc [Hãng] [Dòng] [Phân khúc] [Model][Hậu tố], có thể chỉnh sửa)</div>
+                <span class="error-msg" id="err-name"></span>
+            </div>
+
+            <!-- 2. Hãng CPU (Custom Dropdown) -->
+            <div class="form-group">
+                <label>Hãng CPU (*):</label>
+                <div class="custom-select-container" id="select-container-brand">
+                    <input type="hidden" name="brand" id="cpuBrand" value="" />
+                    <div class="custom-select-trigger" onclick="toggleDropdown('brand')">
+                        <span id="trigger-text-brand">-- Chọn Hãng --</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="custom-dropdown-panel">
+                        <ul class="custom-options-list" id="options-list-brand"></ul>
+                        <div class="custom-add-box">
+                            <input type="text" id="add-input-brand" placeholder="Nhập Hãng CPU mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();addCustomOption('brand');}" />
+                            <button type="button" onclick="addCustomOption('brand')">+ Thêm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Dòng sản phẩm (Custom Dropdown) -->
+            <div class="form-group">
+                <label>Dòng sản phẩm:</label>
+                <div class="custom-select-container" id="select-container-series">
+                    <input type="hidden" name="series" id="cpuSeries" value="" />
+                    <div class="custom-select-trigger" onclick="toggleDropdown('series')">
+                        <span id="trigger-text-series">-- Chọn Dòng sản phẩm --</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="custom-dropdown-panel">
+                        <ul class="custom-options-list" id="options-list-series"></ul>
+                        <div class="custom-add-box">
+                            <input type="text" id="add-input-series" placeholder="Nhập Dòng sản phẩm mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();addCustomOption('series');}" />
+                            <button type="button" onclick="addCustomOption('series')">+ Thêm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Phân khúc (Custom Dropdown) -->
+            <div class="form-group">
+                <label>Phân khúc:</label>
+                <div class="custom-select-container" id="select-container-segment">
+                    <input type="hidden" name="segment" id="cpuSegment" value="" />
+                    <div class="custom-select-trigger" onclick="toggleDropdown('segment')">
+                        <span id="trigger-text-segment">-- Chọn Phân khúc --</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="custom-dropdown-panel">
+                        <ul class="custom-options-list" id="options-list-segment"></ul>
+                        <div class="custom-add-box">
+                            <input type="text" id="add-input-segment" placeholder="Nhập Phân khúc mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();addCustomOption('segment');}" />
+                            <button type="button" onclick="addCustomOption('segment')">+ Thêm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Model -->
+            <div class="form-group">
+                <label>Model:</label>
+                <input type="text" name="modelNumber" id="cpuModelNumber" placeholder="VD: 12400, 5600X" oninput="autoGenerateCpuName()" />
+            </div>
+
+            <!-- 6. Hậu tố (Custom Dropdown) -->
+            <div class="form-group">
+                <label>Hậu tố (có thể để trống):</label>
+                <div class="custom-select-container" id="select-container-suffix">
+                    <input type="hidden" name="suffix" id="cpuSuffix" value="" />
+                    <div class="custom-select-trigger" onclick="toggleDropdown('suffix')">
+                        <span id="trigger-text-suffix">-- Chọn Hậu tố --</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="custom-dropdown-panel">
+                        <ul class="custom-options-list" id="options-list-suffix"></ul>
+                        <div class="custom-add-box">
+                            <input type="text" id="add-input-suffix" placeholder="Nhập Hậu tố mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();addCustomOption('suffix');}" />
+                            <button type="button" onclick="addCustomOption('suffix')">+ Thêm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Socket -->
+            <div class="form-group">
+                <label>Socket (*):</label>
+                <input type="text" name="socket" id="cpuSocket" value="LGA1700" placeholder="VD: LGA1700, AM5, AM4" />
+                <span class="error-msg" id="err-socket"></span>
+            </div>
+
+            <!-- 7. Giá (VNĐ) -->
+            <div class="form-group">
+                <label>Giá (VNĐ) (*):</label>
+                <input type="text" name="price" id="cpuPrice" placeholder="Chỉ nhập số (VD: 4500000)" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                <div class="hint-text">(Chỉ được điền số, không điền chữ hoặc ký tự đặc biệt)</div>
+                <span class="error-msg" id="err-price"></span>
+            </div>
+            
+            <!-- 8. Tồn kho -->
+            <div class="form-group">
+                <label>Tồn kho (*):</label>
+                <input type="text" name="stock" id="cpuStock" value="10" placeholder="Chỉ nhập số" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                <div class="hint-text">(Chỉ được điền số, không điền chữ hoặc ký tự đặc biệt)</div>
+                <span class="error-msg" id="err-stock"></span>
+            </div>
+
+            <!-- 9. Ảnh (URL & Upload) -->
+            <div class="form-group">
+                <label>Ảnh (URL):</label>
+                <input type="text" name="imageUrl" id="cpuImageUrl" placeholder="Nhập đường dẫn URL ảnh (nếu có)..." />
+            </div>
+
+            <div class="form-group">
+                <label>Tải ảnh từ máy tính (Tối đa 10 ảnh, mỗi ảnh max 10MB):</label>
+                <input type="file" id="cpuImagesInput" multiple accept="image/*" />
+                <div id="imagePreviewContainer" class="image-preview-container"></div>
+            </div>
+
+            <!-- 10. Mô tả -->
+            <div class="form-group">
+                <label>Mô tả:</label>
+                <textarea name="description" id="cpuDesc" placeholder="Nhập mô tả sản phẩm (nếu trống sẽ tự hiển thị 'không có mô tả')..."></textarea>
+            </div>
+
+            <span class="error-msg" id="err-general"></span>
+
+            <div class="modal-footer">
+                <button type="button" id="cancelModalBtn">Hủy</button>
+                <button type="submit">Lưu</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const modal = document.getElementById("cpuModal");
+    const openBtn = document.getElementById("openCreateModalBtn");
+    const closeBtn = document.getElementById("closeModalBtn");
+    const cancelBtn = document.getElementById("cancelModalBtn");
+    const form = document.getElementById("cpuAjaxForm");
+    const successAlert = document.getElementById("successAlert");
+    const tbody = document.querySelector("#cpuTable tbody");
+    const emptyRow = document.getElementById("emptyRow");
+
+    const cpuImagesInput = document.getElementById("cpuImagesInput");
+    const previewContainer = document.getElementById("imagePreviewContainer");
+    let selectedFiles = [];
+    let isNameManuallyEdited = false;
+
+    // Dữ liệu cho Custom Dropdown - BAN ĐẦU ĐỂ TRỐNG (KHÔNG CODE CỨNG)
+    const customDropdownData = {
+        brand: [],
+        series: [],
+        segment: [],
+        suffix: []
+    };
+
+    const placeholders = {
+        brand: "-- Chọn Hãng --",
+        series: "-- Chọn Dòng sản phẩm --",
+        segment: "-- Chọn Phân khúc --",
+        suffix: "-- Chọn Hậu tố --"
+    };
+
+    function capitalize(s) {
+        return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
+    function toggleDropdown(key) {
+        const container = document.getElementById("select-container-" + key);
+        const isOpen = container.classList.contains("open");
+        closeAllDropdowns();
+        if (!isOpen) {
+            container.classList.add("open");
+        }
+    }
+
+    function closeAllDropdowns() {
+        document.querySelectorAll(".custom-select-container").forEach(c => c.classList.remove("open"));
+    }
+
+    document.addEventListener("click", function(e) {
+        if (!e.target.closest(".custom-select-container")) {
+            closeAllDropdowns();
+        }
+    });
+
+    function renderCustomDropdown(key) {
+        const listEl = document.getElementById("options-list-" + key);
+        const hiddenInput = document.getElementById("cpu" + capitalize(key));
+        const triggerText = document.getElementById("trigger-text-" + key);
+        const currentVal = hiddenInput.value;
+
+        listEl.innerHTML = "";
+
+        if (customDropdownData[key].length === 0) {
+            const emptyLi = document.createElement("li");
+            emptyLi.className = "empty-hint";
+            emptyLi.innerText = "Chưa có tùy chọn nào. Thêm mới ở dưới...";
+            listEl.appendChild(emptyLi);
+        } else {
+            customDropdownData[key].forEach((val, idx) => {
+                const li = document.createElement("li");
+                const isSelected = val === currentVal;
+                li.className = "custom-option-item" + (isSelected ? " selected" : "");
+
+                const textSpan = document.createElement("span");
+                textSpan.className = "option-text";
+                textSpan.innerText = val;
+                textSpan.onclick = function() {
+                    selectCustomOption(key, val);
+                };
+
+                const actionsDiv = document.createElement("div");
+                actionsDiv.className = "option-actions";
+
+                const editBtn = document.createElement("button");
+                editBtn.type = "button";
+                editBtn.className = "action-icon-btn btn-edit";
+                editBtn.innerHTML = "✏️";
+                editBtn.title = "Sửa tùy chọn này";
+                editBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    editCustomOption(key, idx);
+                };
+
+                const deleteBtn = document.createElement("button");
+                deleteBtn.type = "button";
+                deleteBtn.className = "action-icon-btn btn-delete";
+                deleteBtn.innerHTML = "❌";
+                deleteBtn.title = "Xóa tùy chọn này";
+                deleteBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    deleteCustomOption(key, idx);
+                };
+
+                actionsDiv.appendChild(editBtn);
+                actionsDiv.appendChild(deleteBtn);
+
+                li.appendChild(textSpan);
+                li.appendChild(actionsDiv);
+                listEl.appendChild(li);
+            });
+        }
+
+        triggerText.innerText = currentVal ? currentVal : placeholders[key];
+    }
+
+    function selectCustomOption(key, val) {
+        document.getElementById("cpu" + capitalize(key)).value = val;
+        renderCustomDropdown(key);
+        closeAllDropdowns();
+        autoGenerateCpuName();
+    }
+
+    function addCustomOption(key) {
+        const input = document.getElementById("add-input-" + key);
+        const newVal = input.value.trim();
+        if (newVal !== "") {
+            if (!customDropdownData[key].includes(newVal)) {
+                customDropdownData[key].push(newVal);
+            }
+            input.value = "";
+            selectCustomOption(key, newVal);
+        }
+    }
+
+    function editCustomOption(key, idx) {
+        const oldVal = customDropdownData[key][idx];
+        const newVal = prompt("Sửa tên tùy chọn:", oldVal);
+        if (newVal && newVal.trim() !== "" && newVal.trim() !== oldVal) {
+            const trimmed = newVal.trim();
+            customDropdownData[key][idx] = trimmed;
+            const hiddenInput = document.getElementById("cpu" + capitalize(key));
+            if (hiddenInput.value === oldVal) {
+                hiddenInput.value = trimmed;
+            }
+            renderCustomDropdown(key);
+            autoGenerateCpuName();
+        }
+    }
+
+    function deleteCustomOption(key, idx) {
+        const valToRemove = customDropdownData[key][idx];
+        if (confirm(`Bạn có chắc muốn xóa tùy chọn "${valToRemove}"?`)) {
+            customDropdownData[key].splice(idx, 1);
+            const hiddenInput = document.getElementById("cpu" + capitalize(key));
+            if (hiddenInput.value === valToRemove) {
+                hiddenInput.value = "";
+            }
+            renderCustomDropdown(key);
+            autoGenerateCpuName();
+        }
+    }
+
+    // Tự động sinh tên CPU khi thay đổi các trường cấu thành
+    document.getElementById("cpuName").addEventListener("input", function() {
+        isNameManuallyEdited = true;
+    });
+
+    function autoGenerateCpuName() {
+        if (isNameManuallyEdited) return;
+
+        const brand = document.getElementById("cpuBrand").value || "";
+        const series = document.getElementById("cpuSeries").value || "";
+        const segment = document.getElementById("cpuSegment").value || "";
+        const model = document.getElementById("cpuModelNumber").value || "";
+        const suffix = document.getElementById("cpuSuffix").value || "";
+
+        const parts = [brand, series, segment, model].map(p => p.trim()).filter(p => p !== "");
+        let fullName = parts.join(" ");
+        if (suffix && suffix.trim() !== "") {
+            fullName = (fullName ? fullName + " " : "") + suffix.trim();
+        }
+
+        document.getElementById("cpuName").value = fullName;
+    }
+
+    // Sự kiện chọn file ảnh
+    cpuImagesInput.addEventListener("change", function(e) {
+        const files = Array.from(e.target.files);
+        files.forEach(file => {
+            if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+                selectedFiles.push(file);
+            }
+        });
+        renderPreviews();
+        cpuImagesInput.value = "";
+    });
+
+    function renderPreviews() {
+        previewContainer.innerHTML = "";
+        selectedFiles.forEach((file, index) => {
+            const item = document.createElement("div");
+            item.className = "image-preview-item";
+
+            const img = document.createElement("img");
+            img.src = URL.createObjectURL(file);
+
+            const removeBtn = document.createElement("button");
+            removeBtn.type = "button";
+            removeBtn.className = "remove-btn";
+            removeBtn.innerHTML = "&times;";
+            removeBtn.title = "Bỏ ảnh này";
+            removeBtn.onclick = function() {
+                selectedFiles.splice(index, 1);
+                renderPreviews();
+            };
+
+            item.appendChild(img);
+            item.appendChild(removeBtn);
+            previewContainer.appendChild(item);
+        });
+    }
+
+    function initCustomDropdowns() {
+        ['brand', 'series', 'segment', 'suffix'].forEach(key => {
+            renderCustomDropdown(key);
+        });
+    }
+
+    function openModal() {
+        form.reset();
+        selectedFiles = [];
+        isNameManuallyEdited = false;
+        renderPreviews();
+        
+        // Reset hidden values to empty
+        document.getElementById("cpuBrand").value = "";
+        document.getElementById("cpuSeries").value = "";
+        document.getElementById("cpuSegment").value = "";
+        document.getElementById("cpuSuffix").value = "";
+
+        initCustomDropdowns();
+
+        document.getElementById("cpuId").value = "";
+        document.getElementById("cpuName").value = "";
+        document.getElementById("modalTitle").innerText = "Thêm CPU mới";
+        successAlert.style.display = "none";
+        clearErrors();
+        
+        autoGenerateCpuName();
+        modal.style.display = "block";
+    }
+
+    function closeModal() {
+        modal.style.display = "none";
+        closeAllDropdowns();
+    }
+
+    function clearErrors() {
+        document.querySelectorAll('.error-msg').forEach(el => el.innerText = "");
+    }
+
+    openBtn.onclick = openModal;
+    closeBtn.onclick = closeModal;
+    cancelBtn.onclick = closeModal;
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+
+    form.onsubmit = function(e) {
+        e.preventDefault();
+        clearErrors();
+        successAlert.style.display = "none";
+
+        const descInput = document.getElementById("cpuDesc");
+        if (!descInput.value || descInput.value.trim() === "") {
+            descInput.value = "không có mô tả";
+        }
+
+        const formData = new FormData(form);
+
+        selectedFiles.forEach(file => {
+            formData.append("files", file);
+        });
+
+        fetch('/admin/cpu/api/save', {
+            method: 'POST',
+            body: formData
+        })
+        .then(async response => {
+            if (response.ok) {
+                const data = await response.json();
+                handleSuccess(data);
+            } else {
+                const errorData = await response.json();
+                handleValidationErrors(errorData);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            document.getElementById("err-general").innerText = "Đã xảy ra lỗi hệ thống!";
+        });
+    };
+
+    function handleSuccess(cpu) {
+        successAlert.style.display = "block";
+        successAlert.innerText = "Lưu thành công CPU: " + cpu.name;
+        document.getElementById("modalTitle").innerText = "Sửa CPU (đã lưu)";
+        document.getElementById("cpuId").value = cpu.id; 
+        
+        selectedFiles = [];
+        renderPreviews();
+
+        if (emptyRow) emptyRow.style.display = 'none';
+
+        let existingRow = document.getElementById('cpu-row-' + cpu.id);
+        const descDisplay = (cpu.description && cpu.description.trim() !== "") ? cpu.description : "không có mô tả";
+        const suffixDisplay = (cpu.suffix && cpu.suffix.trim() !== "") ? cpu.suffix : "không có";
+
+        const rowHTML = `
+            <td>${cpu.id}</td>
+            <td>${cpu.name}</td>
+            <td>${cpu.brand || ''}</td>
+            <td>${cpu.series || ''}</td>
+            <td>${cpu.segment || ''}</td>
+            <td>${cpu.modelNumber || ''}</td>
+            <td>${suffixDisplay}</td>
+            <td>${cpu.price}</td>
+            <td>${cpu.stock}</td>
+            <td>${cpu.socket || ''}</td>
+            <td>${descDisplay}</td>
+            <td>
+                <button type="button" style="cursor:pointer;" onclick="editCpuModal(${cpu.id})">Sửa</button>
+                &nbsp;|&nbsp;
+                <form action="/admin/cpu/${cpu.id}/delete" method="post" style="display:inline">
+                    <button type="submit" onclick="return confirm('Xóa CPU này?')">Xóa</button>
+                </form>
+            </td>
+        `;
+
+        if (existingRow) {
+            existingRow.innerHTML = rowHTML;
+        } else {
+            const tr = document.createElement("tr");
+            tr.id = 'cpu-row-' + cpu.id;
+            tr.innerHTML = rowHTML;
+            tbody.appendChild(tr);
+        }
+    }
+
+    function editCpuModal(id) {
+        fetch('/admin/cpu/api/' + id)
+            .then(response => {
+                if (!response.ok) throw new Error("Không tìm thấy dữ liệu CPU");
+                return response.json();
+            })
+            .then(cpu => {
+                form.reset();
+                selectedFiles = [];
+                renderPreviews();
+                clearErrors();
+                successAlert.style.display = "none";
+
+                document.getElementById("modalTitle").innerText = "Sửa CPU #" + cpu.id;
+                document.getElementById("cpuId").value = cpu.id;
+                document.getElementById("cpuName").value = cpu.name || "";
+                document.getElementById("cpuModelNumber").value = cpu.modelNumber || "";
+                document.getElementById("cpuSocket").value = cpu.socket || "LGA1700";
+                document.getElementById("cpuPrice").value = cpu.price || "";
+                document.getElementById("cpuStock").value = cpu.stock || "";
+                document.getElementById("cpuImageUrl").value = cpu.imageUrl || "";
+                document.getElementById("cpuDesc").value = cpu.description || "";
+
+                ['brand', 'series', 'segment', 'suffix'].forEach(key => {
+                    const val = cpu[key] || "";
+                    if (val && !customDropdownData[key].includes(val)) {
+                        customDropdownData[key].push(val);
+                    }
+                    selectCustomOption(key, val);
+                });
+
+                isNameManuallyEdited = true;
+                modal.style.display = "block";
+            })
+            .catch(err => {
+                alert(err.message);
+            });
+    }
+
+    function handleValidationErrors(errors) {
+        for (const [key, value] of Object.entries(errors)) {
+            const errorElement = document.getElementById("err-" + key);
+            if (errorElement) {
+                errorElement.innerText = value;
+            } else if (key === 'general') {
+                document.getElementById("err-general").innerText = value;
+            }
+        }
+    }
+
+    // Initialize custom dropdowns on load
+    initCustomDropdowns();
+</script>
 </body>
 </html>
