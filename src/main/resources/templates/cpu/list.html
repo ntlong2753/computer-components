@@ -251,7 +251,7 @@
 <table border="1" cellpadding="8" cellspacing="0" style="margin-top:16px; border-collapse: collapse; width: 100%;" id="cpuTable">
     <thead>
     <tr>
-        <th>ID</th>
+        <th>STT</th>
         <th>Tên CPU</th>
         <th>Hãng</th>
         <th>Dòng</th>
@@ -266,8 +266,8 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="cpu : ${cpus}" th:id="'cpu-row-' + ${cpu.id}">
-        <td th:text="${cpu.id}"></td>
+    <tr th:each="cpu, iterStat : ${cpus}" th:id="'cpu-row-' + ${cpu.id}">
+        <td th:text="${iterStat.count}"></td>
         <td th:text="${cpu.name}"></td>
         <td th:text="${cpu.brand}"></td>
         <td th:text="${cpu.series}"></td>
@@ -393,10 +393,23 @@
                 </div>
             </div>
 
-            <!-- Socket -->
+            <!-- Socket (Custom Dropdown) -->
             <div class="form-group">
                 <label>Socket (*):</label>
-                <input type="text" name="socket" id="cpuSocket" value="LGA1700" placeholder="VD: LGA1700, AM5, AM4" />
+                <div class="custom-select-container" id="select-container-socket">
+                    <input type="hidden" name="socket" id="cpuSocket" value="" />
+                    <div class="custom-select-trigger" onclick="toggleDropdown('socket')">
+                        <span id="trigger-text-socket">-- Chọn Socket --</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="custom-dropdown-panel">
+                        <ul class="custom-options-list" id="options-list-socket"></ul>
+                        <div class="custom-add-box">
+                            <input type="text" id="add-input-socket" placeholder="Nhập Socket mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();addCustomOption('socket');}" />
+                            <button type="button" onclick="addCustomOption('socket')">+ Thêm</button>
+                        </div>
+                    </div>
+                </div>
                 <span class="error-msg" id="err-socket"></span>
             </div>
 
@@ -457,6 +470,8 @@
     const cpuImagesInput = document.getElementById("cpuImagesInput");
     const previewContainer = document.getElementById("imagePreviewContainer");
     let selectedFiles = [];
+    let existingImages = [];
+    let deletedImageIds = [];
     let isNameManuallyEdited = false;
 
     // Dữ liệu cho Custom Dropdown - BAN ĐẦU ĐỂ TRỐNG (KHÔNG CODE CỨNG)
@@ -464,14 +479,16 @@
         brand: [],
         series: [],
         segment: [],
-        suffix: []
+        suffix: [],
+        socket: []
     };
 
     const placeholders = {
         brand: "-- Chọn Hãng --",
         series: "-- Chọn Dòng sản phẩm --",
         segment: "-- Chọn Phân khúc --",
-        suffix: "-- Chọn Hậu tố --"
+        suffix: "-- Chọn Hậu tố --",
+        socket: "-- Chọn Socket --"
     };
 
     function capitalize(s) {
@@ -642,6 +659,36 @@
 
     function renderPreviews() {
         previewContainer.innerHTML = "";
+        
+        // Render existing images from server
+        existingImages.forEach((imgObj, index) => {
+            const item = document.createElement("div");
+            item.className = "image-preview-item";
+
+            const img = document.createElement("img");
+            let src = imgObj.imageUrl;
+            if (!src.startsWith("http")) {
+                src = src.startsWith("/") ? src : '/' + src;
+            }
+            img.src = src; 
+
+            const removeBtn = document.createElement("button");
+            removeBtn.type = "button";
+            removeBtn.className = "remove-btn";
+            removeBtn.innerHTML = "&times;";
+            removeBtn.title = "Xóa ảnh cũ này";
+            removeBtn.onclick = function() {
+                deletedImageIds.push(imgObj.id);
+                existingImages.splice(index, 1);
+                renderPreviews();
+            };
+
+            item.appendChild(img);
+            item.appendChild(removeBtn);
+            previewContainer.appendChild(item);
+        });
+
+        // Render new selected files
         selectedFiles.forEach((file, index) => {
             const item = document.createElement("div");
             item.className = "image-preview-item";
@@ -653,7 +700,7 @@
             removeBtn.type = "button";
             removeBtn.className = "remove-btn";
             removeBtn.innerHTML = "&times;";
-            removeBtn.title = "Bỏ ảnh này";
+            removeBtn.title = "Bỏ ảnh mới này";
             removeBtn.onclick = function() {
                 selectedFiles.splice(index, 1);
                 renderPreviews();
@@ -666,7 +713,7 @@
     }
 
     function initCustomDropdowns() {
-        ['brand', 'series', 'segment', 'suffix'].forEach(key => {
+        ['brand', 'series', 'segment', 'suffix', 'socket'].forEach(key => {
             renderCustomDropdown(key);
         });
     }
@@ -674,6 +721,8 @@
     function openModal() {
         form.reset();
         selectedFiles = [];
+        existingImages = [];
+        deletedImageIds = [];
         isNameManuallyEdited = false;
         renderPreviews();
         
@@ -682,6 +731,7 @@
         document.getElementById("cpuSeries").value = "";
         document.getElementById("cpuSegment").value = "";
         document.getElementById("cpuSuffix").value = "";
+        document.getElementById("cpuSocket").value = "";
 
         initCustomDropdowns();
 
@@ -730,6 +780,10 @@
             formData.append("files", file);
         });
 
+        deletedImageIds.forEach(id => {
+            formData.append("deletedImageIds", id);
+        });
+
         fetch('/admin/cpu/api/save', {
             method: 'POST',
             body: formData
@@ -756,6 +810,7 @@
         document.getElementById("cpuId").value = cpu.id; 
         
         selectedFiles = [];
+        deletedImageIds = [];
         renderPreviews();
 
         if (emptyRow) emptyRow.style.display = 'none';
@@ -793,32 +848,48 @@
             tr.innerHTML = rowHTML;
             tbody.appendChild(tr);
         }
+
+        updateTableSTT();
+    }
+
+    function updateTableSTT() {
+        const rows = document.querySelectorAll("#cpuTable tbody tr:not(#emptyRow)");
+        rows.forEach((row, idx) => {
+            const firstTd = row.querySelector("td");
+            if (firstTd) {
+                firstTd.innerText = idx + 1;
+            }
+        });
     }
 
     function editCpuModal(id) {
         fetch('/admin/cpu/api/' + id)
-            .then(response => {
-                if (!response.ok) throw new Error("Không tìm thấy dữ liệu CPU");
-                return response.json();
+            .then(res => {
+                if (!res.ok) throw new Error("Không tìm thấy CPU");
+                return res.json();
             })
-            .then(cpu => {
+            .then(data => {
+                const cpu = data.cpu;
+                existingImages = data.images || [];
+                deletedImageIds = [];
+
                 form.reset();
                 selectedFiles = [];
                 renderPreviews();
                 clearErrors();
                 successAlert.style.display = "none";
 
+                document.getElementById("cpuTitle") ? document.getElementById("cpuTitle") : null;
                 document.getElementById("modalTitle").innerText = "Sửa CPU #" + cpu.id;
                 document.getElementById("cpuId").value = cpu.id;
                 document.getElementById("cpuName").value = cpu.name || "";
                 document.getElementById("cpuModelNumber").value = cpu.modelNumber || "";
-                document.getElementById("cpuSocket").value = cpu.socket || "LGA1700";
                 document.getElementById("cpuPrice").value = cpu.price || "";
                 document.getElementById("cpuStock").value = cpu.stock || "";
                 document.getElementById("cpuImageUrl").value = cpu.imageUrl || "";
                 document.getElementById("cpuDesc").value = cpu.description || "";
 
-                ['brand', 'series', 'segment', 'suffix'].forEach(key => {
+                ['brand', 'series', 'segment', 'suffix', 'socket'].forEach(key => {
                     const val = cpu[key] || "";
                     if (val && !customDropdownData[key].includes(val)) {
                         customDropdownData[key].push(val);
@@ -827,6 +898,7 @@
                 });
 
                 isNameManuallyEdited = true;
+                renderPreviews();
                 modal.style.display = "block";
             })
             .catch(err => {
@@ -845,8 +917,9 @@
         }
     }
 
-    // Initialize custom dropdowns on load
+    // Initialize custom dropdowns & STT on load
     initCustomDropdowns();
+    updateTableSTT();
 </script>
 </body>
 </html>

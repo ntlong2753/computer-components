@@ -23,6 +23,7 @@ public class CpuImage {
     @Column(nullable = false, length = 1000)
     private String imageUrl;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cpu_id", nullable = false)
     private Cpu cpu;

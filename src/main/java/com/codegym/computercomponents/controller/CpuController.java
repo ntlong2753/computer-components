@@ -85,14 +85,19 @@ public class CpuController {
         if (cpu == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(cpu);
+        List<com.codegym.computercomponents.model.CpuImage> images = cpuImageService.getImagesByCpuId(id);
+        Map<String, Object> response = new HashMap<>();
+        response.put("cpu", cpu);
+        response.put("images", images);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/api/save")
     @ResponseBody
     public ResponseEntity<?> saveAjax(@Valid @ModelAttribute Cpu cpu, 
                                       BindingResult result,
-                                      @RequestParam(value = "files", required = false) List<MultipartFile> files) {
+                                      @RequestParam(value = "files", required = false) List<MultipartFile> files,
+                                      @RequestParam(value = "deletedImageIds", required = false) List<Long> deletedImageIds) {
         if (result.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
             result.getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
@@ -101,6 +106,12 @@ public class CpuController {
 
         try {
             Cpu savedCpu = cpuService.save(cpu);
+
+            if (deletedImageIds != null && !deletedImageIds.isEmpty()) {
+                for (Long imageId : deletedImageIds) {
+                    cpuImageService.deleteImage(imageId);
+                }
+            }
 
             // Delegate image bulk upload to the service
             if (files != null && !files.isEmpty()) {
