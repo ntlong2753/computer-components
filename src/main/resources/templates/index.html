@@ -12,10 +12,22 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="logo">NexGen PC</div>
-        <div class="nav-links">
+        <div class="nav-links" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
             <a href="/">Trang chủ</a>
             <a href="#catalog">Sản phẩm</a>
-            <a href="/admin/cpu">Quản trị</a>
+            
+            <!-- Chưa đăng nhập -->
+            <th:block sec:authorize="!isAuthenticated()">
+                <a href="/login">Đăng nhập</a>
+                <a href="/register">Đăng ký</a>
+            </th:block>
+
+            <!-- Đã đăng nhập -->
+            <th:block sec:authorize="isAuthenticated()">
+                <a sec:authorize="hasRole('ADMIN')" href="/admin/cpu">Quản trị</a>
+                <span style="margin-left: 20px; color: var(--primary); font-weight: bold;">Chào, <span sec:authentication="name"></span></span>
+                <a href="/logout">Đăng xuất</a>
+            </th:block>
         </div>
     </nav>
 

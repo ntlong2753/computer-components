@@ -1,0 +1,51 @@
+package com.codegym.computercomponents.service.impl;
+
+import com.codegym.computercomponents.dto.UserRegisterDto;
+import com.codegym.computercomponents.model.AppUser;
+import com.codegym.computercomponents.model.Role;
+import com.codegym.computercomponents.repository.RoleRepository;
+import com.codegym.computercomponents.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public void registerNewUserAccount(UserRegisterDto dto) throws Exception {
+        if (userRepository.existsByUsername(dto.getUsername())) {
+            throw new Exception("Tên đăng nhập đã tồn tại!");
+        }
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new Exception("Email đã được sử dụng!");
+        }
+
+        AppUser user = new AppUser();
+        user.setUsername(dto.getUsername());
+        user.setPassword(passwordEncoder.encode(dto.getPassword())); // Mã hóa BCrypt
+        user.setFullName(dto.getFullName());
+        user.setEmail(dto.getEmail());
+        user.setPhone(dto.getPhone());
+        user.setAddress(dto.getAddress());
+
+        // Gán Role mặc định
+        Role userRole = roleRepository.findByName("ROLE_USER").orElseGet(() -> {
+            Role newRole = new Role();
+            newRole.setName("ROLE_USER");
+            return roleRepository.save(newRole);
+        });
+
+        user.addRole(userRole);
+
+        userRepository.save(user);
+    }
+}
