@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách Nguồn máy tính (PSU)</title>
+</head>
+<body>
+<h1>Quản lý Nguồn (PSU)</h1>
+<button id="openCreateModalBtn">+ Thêm Nguồn mới</button>
+<table border="1" cellpadding="8" cellspacing="0" style="margin-top:16px; border-collapse: collapse; width: 100%;" id="psuTable">
+    <thead>
+    <tr>
+        <th>STT</th>
+        <th>Tên PSU</th>
+        <th>Hãng</th>
+        <th>Công suất</th>
+        <th>Chuẩn nguồn</th>
+        <th>Kích thước</th>
+        <th>Giá</th>
+        <th>Tồn kho</th>
+        <th>Mô tả</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item, iterStat : ${psus}" th:id="'psu-row-' + ${item.id}">
+        <td th:text="${iterStat.count}"></td>
+        <td th:text="${item.name}"></td>
+        <td th:text="${item.brand}"></td>
+        <td th:text="${item.wattage != null ? item.wattage + 'W' : ''}"></td>
+        <td th:text="${item.efficiency}"></td>
+        <td th:text="${item.formFactor}"></td>
+        <td th:text="${item.price}"></td>
+        <td th:text="${item.stock}"></td>
+        <td th:text="${item.description != null && !item.description.isBlank() ? item.description : 'không có mô tả'}"></td>
+        <td>
+            <button type="button" style="cursor:pointer;" th:onclick="'psuManager.editItemModal(' + ${item.id} + ')'">Sửa</button>
+            &nbsp;|&nbsp;
+            <form th:action="@{/admin/psu/{id}/delete(id=${item.id})}" method="post" style="display:inline">
+                <button type="submit" onclick="return confirm('Xóa Nguồn này?')">Xóa</button>
+            </form>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(psus)}" id="emptyRow">
+        <td colspan="10">Chưa có Nguồn nào.</td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Nhúng Modal Form vào đây -->
+<div th:replace="~{psu/form :: psuModalForm}"></div>
+</body>
+</html>

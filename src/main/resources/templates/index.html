@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexGen PC - Đỉnh Cao Công Nghệ</title>
+    <meta name="description" content="Khám phá linh kiện PC cao cấp, hiệu năng vượt trội cho Game thủ và Chuyên gia.">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">NexGen PC</div>
+        <div class="nav-links">
+            <a href="/">Trang chủ</a>
+            <a href="#catalog">Sản phẩm</a>
+            <a href="/admin/cpu">Quản trị</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Xây Dựng Cỗ Máy Trong Mơ Của Bạn</h1>
+            <p>Khám phá bộ sưu tập linh kiện PC cao cấp nhất, từ CPU đa nhân, Card đồ họa cực khủng đến những hệ thống tản nhiệt tối tân. Sẵn sàng phá vỡ mọi giới hạn hiệu năng.</p>
+            <a href="#catalog" class="btn-primary">Khám Phá Ngay</a>
+        </div>
+    </section>
+
+    <!-- Products Catalog -->
+    <section id="catalog" class="products-section">
+        <h2 class="section-title">Linh Kiện Tuyển Chọn</h2>
+        
+        <div class="product-grid">
+            <!-- Thymeleaf Loop cho toàn bộ Product -->
+            <div class="product-card" th:each="product : ${products}">
+                <div class="product-badge" th:text="${product.class.simpleName}">Loại</div>
+                
+                <!-- Ảnh sản phẩm: Lấy URL đầu tiên, hoặc ảnh mặc định nếu rỗng -->
+                <img th:if="${product.imageUrl != null and !product.imageUrl.isBlank()}" 
+                     th:src="${product.imageUrl.split(',')[0]}" 
+                     alt="Product Image" class="product-image" onerror="this.src='https://via.placeholder.com/300x200/1e293b/ffffff?text=No+Image'">
+                <img th:unless="${product.imageUrl != null and !product.imageUrl.isBlank()}" 
+                     src="https://via.placeholder.com/300x200/1e293b/ffffff?text=No+Image" 
+                     alt="No Image" class="product-image">
+
+                <div class="product-brand" th:text="${product.brand}">Hãng</div>
+                <h3 class="product-name" th:text="${product.name}">Tên sản phẩm</h3>
+                
+                <div class="product-footer">
+                    <div class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</div>
+                    <div class="product-stock" th:if="${product.stock > 0}" style="color: #22c55e;">Còn hàng</div>
+                    <div class="product-stock" th:if="${product.stock <= 0}" style="color: #ef4444;">Hết hàng</div>
+                </div>
+                
+                <!-- Nút thao tác dành cho người dùng -->
+                <div class="product-actions" style="margin-top: 15px; display: flex; gap: 10px;">
+                    <button style="flex: 1; padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid var(--border-card); color: white; border-radius: 8px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">Chi tiết</button>
+                    <button style="flex: 1; padding: 10px; background: var(--primary); border: none; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='var(--primary)'">Thêm vào giỏ</button>
+                </div>
+            </div>
+            
+            <div th:if="${#lists.isEmpty(products)}" style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">
+                Chưa có sản phẩm nào trong hệ thống. Hãy truy cập trang quản trị để thêm sản phẩm!
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 NexGen PC. Khẳng định đẳng cấp hệ thống của bạn.</p>
+    </footer>
+
+    <!-- Optional JS for smooth scrolling or interactions -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

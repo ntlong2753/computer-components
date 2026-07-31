@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="storageModalForm">
+    <link rel="stylesheet" th:href="@{/css/modal.css}" />
+    <link rel="stylesheet" th:href="@{/css/storage.css}" />
+
+    <!-- The Modal -->
+    <div id="storageModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModalBtn">&times;</span>
+            <h2 id="modalTitle">Thêm Ổ cứng mới</h2>
+            
+            <div class="success-alert" id="successAlert">Lưu thành công!</div>
+
+            <form id="storageAjaxForm">
+                <input type="hidden" name="id" id="storageId" />
+                <input type="hidden" name="deletedImageIds" id="deletedImageIds" value="" />
+
+                <!-- Loại ổ cứng -->
+                <div class="type-selector">
+                    <label><strong>Loại ổ cứng:</strong></label>
+                    <select name="type" id="storageType">
+                        <option value="SSD">SSD (Ổ cứng thể rắn)</option>
+                        <option value="HDD">HDD (Ổ cứng cơ)</option>
+                    </select>
+                </div>
+
+                <!-- 1. Tên Ổ cứng -->
+                <div class="form-group">
+                    <label>Tên ổ cứng (*):</label>
+                    <input type="text" name="name" id="storageName" placeholder="Tự sinh, có thể sửa" />
+                    <span class="error-msg" id="err-name"></span>
+                </div>
+
+                <!-- 2. Hãng (Custom Dropdown) -->
+                <div class="form-group">
+                    <label>Hãng (*):</label>
+                    <div class="custom-select-container" id="select-container-brand">
+                        <input type="hidden" name="brand" id="storageBrand" value="" />
+                        <div class="custom-select-trigger" onclick="storageManager.toggleDropdown('brand')">
+                            <span id="trigger-text-brand">-- Chọn Hãng --</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="custom-dropdown-panel">
+                            <ul class="custom-options-list" id="options-list-brand"></ul>
+                            <div class="custom-add-box">
+                                <input type="text" id="add-input-brand" placeholder="Nhập Hãng mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();storageManager.addCustomOption('brand', 'add-input-brand');}" />
+                                <button type="button" onclick="storageManager.addCustomOption('brand', 'add-input-brand')">+ Thêm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Dung lượng -->
+                <div class="form-group" style="display: flex; gap: 10px; align-items: flex-end;">
+                    <div style="flex: 1;">
+                        <label>Dung lượng (*):</label>
+                        <input type="number" name="capacity" id="storageCapacity" placeholder="VD: 1, 500" min="1" oninput="storageManager.generateNameCallback()" />
+                        <span class="error-msg" id="err-capacity"></span>
+                    </div>
+                    <div>
+                        <select name="capacityUnit" id="storageCapacityUnit" onchange="storageManager.generateNameCallback()" style="padding: 8px;">
+                            <option value="GB">GB</option>
+                            <option value="TB" selected>TB</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- SECTION: HDD Specific -->
+                <div id="hdd-fields" class="field-group" style="display: none; border-color: #ffc107; background: #fffcf0;">
+                    <h4>Thông số HDD</h4>
+                    <div class="form-group">
+                        <label>Tốc độ vòng quay (RPM):</label>
+                        <input type="number" name="rpm" id="storageRpm" placeholder="VD: 7200, 5400" min="1" />
+                    </div>
+                </div>
+
+                <!-- SECTION: SSD Specific -->
+                <div id="ssd-fields" class="field-group">
+                    <h4>Thông số SSD</h4>
+                    
+                    <div class="form-group">
+                        <label>Chuẩn kết nối:</label>
+                        <div class="custom-select-container" id="select-container-connectionType">
+                            <input type="hidden" name="connectionType" id="storageConnectionType" value="" />
+                            <div class="custom-select-trigger" onclick="storageManager.toggleDropdown('connectionType')">
+                                <span id="trigger-text-connectionType">-- Chọn Chuẩn kết nối --</span>
+                                <span>▼</span>
+                            </div>
+                            <div class="custom-dropdown-panel">
+                                <ul class="custom-options-list" id="options-list-connectionType"></ul>
+                                <div class="custom-add-box">
+                                    <input type="text" id="add-input-connectionType" placeholder="Nhập chuẩn mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();storageManager.addCustomOption('connectionType', 'add-input-connectionType');}" />
+                                    <button type="button" onclick="storageManager.addCustomOption('connectionType', 'add-input-connectionType')">+ Thêm</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Chuẩn PCIe (nếu NVMe):</label>
+                        <div class="custom-select-container" id="select-container-pcieGen">
+                            <input type="hidden" name="pcieGen" id="storagePcieGen" value="" />
+                            <div class="custom-select-trigger" onclick="storageManager.toggleDropdown('pcieGen')">
+                                <span id="trigger-text-pcieGen">-- Chọn Chuẩn PCIe --</span>
+                                <span>▼</span>
+                            </div>
+                            <div class="custom-dropdown-panel">
+                                <ul class="custom-options-list" id="options-list-pcieGen"></ul>
+                                <div class="custom-add-box">
+                                    <input type="text" id="add-input-pcieGen" placeholder="Nhập chuẩn mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();storageManager.addCustomOption('pcieGen', 'add-input-pcieGen');}" />
+                                    <button type="button" onclick="storageManager.addCustomOption('pcieGen', 'add-input-pcieGen')">+ Thêm</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="display: flex; gap: 10px;">
+                        <div style="flex: 1;">
+                            <label>Tốc độ đọc (MB/s):</label>
+                            <input type="number" name="readSpeed" id="storageReadSpeed" placeholder="VD: 7000" min="1" />
+                        </div>
+                        <div style="flex: 1;">
+                            <label>Tốc độ ghi (MB/s):</label>
+                            <input type="number" name="writeSpeed" id="storageWriteSpeed" placeholder="VD: 5000" min="1" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chung: Cache -->
+                <div class="form-group" style="display: flex; gap: 10px; align-items: flex-end;">
+                    <div style="flex: 1;">
+                        <label>Bộ nhớ đệm (Cache):</label>
+                        <input type="number" name="cache" id="storageCache" placeholder="VD: 256" min="1" />
+                    </div>
+                    <div>
+                        <select name="cacheUnit" id="storageCacheUnit" style="padding: 8px;">
+                            <option value="MB">MB</option>
+                            <option value="GB">GB</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Fragment chứa Giá, Tồn kho, Ảnh, Mô tả -->
+                <div th:replace="~{common/product-fields :: fields(prefix='storage')}"></div>
+                <span class="error-msg" id="err-general"></span>
+
+                <div class="modal-footer">
+                    <button type="button" id="cancelModalBtn">Hủy</button>
+                    <button type="submit">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Nhúng script chung và riêng -->
+    <script th:src="@{/js/component-form.js}"></script>
+    <script th:src="@{/js/storage.js}"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const existingStorages = /*[[${storages}]]*/ [];
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

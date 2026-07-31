@@ -13,9 +13,8 @@ import lombok.Builder;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "cpu_image")
-@SuppressWarnings("JpaDataSourceORMInspection")
-public class CpuImage {
+@Table(name = "product_image")
+public class ProductImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,6 +24,6 @@ public class CpuImage {
 
     @com.fasterxml.jackson.annotation.JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cpu_id", nullable = false)
-    private Cpu cpu;
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 }

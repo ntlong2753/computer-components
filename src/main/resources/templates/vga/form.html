@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="vgaModalForm">
+    <link rel="stylesheet" th:href="@{/css/modal.css}" />
+<!-- The Modal -->
+<div id="vgaModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" id="closeModalBtn">&times;</span>
+        <h2 id="modalTitle">Thêm VGA mới</h2>
+        
+        <div class="success-alert" id="successAlert">Lưu thành công!</div>
+
+        <form id="vgaAjaxForm">
+            <input type="hidden" name="id" id="vgaId" />
+            
+            <!-- 1. Tên VGA -->
+            <div class="form-group">
+                <label>Tên VGA (*):</label>
+                <input type="text" name="name" id="vgaName" placeholder="Tên VGA sẽ tự động sinh hoặc tự sửa..." />
+                <div class="hint-text">(Tự động sinh theo cấu trúc [Hãng card] [Model GPU] [VRAM] [Loại VRAM], có thể chỉnh sửa)</div>
+                <span class="error-msg" id="err-name"></span>
+            </div>
+
+            <!-- Hãng GPU (Custom Dropdown) -->
+            <div class="form-group">
+                <label>Hãng GPU (*):</label>
+                <div class="custom-select-container" id="select-container-gpuBrand">
+                    <input type="hidden" name="gpuBrand" id="vgaGpuBrand" value="" />
+                    <div class="custom-select-trigger" onclick="vgaManager.toggleDropdown('gpuBrand')">
+                        <span id="trigger-text-gpuBrand">-- Chọn Hãng GPU --</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="custom-dropdown-panel">
+                        <ul class="custom-options-list" id="options-list-gpuBrand"></ul>
+                        <div class="custom-add-box">
+                            <input type="text" id="add-input-gpuBrand" placeholder="Nhập Hãng GPU mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();vgaManager.addCustomOption('gpuBrand', 'add-input-gpuBrand');}" />
+                            <button type="button" onclick="vgaManager.addCustomOption('gpuBrand', 'add-input-gpuBrand')">+ Thêm</button>
+                        </div>
+                    </div>
+                </div>
+                <span class="error-msg" id="err-gpuBrand"></span>
+            </div>
+
+            <!-- Model GPU (Custom Dropdown) -->
+            <div class="form-group">
+                <label>Model GPU (*):</label>
+                <div class="custom-select-container" id="select-container-gpuModel">
+                    <input type="hidden" name="gpuModel" id="vgaGpuModel" value="" />
+                    <div class="custom-select-trigger" onclick="vgaManager.toggleDropdown('gpuModel')">
+                        <span id="trigger-text-gpuModel">-- Chọn Model GPU --</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="custom-dropdown-panel">
+                        <ul class="custom-options-list" id="options-list-gpuModel"></ul>
+                        <div class="custom-add-box">
+                            <input type="text" id="add-input-gpuModel" placeholder="Nhập Model GPU mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();vgaManager.addCustomOption('gpuModel', 'add-input-gpuModel');}" />
+                            <button type="button" onclick="vgaManager.addCustomOption('gpuModel', 'add-input-gpuModel')">+ Thêm</button>
+                        </div>
+                    </div>
+                </div>
+                <span class="error-msg" id="err-gpuModel"></span>
+            </div>
+
+            <!-- Hãng card (Custom Dropdown) -->
+            <div class="form-group">
+                <label>Hãng card (*):</label>
+                <div class="custom-select-container" id="select-container-brand">
+                    <input type="hidden" name="brand" id="vgaBrand" value="" />
+                    <div class="custom-select-trigger" onclick="vgaManager.toggleDropdown('brand')">
+                        <span id="trigger-text-brand">-- Chọn Hãng card --</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="custom-dropdown-panel">
+                        <ul class="custom-options-list" id="options-list-brand"></ul>
+                        <div class="custom-add-box">
+                            <input type="text" id="add-input-brand" placeholder="Nhập Hãng mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();vgaManager.addCustomOption('brand', 'add-input-brand');}" />
+                            <button type="button" onclick="vgaManager.addCustomOption('brand', 'add-input-brand')">+ Thêm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dung lượng VRAM -->
+            <div class="form-group">
+                <label>Dung lượng VRAM (GB) (*):</label>
+                <input type="number" name="vram" id="vgaVram" placeholder="VD: 8, 12, 16" min="1" oninput="vgaManager.generateNameCallback()" />
+                <span class="error-msg" id="err-vram"></span>
+            </div>
+
+            <!-- Loại VRAM (Custom Dropdown) -->
+            <div class="form-group">
+                <label>Loại VRAM:</label>
+                <div class="custom-select-container" id="select-container-memoryType">
+                    <input type="hidden" name="memoryType" id="vgaMemoryType" value="" />
+                    <div class="custom-select-trigger" onclick="vgaManager.toggleDropdown('memoryType')">
+                        <span id="trigger-text-memoryType">-- Chọn Loại VRAM --</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="custom-dropdown-panel">
+                        <ul class="custom-options-list" id="options-list-memoryType"></ul>
+                        <div class="custom-add-box">
+                            <input type="text" id="add-input-memoryType" placeholder="Nhập Loại VRAM mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();vgaManager.addCustomOption('memoryType', 'add-input-memoryType');}" />
+                            <button type="button" onclick="vgaManager.addCustomOption('memoryType', 'add-input-memoryType')">+ Thêm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;" />
+
+            <!-- Các trường thông tin chung được nhúng từ fragment -->
+            <div th:replace="~{common/product-fields :: fields(prefix='vga')}"></div>
+            <span class="error-msg" id="err-general"></span>
+
+            <div class="modal-footer">
+                <button type="button" id="cancelModalBtn">Hủy</button>
+                <button type="submit">Lưu</button>
+            </div>
+        </form>
+    </div>
+</div>
+    <script th:src="@{/js/component-form.js}"></script>
+    <script th:src="@{/js/vga.js}"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const existingVgas = /*[[${vgas}]]*/ [];
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

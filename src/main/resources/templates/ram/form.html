@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="ramModalForm">
+    <link rel="stylesheet" th:href="@{/css/modal.css}" />
+    <!-- The Modal -->
+    <div id="ramModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModalBtn">&times;</span>
+            <h2 id="modalTitle">Thêm RAM mới</h2>
+
+            <div class="success-alert" id="successAlert">Lưu thành công!</div>
+
+            <form id="ramAjaxForm">
+                <input type="hidden" name="id" id="ramId" />
+                <input type="hidden" name="deletedImageIds" id="deletedImageIds" value="" />
+
+                <!-- 1. Tên RAM -->
+                <div class="form-group">
+                    <label>Tên RAM (*):</label>
+                    <input type="text" name="name" id="ramName" placeholder="Tự sinh, có thể sửa" />
+                    <span class="error-msg" id="err-name"></span>
+                </div>
+
+                <!-- 2. Hãng (Custom Dropdown) -->
+                <div class="form-group">
+                    <label>Hãng (*):</label>
+                    <div class="custom-select-container" id="select-container-brand">
+                        <input type="hidden" name="brand" id="ramBrand" value="" />
+                        <div class="custom-select-trigger" onclick="ramManager.toggleDropdown('brand')">
+                            <span id="trigger-text-brand">-- Chọn Hãng --</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="custom-dropdown-panel">
+                            <ul class="custom-options-list" id="options-list-brand"></ul>
+                            <div class="custom-add-box">
+                                <input type="text" id="add-input-brand" placeholder="Nhập Hãng mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();ramManager.addCustomOption('brand', 'add-input-brand');}" />
+                                <button type="button" onclick="ramManager.addCustomOption('brand', 'add-input-brand')">+ Thêm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Dung lượng (GB) -->
+                <div class="form-group">
+                    <label>Dung lượng (GB) (*):</label>
+                    <input type="number" name="capacity" id="ramCapacity" placeholder="VD: 8, 16, 32" min="1" oninput="ramManager.generateNameCallback()" />
+                    <span class="error-msg" id="err-capacity"></span>
+                </div>
+
+                <!-- 4. Chuẩn RAM (Custom Dropdown) -->
+                <div class="form-group">
+                    <label>Chuẩn RAM:</label>
+                    <div class="custom-select-container" id="select-container-ramType">
+                        <input type="hidden" name="ramType" id="ramRamType" value="" />
+                        <div class="custom-select-trigger" onclick="ramManager.toggleDropdown('ramType')">
+                            <span id="trigger-text-ramType">-- Chọn Chuẩn RAM --</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="custom-dropdown-panel">
+                            <ul class="custom-options-list" id="options-list-ramType"></ul>
+                            <div class="custom-add-box">
+                                <input type="text" id="add-input-ramType" placeholder="Nhập Chuẩn RAM mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();ramManager.addCustomOption('ramType', 'add-input-ramType');}" />
+                                <button type="button" onclick="ramManager.addCustomOption('ramType', 'add-input-ramType')">+ Thêm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Bus RAM (MHz) -->
+                <div class="form-group">
+                    <label>Bus RAM (MHz) (*):</label>
+                    <input type="number" name="busSpeed" id="ramBusSpeed" placeholder="VD: 3200, 5600" min="1" oninput="ramManager.generateNameCallback()" />
+                    <span class="error-msg" id="err-busSpeed"></span>
+                </div>
+
+                <!-- Fragment chứa Giá, Tồn kho, Ảnh, Mô tả -->
+                <div th:replace="~{common/product-fields :: fields(prefix='ram')}"></div>
+                <span class="error-msg" id="err-general"></span>
+
+                <div class="modal-footer">
+                    <button type="button" id="cancelModalBtn">Hủy</button>
+                    <button type="submit" id="saveBtn">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Nhúng script chung và riêng với cache-buster để trình duyệt nhận bản mới nhất -->
+    <script th:src="@{/js/component-form.js}"></script>
+    <script th:src="@{/js/ram.js}"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const existingRams = /*[[${rams}]]*/ [];
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

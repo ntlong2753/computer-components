@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách RAM</title>
+</head>
+<body>
+<h1>Quản lý RAM</h1>
+<button id="openCreateModalBtn">+ Thêm RAM mới</button>
+<table border="1" cellpadding="8" cellspacing="0" style="margin-top:16px; border-collapse: collapse; width: 100%;" id="ramTable">
+    <thead>
+    <tr>
+        <th>STT</th>
+        <th>Tên RAM</th>
+        <th>Hãng</th>
+        <th>Dung lượng (GB)</th>
+        <th>Chuẩn RAM</th>
+        <th>Bus RAM (MHz)</th>
+        <th>Giá</th>
+        <th>Tồn kho</th>
+        <th>Mô tả</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ram, iterStat : ${rams}" th:id="'ram-row-' + ${ram.id}">
+        <td th:text="${iterStat.count}"></td>
+        <td th:text="${ram.name}"></td>
+        <td th:text="${ram.brand}"></td>
+        <td th:text="${ram.capacity}"></td>
+        <td th:text="${ram.ramType}"></td>
+        <td th:text="${ram.busSpeed}"></td>
+        <td th:text="${ram.price}"></td>
+        <td th:text="${ram.stock}"></td>
+        <td th:text="${ram.description != null && !ram.description.isBlank() ? ram.description : 'không có mô tả'}"></td>
+        <td>
+            <button type="button" style="cursor:pointer;" th:onclick="'ramManager.editItemModal(' + ${ram.id} + ')'">Sửa</button>
+            &nbsp;|&nbsp;
+            <form th:action="@{/admin/ram/{id}/delete(id=${ram.id})}" method="post" style="display:inline">
+                <button type="submit" onclick="return confirm('Xóa RAM này?')">Xóa</button>
+            </form>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(rams)}" id="emptyRow">
+        <td colspan="10">Chưa có RAM nào.</td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Nhúng Modal Form vào đây -->
+<div th:replace="~{ram/form :: ramModalForm}"></div>
+</body>
+</html>

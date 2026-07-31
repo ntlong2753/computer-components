@@ -1,8 +1,8 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="cpuModalForm">
-    <link rel="stylesheet" th:href="@{/css/cpu.css}" />
+    <link rel="stylesheet" th:href="@{/css/modal.css}" />
 <!-- The Modal -->
 <div id="cpuModal" class="modal">
     <div class="modal-content">
@@ -27,15 +27,15 @@
                 <label>Hãng CPU (*):</label>
                 <div class="custom-select-container" id="select-container-brand">
                     <input type="hidden" name="brand" id="cpuBrand" value="" />
-                    <div class="custom-select-trigger" onclick="toggleDropdown('brand')">
+                    <div class="custom-select-trigger" onclick="cpuManager.toggleDropdown('brand')">
                         <span id="trigger-text-brand">-- Chọn Hãng --</span>
                         <span>▼</span>
                     </div>
                     <div class="custom-dropdown-panel">
                         <ul class="custom-options-list" id="options-list-brand"></ul>
                         <div class="custom-add-box">
-                            <input type="text" id="add-input-brand" placeholder="Nhập Hãng CPU mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();addCustomOption('brand');}" />
-                            <button type="button" onclick="addCustomOption('brand')">+ Thêm</button>
+                            <input type="text" id="add-input-brand" placeholder="Nhập Hãng CPU mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();cpuManager.addCustomOption('brand', 'add-input-brand');}" />
+                            <button type="button" onclick="cpuManager.addCustomOption('brand', 'add-input-brand')">+ Thêm</button>
                         </div>
                     </div>
                 </div>
@@ -46,15 +46,15 @@
                 <label>Dòng sản phẩm:</label>
                 <div class="custom-select-container" id="select-container-series">
                     <input type="hidden" name="series" id="cpuSeries" value="" />
-                    <div class="custom-select-trigger" onclick="toggleDropdown('series')">
+                    <div class="custom-select-trigger" onclick="cpuManager.toggleDropdown('series')">
                         <span id="trigger-text-series">-- Chọn Dòng sản phẩm --</span>
                         <span>▼</span>
                     </div>
                     <div class="custom-dropdown-panel">
                         <ul class="custom-options-list" id="options-list-series"></ul>
                         <div class="custom-add-box">
-                            <input type="text" id="add-input-series" placeholder="Nhập Dòng sản phẩm mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();addCustomOption('series');}" />
-                            <button type="button" onclick="addCustomOption('series')">+ Thêm</button>
+                            <input type="text" id="add-input-series" placeholder="Nhập Dòng sản phẩm mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();cpuManager.addCustomOption('series', 'add-input-series');}" />
+                            <button type="button" onclick="cpuManager.addCustomOption('series', 'add-input-series')">+ Thêm</button>
                         </div>
                     </div>
                 </div>
@@ -65,24 +65,23 @@
                 <label>Phân khúc:</label>
                 <div class="custom-select-container" id="select-container-segment">
                     <input type="hidden" name="segment" id="cpuSegment" value="" />
-                    <div class="custom-select-trigger" onclick="toggleDropdown('segment')">
+                    <div class="custom-select-trigger" onclick="cpuManager.toggleDropdown('segment')">
                         <span id="trigger-text-segment">-- Chọn Phân khúc --</span>
                         <span>▼</span>
                     </div>
                     <div class="custom-dropdown-panel">
                         <ul class="custom-options-list" id="options-list-segment"></ul>
                         <div class="custom-add-box">
-                            <input type="text" id="add-input-segment" placeholder="Nhập Phân khúc mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();addCustomOption('segment');}" />
-                            <button type="button" onclick="addCustomOption('segment')">+ Thêm</button>
+                            <input type="text" id="add-input-segment" placeholder="Nhập Phân khúc mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();cpuManager.addCustomOption('segment', 'add-input-segment');}" />
+                            <button type="button" onclick="cpuManager.addCustomOption('segment', 'add-input-segment')">+ Thêm</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 5. Model -->
             <div class="form-group">
                 <label>Model:</label>
-                <input type="text" name="modelNumber" id="cpuModelNumber" placeholder="VD: 12400, 5600X" oninput="autoGenerateCpuName()" />
+                <input type="text" name="modelNumber" id="cpuModelNumber" placeholder="VD: 12400, 5600X" oninput="cpuManager.generateNameCallback()" />
             </div>
 
             <!-- 6. Hậu tố (Custom Dropdown) -->
@@ -90,15 +89,15 @@
                 <label>Hậu tố (có thể để trống):</label>
                 <div class="custom-select-container" id="select-container-suffix">
                     <input type="hidden" name="suffix" id="cpuSuffix" value="" />
-                    <div class="custom-select-trigger" onclick="toggleDropdown('suffix')">
+                    <div class="custom-select-trigger" onclick="cpuManager.toggleDropdown('suffix')">
                         <span id="trigger-text-suffix">-- Chọn Hậu tố --</span>
                         <span>▼</span>
                     </div>
                     <div class="custom-dropdown-panel">
                         <ul class="custom-options-list" id="options-list-suffix"></ul>
                         <div class="custom-add-box">
-                            <input type="text" id="add-input-suffix" placeholder="Nhập Hậu tố mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();addCustomOption('suffix');}" />
-                            <button type="button" onclick="addCustomOption('suffix')">+ Thêm</button>
+                            <input type="text" id="add-input-suffix" placeholder="Nhập Hậu tố mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();cpuManager.addCustomOption('suffix', 'add-input-suffix');}" />
+                            <button type="button" onclick="cpuManager.addCustomOption('suffix', 'add-input-suffix')">+ Thêm</button>
                         </div>
                     </div>
                 </div>
@@ -109,24 +108,39 @@
                 <label>Socket (*):</label>
                 <div class="custom-select-container" id="select-container-socket">
                     <input type="hidden" name="socket" id="cpuSocket" value="" />
-                    <div class="custom-select-trigger" onclick="toggleDropdown('socket')">
+                    <div class="custom-select-trigger" onclick="cpuManager.toggleDropdown('socket')">
                         <span id="trigger-text-socket">-- Chọn Socket --</span>
                         <span>▼</span>
                     </div>
                     <div class="custom-dropdown-panel">
                         <ul class="custom-options-list" id="options-list-socket"></ul>
                         <div class="custom-add-box">
-                            <input type="text" id="add-input-socket" placeholder="Nhập Socket mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();addCustomOption('socket');}" />
-                            <button type="button" onclick="addCustomOption('socket')">+ Thêm</button>
+                            <input type="text" id="add-input-socket" placeholder="Nhập Socket mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();cpuManager.addCustomOption('socket', 'add-input-socket');}" />
+                            <button type="button" onclick="cpuManager.addCustomOption('socket', 'add-input-socket')">+ Thêm</button>
                         </div>
                     </div>
                 </div>
                 <span class="error-msg" id="err-socket"></span>
             </div>
 
-            <!-- Cc tru?ng thng tin chung du?c nhng t? fragment -->
-            <div th:replace="~{common/product_form_fields :: commonFields('cpu')}"></div>
-            <span class="error-msg" id="err-general"></span>
+            <!-- 7. Số nhân -->
+            <div class="form-group">
+                <label>Số nhân (*):</label>
+                <input type="number" name="coreCount" id="cpuCoreCount" placeholder="VD: 6, 8, 16" min="1" />
+                <span class="error-msg" id="err-coreCount"></span>
+            </div>
+
+            <!-- 8. Số luồng -->
+            <div class="form-group">
+                <label>Số luồng (*):</label>
+                <input type="number" name="threadCount" id="cpuThreadCount" placeholder="VD: 12, 16, 32" min="1" />
+                <span class="error-msg" id="err-threadCount"></span>
+            </div>
+
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;" />
+
+            <!-- Fragment chứa Giá, Tồn kho, Ảnh, Mô tả -->
+            <div th:replace="~{common/product-fields :: fields(prefix='cpu')}"></div>
 
             <div class="modal-footer">
                 <button type="button" id="cancelModalBtn">Hủy</button>
@@ -135,30 +149,13 @@
         </form>
     </div>
 </div>
+    <script th:src="@{/js/component-form.js}"></script>
     <script th:src="@{/js/cpu.js}"></script>
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    const existingCpus = /*[[${cpus}]]*/ [];
-    /*]]>*/
-    
-    // Đồng bộ các tuỳ chọn đã có trong database vào localStorage (đề phòng mở trên máy khác)
-    if (existingCpus && Array.isArray(existingCpus)) {
-        let changed = false;
-        existingCpus.forEach(cpu => {
-            ['brand', 'series', 'segment', 'suffix', 'socket'].forEach(key => {
-                const val = cpu[key];
-                if (val && val.trim() !== "" && !customDropdownData[key].includes(val)) {
-                    customDropdownData[key].push(val);
-                    changed = true;
-                }
-            });
-        });
-        if (changed) {
-            saveCustomDropdownData();
-            initCustomDropdowns(); // re-render if updated
-        }
-    }
-</script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const existingCpus = /*[[${cpus}]]*/ [];
+        /*]]>*/
+    </script>
 </div>
 </body>
 </html>

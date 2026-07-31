@@ -1,0 +1,25 @@
+.type-selector {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.type-selector select {
+    padding: 5px;
+    font-size: 16px;
+}
+.field-group {
+    padding: 10px;
+    border-left: 3px solid #007bff;
+    background: #f4f8ff;
+    margin-bottom: 15px;
+}
+.badge {
+    padding: 3px 6px;
+    border-radius: 3px;
+    color: white;
+    font-size: 12px;
+}
+.badge-primary { background-color: #007bff; }
+.badge-success { background-color: #28a745; }

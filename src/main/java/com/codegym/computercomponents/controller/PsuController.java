@@ -1,54 +1,51 @@
 package com.codegym.computercomponents.controller;
 
-import com.codegym.computercomponents.dto.CpuDto;
-import com.codegym.computercomponents.model.Cpu;
-import com.codegym.computercomponents.service.impl.CpuService;
+import com.codegym.computercomponents.dto.PsuDto;
+import com.codegym.computercomponents.model.Psu;
+import com.codegym.computercomponents.service.IProductImageService;
+import com.codegym.computercomponents.service.IPsuService;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import com.codegym.computercomponents.service.IProductImageService;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.http.ResponseEntity;
-import java.util.List;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-
 @Controller
-@RequestMapping("/admin/cpu")
-public class CpuController extends BaseProductController<Cpu> {
-    
-    public CpuController(CpuService cpuService, IProductImageService productImageService) {
-        super(cpuService, productImageService);
+@RequestMapping("/admin/psu")
+public class PsuController extends BaseProductController<Psu> {
+
+    public PsuController(IPsuService psuService, IProductImageService productImageService) {
+        super(psuService, productImageService);
     }
 
     @Override
     protected String getViewPrefix() {
-        return "cpu";
+        return "psu";
     }
 
     @Override
     protected String getModelName() {
-        return "cpu";
+        return "psu";
     }
 
     @Override
     protected Object createEmptyDto() {
-        return new CpuDto();
+        return new PsuDto();
     }
 
     @Override
-    protected Object convertToDto(Cpu entity) {
-        return CpuDto.fromEntity(entity);
+    protected Object convertToDto(Psu entity) {
+        return PsuDto.fromEntity(entity);
     }
 
     @PostMapping("/api/save")
     @ResponseBody
-    public ResponseEntity<?> saveAjax(@Valid @ModelAttribute CpuDto cpuDto, 
+    public ResponseEntity<?> saveAjax(@Valid @ModelAttribute PsuDto dto, 
                                       BindingResult result,
                                       @RequestParam(value = "files", required = false) List<MultipartFile> files,
                                       @RequestParam(value = "deletedImageIds", required = false) List<Long> deletedImageIds) {
@@ -59,8 +56,8 @@ public class CpuController extends BaseProductController<Cpu> {
         }
 
         try {
-            Cpu existingCpu = (cpuDto.getId() != null) ? service.findById(cpuDto.getId()) : new Cpu();
-            Cpu savedCpu = service.save(cpuDto.toEntity(existingCpu));
+            Psu existing = (dto.getId() != null) ? service.findById(dto.getId()) : new Psu();
+            Psu saved = service.save(dto.toEntity(existing));
 
             if (deletedImageIds != null && !deletedImageIds.isEmpty()) {
                 for (Long imageId : deletedImageIds) {
@@ -68,11 +65,10 @@ public class CpuController extends BaseProductController<Cpu> {
                 }
             }
 
-            // Chuyển việc tải lên hàng loạt ảnh cho Service xử lý
             if (files != null && !files.isEmpty()) {
-                productImageService.addImagesToProduct(savedCpu.getId(), files);
+                productImageService.addImagesToProduct(saved.getId(), files);
             }
-            return ResponseEntity.ok(CpuDto.fromEntity(savedCpu));
+            return ResponseEntity.ok(PsuDto.fromEntity(saved));
         } catch (Exception e) {
             Map<String, String> error = new HashMap<>();
             error.put("general", e.getMessage());

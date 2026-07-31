@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách Ổ cứng</title>
+</head>
+<body>
+<h1>Quản lý Ổ cứng (Storage)</h1>
+<button id="openCreateModalBtn">+ Thêm Ổ cứng mới</button>
+<table border="1" cellpadding="8" cellspacing="0" style="margin-top:16px; border-collapse: collapse; width: 100%;" id="storageTable">
+    <thead>
+    <tr>
+        <th>STT</th>
+        <th>Tên Ổ cứng</th>
+        <th>Hãng</th>
+        <th>Loại</th>
+        <th>Dung lượng</th>
+        <th>Chuẩn kết nối (SSD)</th>
+        <th>Thông số kỹ thuật</th>
+        <th>Giá</th>
+        <th>Tồn kho</th>
+        <th>Mô tả</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item, iterStat : ${storages}" th:id="'storage-row-' + ${item.id}">
+        <td th:text="${iterStat.count}"></td>
+        <td th:text="${item.name}"></td>
+        <td th:text="${item.brand}"></td>
+        <td>
+            <span th:class="${item.type == 'HDD' ? 'badge badge-primary' : 'badge badge-success'}" th:text="${item.type}"></span>
+        </td>
+        <td th:text="${item.capacity + ' ' + item.capacityUnit}"></td>
+        <td th:text="${item.type == 'SSD' ? ((item.connectionType != null ? item.connectionType : '') + ' ' + (item.pcieGen != null ? item.pcieGen : '')) : '-'}"></td>
+        <td>
+            <small th:if="${item.type == 'HDD'}" th:text="'RPM: ' + ${item.rpm != null ? item.rpm : '?'} + ' | Cache: ' + ${item.cache != null ? item.cache : '?'} + ${item.cacheUnit != null ? item.cacheUnit : ''}"></small>
+            <small th:if="${item.type == 'SSD'}" th:text="'Read: ' + ${item.readSpeed != null ? item.readSpeed : '?'} + 'MB/s | Write: ' + ${item.writeSpeed != null ? item.writeSpeed : '?'} + 'MB/s | Cache: ' + ${item.cache != null ? item.cache : '?'} + ${item.cacheUnit != null ? item.cacheUnit : ''}"></small>
+        </td>
+        <td th:text="${item.price}"></td>
+        <td th:text="${item.stock}"></td>
+        <td th:text="${item.description != null && !item.description.isBlank() ? item.description : 'không có mô tả'}"></td>
+        <td>
+            <button type="button" style="cursor:pointer;" th:onclick="'storageManager.editItemModal(' + ${item.id} + ')'">Sửa</button>
+            &nbsp;|&nbsp;
+            <form th:action="@{/admin/storage/{id}/delete(id=${item.id})}" method="post" style="display:inline">
+                <button type="submit" onclick="return confirm('Xóa Ổ cứng này?')">Xóa</button>
+            </form>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(storages)}" id="emptyRow">
+        <td colspan="11">Chưa có Ổ cứng nào.</td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Nhúng Modal Form vào đây -->
+<div th:replace="~{storage/form :: storageModalForm}"></div>
+</body>
+</html>

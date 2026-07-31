@@ -2,5 +2,5 @@ package com.codegym.computercomponents.service;
 
 import com.codegym.computercomponents.model.Cpu;
 
-public interface ICpuService extends GeneralService<Cpu, Long> {
+public interface ICpuService extends IBaseService<Cpu> {
 }

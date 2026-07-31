@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -38,7 +38,7 @@
         <td th:text="${cpu.socket}"></td>
         <td th:text="${cpu.description != null && !cpu.description.isBlank() ? cpu.description : 'không có mô tả'}"></td>
         <td>
-            <button type="button" style="cursor:pointer;" th:onclick="'editCpuModal(' + ${cpu.id} + ')'">Sửa</button>
+            <button type="button" style="cursor:pointer;" th:onclick="'cpuManager.editItemModal(' + ${cpu.id} + ')'">Sửa</button>
             &nbsp;|&nbsp;
             <form th:action="@{/admin/cpu/{id}/delete(id=${cpu.id})}" method="post" style="display:inline">
                 <button type="submit" onclick="return confirm('Xóa CPU này?')">Xóa</button>

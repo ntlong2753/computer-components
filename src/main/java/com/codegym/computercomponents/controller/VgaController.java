@@ -1,8 +1,8 @@
 package com.codegym.computercomponents.controller;
 
-import com.codegym.computercomponents.dto.CpuDto;
-import com.codegym.computercomponents.model.Cpu;
-import com.codegym.computercomponents.service.impl.CpuService;
+import com.codegym.computercomponents.dto.VgaDto;
+import com.codegym.computercomponents.model.Vga;
+import com.codegym.computercomponents.service.impl.VgaService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,36 +19,36 @@ import java.util.Map;
 
 
 @Controller
-@RequestMapping("/admin/cpu")
-public class CpuController extends BaseProductController<Cpu> {
-    
-    public CpuController(CpuService cpuService, IProductImageService productImageService) {
-        super(cpuService, productImageService);
+@RequestMapping("/admin/vga")
+public class VgaController extends BaseProductController<Vga> {
+
+    public VgaController(VgaService vgaService, IProductImageService productImageService) {
+        super(vgaService, productImageService);
     }
 
     @Override
     protected String getViewPrefix() {
-        return "cpu";
+        return "vga";
     }
 
     @Override
     protected String getModelName() {
-        return "cpu";
+        return "vga";
     }
 
     @Override
     protected Object createEmptyDto() {
-        return new CpuDto();
+        return new VgaDto();
     }
 
     @Override
-    protected Object convertToDto(Cpu entity) {
-        return CpuDto.fromEntity(entity);
+    protected Object convertToDto(Vga entity) {
+        return VgaDto.fromEntity(entity);
     }
 
     @PostMapping("/api/save")
     @ResponseBody
-    public ResponseEntity<?> saveAjax(@Valid @ModelAttribute CpuDto cpuDto, 
+    public ResponseEntity<?> saveAjax(@Valid @ModelAttribute VgaDto vgaDto, 
                                       BindingResult result,
                                       @RequestParam(value = "files", required = false) List<MultipartFile> files,
                                       @RequestParam(value = "deletedImageIds", required = false) List<Long> deletedImageIds) {
@@ -59,8 +59,8 @@ public class CpuController extends BaseProductController<Cpu> {
         }
 
         try {
-            Cpu existingCpu = (cpuDto.getId() != null) ? service.findById(cpuDto.getId()) : new Cpu();
-            Cpu savedCpu = service.save(cpuDto.toEntity(existingCpu));
+            Vga existingVga = (vgaDto.getId() != null) ? service.findById(vgaDto.getId()) : new Vga();
+            Vga savedVga = service.save(vgaDto.toEntity(existingVga));
 
             if (deletedImageIds != null && !deletedImageIds.isEmpty()) {
                 for (Long imageId : deletedImageIds) {
@@ -70,9 +70,9 @@ public class CpuController extends BaseProductController<Cpu> {
 
             // Chuyển việc tải lên hàng loạt ảnh cho Service xử lý
             if (files != null && !files.isEmpty()) {
-                productImageService.addImagesToProduct(savedCpu.getId(), files);
+                productImageService.addImagesToProduct(savedVga.getId(), files);
             }
-            return ResponseEntity.ok(CpuDto.fromEntity(savedCpu));
+            return ResponseEntity.ok(VgaDto.fromEntity(savedVga));
         } catch (Exception e) {
             Map<String, String> error = new HashMap<>();
             error.put("general", e.getMessage());
