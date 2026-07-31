@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="commonFields(prefix)">
+    <!-- Giá (VNĐ) -->
+    <div class="form-group">
+        <label>Giá (VNĐ) (*):</label>
+        <input type="text" name="price" th:id="${prefix} + 'Price'" placeholder="Chỉ nhập số (VD: 4500000)" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+        <div class="hint-text">(Chỉ được điền số, không điền chữ hoặc ký tự đặc biệt)</div>
+        <span class="error-msg" id="err-price"></span>
+    </div>
+    
+    <!-- Tồn kho -->
+    <div class="form-group">
+        <label>Tồn kho (*):</label>
+        <input type="text" name="stock" th:id="${prefix} + 'Stock'" value="10" placeholder="Chỉ nhập số" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+        <div class="hint-text">(Chỉ được điền số, không điền chữ hoặc ký tự đặc biệt)</div>
+        <span class="error-msg" id="err-stock"></span>
+    </div>
+
+    <!-- Ảnh (URL & Upload) -->
+    <div class="form-group">
+        <label>Ảnh (URL):</label>
+        <input type="text" name="imageUrl" th:id="${prefix} + 'ImageUrl'" placeholder="Nhập đường dẫn URL ảnh (nếu có)..." />
+    </div>
+
+    <div class="form-group">
+        <label>Tải ảnh từ máy tính (Tối đa 10 ảnh, mỗi ảnh max 10MB):</label>
+        <input type="file" th:id="${prefix} + 'ImagesInput'" multiple accept="image/*" />
+        <div id="imagePreviewContainer" class="image-preview-container"></div>
+    </div>
+
+    <!-- Mô tả -->
+    <div class="form-group">
+        <label>Mô tả:</label>
+        <textarea name="description" th:id="${prefix} + 'Desc'" placeholder="Nhập mô tả sản phẩm (nếu trống sẽ tự hiển thị 'không có mô tả')..."></textarea>
+    </div>
+</div>
+</body>
+</html>

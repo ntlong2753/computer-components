@@ -1,43 +1,21 @@
 package com.codegym.computercomponents.dto;
 
 import com.codegym.computercomponents.model.Cpu;
-import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.math.BigDecimal;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class CpuDto {
-
-    private Long id;
-
-    @NotBlank(message = "Tên sản phẩm không được để trống")
-    private String name;
-
-    private String brand;
-
-    @Positive(message = "Giá phải lớn hơn 0")
-    @DecimalMax(value = "999999999.99", message = "Giá không được vượt quá 999,999,999.99")
-    private BigDecimal price;
-
-    @PositiveOrZero(message = "Tồn kho không được âm")
-    private Integer stock;
-
-    private String imageUrl;
-
-    private String description;
+@SuperBuilder
+public class CpuDto extends ProductDto {
 
     @NotBlank(message = "Socket không được để trống")
     private String socket;
@@ -64,13 +42,13 @@ public class CpuDto {
         if (existingCpu == null) {
             existingCpu = new Cpu();
         }
-        existingCpu.setId(this.id);
-        existingCpu.setName(this.name);
-        existingCpu.setBrand(this.brand);
-        existingCpu.setPrice(this.price);
-        existingCpu.setStock(this.stock);
-        existingCpu.setImageUrl(this.imageUrl);
-        existingCpu.setDescription(this.description);
+        existingCpu.setId(this.getId());
+        existingCpu.setName(this.getName());
+        existingCpu.setBrand(this.getBrand());
+        existingCpu.setPrice(this.getPrice());
+        existingCpu.setStock(this.getStock());
+        existingCpu.setImageUrl(this.getImageUrl());
+        existingCpu.setDescription(this.getDescription());
         existingCpu.setSocket(this.socket);
         existingCpu.setSeries(this.series);
         existingCpu.setSegment(this.segment);
