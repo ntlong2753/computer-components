@@ -31,14 +31,45 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Xây Dựng Cỗ Máy Trong Mơ Của Bạn</h1>
-            <p>Khám phá bộ sưu tập linh kiện PC cao cấp nhất, từ CPU đa nhân, Card đồ họa cực khủng đến những hệ thống tản nhiệt tối tân. Sẵn sàng phá vỡ mọi giới hạn hiệu năng.</p>
-            <a href="#catalog" class="btn-primary">Khám Phá Ngay</a>
-        </div>
-    </section>
+    <!-- Main Layout Wrapper -->
+    <div class="main-wrapper">
+        <!-- Sidebar Menu -->
+        <aside class="sidebar-menu">
+            <a href="/?category=cpu" class="sidebar-item">
+                <div class="sidebar-item-icon">🔲 <span>Vi xử lý (CPU)</span></div>
+                <span class="sidebar-arrow">❯</span>
+            </a>
+            <a href="/?category=mainboard" class="sidebar-item">
+                <div class="sidebar-item-icon">🛠️ <span>Bo mạch chủ (Mainboard)</span></div>
+                <span class="sidebar-arrow">❯</span>
+            </a>
+            <a href="/?category=ram" class="sidebar-item">
+                <div class="sidebar-item-icon">📼 <span>Bộ nhớ trong (RAM)</span></div>
+                <span class="sidebar-arrow">❯</span>
+            </a>
+            <a href="/?category=vga" class="sidebar-item">
+                <div class="sidebar-item-icon">🎮 <span>Card màn hình (VGA)</span></div>
+                <span class="sidebar-arrow">❯</span>
+            </a>
+            <a href="/?category=storage" class="sidebar-item">
+                <div class="sidebar-item-icon">💾 <span>Ổ cứng (SSD/HDD)</span></div>
+                <span class="sidebar-arrow">❯</span>
+            </a>
+            <a href="/?category=psu" class="sidebar-item">
+                <div class="sidebar-item-icon">⚡ <span>Nguồn máy tính (PSU)</span></div>
+                <span class="sidebar-arrow">❯</span>
+            </a>
+        </aside>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Xây Dựng Cỗ Máy Trong Mơ Của Bạn</h1>
+                <p>Khám phá bộ sưu tập linh kiện PC cao cấp nhất, từ CPU đa nhân, Card đồ họa cực khủng đến những hệ thống tản nhiệt tối tân. Sẵn sàng phá vỡ mọi giới hạn hiệu năng.</p>
+                <a href="#catalog" class="btn-primary">Khám Phá Ngay</a>
+            </div>
+        </section>
+    </div>
 
     <!-- Products Catalog -->
     <section id="catalog" class="products-section">
@@ -67,9 +98,9 @@
                 </div>
                 
                 <!-- Nút thao tác dành cho người dùng -->
-                <div class="product-actions" style="margin-top: 15px; display: flex; gap: 10px;">
-                    <button style="flex: 1; padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid var(--border-card); color: white; border-radius: 8px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">Chi tiết</button>
-                    <button style="flex: 1; padding: 10px; background: var(--primary); border: none; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='var(--primary)'">Thêm vào giỏ</button>
+                <div class="product-actions">
+                    <button class="btn-detail">Chi tiết</button>
+                    <button class="btn-cart">Thêm vào giỏ</button>
                 </div>
             </div>
             
