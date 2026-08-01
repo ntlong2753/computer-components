@@ -14,9 +14,11 @@
             <div class="admin-header">
                 <h1>Quản lý RAM</h1>
             </div>
-<button id="openCreateModalBtn" class="btn-primary" style="margin-bottom: 1rem;">+ Thêm RAM mới</button>
-<table border="1" cellpadding="8" cellspacing="0" style="margin-top:16px; border-collapse: collapse; width: 100%;" id="ramTable">
-    <thead>
+            <button id="openCreateModalBtn" class="btn btn-primary mb-3">+ Thêm RAM mới</button>
+            
+            <div class="table-responsive bg-white rounded shadow-sm border">
+                <table class="table table-hover mb-0 align-middle" id="ramTable">
+    <thead class="table-light">
     <tr>
         <th>STT</th>
         <th>Tên RAM</th>
@@ -42,18 +44,20 @@
         <td th:text="${ram.stock}"></td>
         <td th:text="${ram.description != null && !ram.description.isBlank() ? ram.description : 'không có mô tả'}"></td>
         <td>
-            <button type="button" style="cursor:pointer;" th:onclick="'ramManager.editItemModal(' + ${ram.id} + ')'">Sửa</button>
-            &nbsp;|&nbsp;
-            <form th:action="@{/admin/ram/{id}/delete(id=${ram.id})}" method="post" style="display:inline">
-                <button type="submit" onclick="return confirm('Xóa RAM này?')">Xóa</button>
-            </form>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-sm btn-outline-primary" th:onclick="'ramManager.editItemModal(' + ${ram.id} + ')'">Sửa</button>
+                <form th:action="@{/admin/ram/{id}/delete(id=${ram.id})}" method="post" class="m-0">
+                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa RAM này?')">Xóa</button>
+                </form>
+            </div>
         </td>
     </tr>
     <tr th:if="${#lists.isEmpty(rams)}" id="emptyRow">
-        <td colspan="10">Chưa có RAM nào.</td>
+        <td colspan="10" class="text-center py-4 text-muted">Chưa có RAM nào.</td>
     </tr>
     </tbody>
 </table>
+</div>
 
 <!-- Nhúng Modal Form vào đây -->
 <div th:replace="~{ram/form :: ramModalForm}"></div>

@@ -10,52 +10,48 @@
         </div>
 
         <nav class="sidebar-nav">
-            <div class="nav-group-title">QUẢN TRỊ</div>
-            <a href="/admin" class="sidebar-item" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}">
+            <div class="admin-sidebar-title">QUẢN TRỊ</div>
+            <a href="/admin" class="admin-nav-item" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}">
                 <div class="sidebar-item-icon">📊</div>
                 <span>Tổng quan</span>
             </a>
 
-            <div class="nav-group-title">QUẢN LÝ SẢN PHẨM</div>
-            <a href="/admin/cpu" class="sidebar-item" th:classappend="${activeMenu == 'cpu' ? 'active' : ''}">
+            <div class="admin-sidebar-title">QUẢN LÝ SẢN PHẨM</div>
+            <a href="/admin/cpu" class="admin-nav-item" th:classappend="${activeMenu == 'cpu' ? 'active' : ''}">
                 <div class="sidebar-item-icon">🔲</div>
                 <span>Vi xử lý (CPU)</span>
             </a>
-            <a href="/admin/mainboard" class="sidebar-item" th:classappend="${activeMenu == 'mainboard' ? 'active' : ''}">
+            <a href="/admin/mainboard" class="admin-nav-item" th:classappend="${activeMenu == 'mainboard' ? 'active' : ''}">
                 <div class="sidebar-item-icon">🛠️</div>
                 <span>Bo mạch chủ (Mainboard)</span>
             </a>
-            <a href="/admin/ram" class="sidebar-item" th:classappend="${activeMenu == 'ram' ? 'active' : ''}">
+            <a href="/admin/ram" class="admin-nav-item" th:classappend="${activeMenu == 'ram' ? 'active' : ''}">
                 <div class="sidebar-item-icon">📼</div>
                 <span>Bộ nhớ trong (RAM)</span>
             </a>
-            <a href="/admin/vga" class="sidebar-item" th:classappend="${activeMenu == 'vga' ? 'active' : ''}">
+            <a href="/admin/vga" class="admin-nav-item" th:classappend="${activeMenu == 'vga' ? 'active' : ''}">
                 <div class="sidebar-item-icon">🎮</div>
                 <span>Card màn hình (VGA)</span>
             </a>
-            <a href="/admin/storage" class="sidebar-item" th:classappend="${activeMenu == 'storage' ? 'active' : ''}">
+            <a href="/admin/storage" class="admin-nav-item" th:classappend="${activeMenu == 'storage' ? 'active' : ''}">
                 <div class="sidebar-item-icon">💾</div>
                 <span>Ổ cứng (SSD/HDD)</span>
             </a>
-            <a href="/admin/psu" class="sidebar-item" th:classappend="${activeMenu == 'psu' ? 'active' : ''}">
+            <a href="/admin/psu" class="admin-nav-item" th:classappend="${activeMenu == 'psu' ? 'active' : ''}">
                 <div class="sidebar-item-icon">⚡</div>
                 <span>Nguồn máy tính (PSU)</span>
             </a>
 
-            <div class="nav-group-title">HỆ THỐNG</div>
-            <a href="#" class="sidebar-item" th:classappend="${activeMenu == 'orders' ? 'active' : ''}">
+            <div class="admin-sidebar-title">HỆ THỐNG</div>
+            <a href="#" class="admin-nav-item" th:classappend="${activeMenu == 'orders' ? 'active' : ''}">
                 <div class="sidebar-item-icon">📦</div>
                 <span>Đơn hàng</span>
             </a>
-            <a href="#" class="sidebar-item" th:classappend="${activeMenu == 'users' ? 'active' : ''}">
+            <a href="#" class="admin-nav-item" th:classappend="${activeMenu == 'users' ? 'active' : ''}">
                 <div class="sidebar-item-icon">👥</div>
                 <span>Người dùng</span>
             </a>
             
-            <a href="/" class="sidebar-item mt-auto" style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 2rem;">
-                <div class="sidebar-item-icon">🔙</div>
-                <span>Về trang người dùng</span>
-            </a>
         </nav>
     </aside>
 </body>

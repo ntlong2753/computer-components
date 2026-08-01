@@ -5,7 +5,7 @@
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
+    <div th:replace="~{fragments/navbar :: navbar}" th:with="isAdminPage=true"></div>
 
     <div class="admin-layout">
         <div th:replace="~{fragments/admin_sidebar :: adminSidebar('storage')}"></div>
@@ -14,16 +14,18 @@
             <div class="admin-header">
                 <h1>Quản lý Ổ cứng (Storage)</h1>
             </div>
-<button id="openCreateModalBtn" class="btn-primary" style="margin-bottom: 1rem;">+ Thêm Ổ cứng mới</button>
-<table border="1" cellpadding="8" cellspacing="0" style="margin-top:16px; border-collapse: collapse; width: 100%;" id="storageTable">
-    <thead>
+            <button id="openCreateModalBtn" class="btn btn-primary mb-3">+ Thêm Ổ cứng mới</button>
+            
+            <div class="table-responsive bg-white rounded shadow-sm border">
+                <table class="table table-hover mb-0 align-middle" id="storageTable">
+    <thead class="table-light">
     <tr>
         <th>STT</th>
         <th>Tên Ổ cứng</th>
         <th>Hãng</th>
         <th>Loại</th>
         <th>Dung lượng</th>
-        <th>Chuẩn kết nối (SSD)</th>
+        <th>Chuẩn kết nối</th>
         <th>Thông số kỹ thuật</th>
         <th>Giá</th>
         <th>Tồn kho</th>
@@ -49,18 +51,20 @@
         <td th:text="${item.stock}"></td>
         <td th:text="${item.description != null && !item.description.isBlank() ? item.description : 'không có mô tả'}"></td>
         <td>
-            <button type="button" style="cursor:pointer;" th:onclick="'storageManager.editItemModal(' + ${item.id} + ')'">Sửa</button>
-            &nbsp;|&nbsp;
-            <form th:action="@{/admin/storage/{id}/delete(id=${item.id})}" method="post" style="display:inline">
-                <button type="submit" onclick="return confirm('Xóa Ổ cứng này?')">Xóa</button>
-            </form>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-sm btn-outline-primary" th:onclick="'storageManager.editItemModal(' + ${item.id} + ')'">Sửa</button>
+                <form th:action="@{/admin/storage/{id}/delete(id=${item.id})}" method="post" class="m-0">
+                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa Ổ cứng này?')">Xóa</button>
+                </form>
+            </div>
         </td>
     </tr>
     <tr th:if="${#lists.isEmpty(storages)}" id="emptyRow">
-        <td colspan="11">Chưa có Ổ cứng nào.</td>
+        <td colspan="11" class="text-center py-4 text-muted">Chưa có Ổ cứng nào.</td>
     </tr>
     </tbody>
 </table>
+</div>
 
 <!-- Nhúng Modal Form vào đây -->
 <div th:replace="~{storage/form :: storageModalForm}"></div>

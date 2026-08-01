@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Danh sách Bo mạch chủ (Mainboard)</title>
+    <div th:replace="~{fragments/head :: head('Danh sách Bo mạch chủ (Mainboard)')}"></div>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
-<h1>Quản lý Bo mạch chủ (Mainboard)</h1>
-<button id="openCreateModalBtn">+ Thêm Mainboard mới</button>
-<table border="1" cellpadding="8" cellspacing="0" style="margin-top:16px; border-collapse: collapse; width: 100%;" id="mainboardTable">
-    <thead>
+    <div th:replace="~{fragments/navbar :: navbar}" th:with="isAdminPage=true"></div>
+
+    <div class="admin-layout">
+        <div th:replace="~{fragments/admin_sidebar :: adminSidebar('mainboard')}"></div>
+        
+        <main class="admin-content">
+            <div class="admin-header">
+                <h1>Quản lý Bo mạch chủ (Mainboard)</h1>
+            </div>
+            
+            <button id="openCreateModalBtn" class="btn btn-primary mb-3">+ Thêm Mainboard mới</button>
+            
+            <div class="table-responsive bg-white rounded shadow-sm border">
+                <table class="table table-hover mb-0 align-middle" id="mainboardTable">
+    <thead class="table-light">
     <tr>
         <th>STT</th>
         <th>Tên Mainboard</th>
@@ -38,20 +49,24 @@
         <td th:text="${item.stock}"></td>
         <td th:text="${item.description != null && !item.description.isBlank() ? item.description : 'không có mô tả'}"></td>
         <td>
-            <button type="button" style="cursor:pointer;" th:onclick="'mainboardManager.editItemModal(' + ${item.id} + ')'">Sửa</button>
-            &nbsp;|&nbsp;
-            <form th:action="@{/admin/mainboard/{id}/delete(id=${item.id})}" method="post" style="display:inline">
-                <button type="submit" onclick="return confirm('Xóa Mainboard này?')">Xóa</button>
-            </form>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-sm btn-outline-primary" th:onclick="'mainboardManager.editItemModal(' + ${item.id} + ')'">Sửa</button>
+                <form th:action="@{/admin/mainboard/{id}/delete(id=${item.id})}" method="post" class="m-0">
+                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa Mainboard này?')">Xóa</button>
+                </form>
+            </div>
         </td>
     </tr>
     <tr th:if="${#lists.isEmpty(mainboards)}" id="emptyRow">
-        <td colspan="12">Chưa có Mainboard nào.</td>
+        <td colspan="12" class="text-center py-4 text-muted">Chưa có Mainboard nào.</td>
     </tr>
     </tbody>
 </table>
+</div>
 
 <!-- Nhúng Modal Form vào đây -->
 <div th:replace="~{mainboard/form :: mainboardModalForm}"></div>
+        </main>
+    </div>
 </body>
 </html>
