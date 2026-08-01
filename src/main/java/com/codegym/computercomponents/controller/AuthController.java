@@ -42,6 +42,10 @@ public class AuthController {
         if (userService.existsByPhone(userDto.getPhone())) {
             result.rejectValue("phone", "error.userDto", "Số điện thoại đã được sử dụng!");
         }
+        
+        if (userDto.getPassword() != null && !userDto.getPassword().equals(userDto.getConfirmPassword())) {
+            result.rejectValue("confirmPassword", "error.userDto", "Mật khẩu xác nhận không khớp!");
+        }
 
         if (result.hasErrors()) {
             return "auth/register";

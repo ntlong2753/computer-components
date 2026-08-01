@@ -23,8 +23,6 @@ public class CasePcDto extends ProductDto {
 
     private String motherboardSupport;
 
-    private String color;
-
     // Convert from DTO to Entity
     public CasePc toEntity(CasePc existingCase) {
         if (existingCase == null) {
@@ -41,7 +39,6 @@ public class CasePcDto extends ProductDto {
         existingCase.setModel(this.model);
         existingCase.setFormFactor(this.formFactor);
         existingCase.setMotherboardSupport(this.motherboardSupport);
-        existingCase.setColor(this.color);
         
         return existingCase;
     }
@@ -60,7 +57,6 @@ public class CasePcDto extends ProductDto {
                 .model(casePc.getModel())
                 .formFactor(casePc.getFormFactor())
                 .motherboardSupport(casePc.getMotherboardSupport())
-                .color(casePc.getColor())
                 .build();
     }
 }

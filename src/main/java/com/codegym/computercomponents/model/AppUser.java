@@ -39,6 +39,9 @@ public class AppUser {
     @Column(length = 255)
     private String address;
 
+    @Column(length = 255)
+    private String avatar;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",

@@ -4,21 +4,21 @@
 <div th:fragment="casePcModalForm">
     <link rel="stylesheet" th:href="@{/css/modal.css}" />
 <!-- The Modal -->
-<div id="casePcModal" class="modal">
+<div id="casepcModal" class="modal">
     <div class="modal-content">
         <span class="close-btn" id="closeModalBtn">&times;</span>
         <h2 id="modalTitle">Thêm Case mới</h2>
         
         <div class="success-alert" id="successAlert">Lưu thành công!</div>
 
-        <form id="casePcAjaxForm">
+        <form id="casepcAjaxForm">
             <input type="hidden" name="id" id="casepcId" />
             
             <!-- Tên Case -->
             <div class="form-group">
                 <label>Tên Case (*):</label>
                 <input type="text" name="name" id="casepcName" placeholder="Tên Case sẽ tự động sinh hoặc tự sửa..." />
-                <div class="hint-text">(Tự động sinh theo cấu trúc [Hãng] [Model] [Màu sắc] [Kích thước], có thể chỉnh sửa)</div>
+                <div class="hint-text">(Tự động sinh theo cấu trúc [Hãng] [Model] [Kích thước], có thể chỉnh sửa)</div>
                 <span class="error-msg" id="err-name"></span>
             </div>
 
@@ -79,25 +79,6 @@
                     </div>
                 </div>
                 <span class="error-msg" id="err-formFactor"></span>
-            </div>
-            
-            <!-- Màu sắc (Custom Dropdown) -->
-            <div class="form-group">
-                <label>Màu sắc:</label>
-                <div class="custom-select-container" id="select-container-color">
-                    <input type="hidden" name="color" id="casepcColor" value="" />
-                    <div class="custom-select-trigger" onclick="casePcManager.toggleDropdown('color')">
-                        <span id="trigger-text-color">-- Chọn Màu sắc --</span>
-                        <span>▼</span>
-                    </div>
-                    <div class="custom-dropdown-panel">
-                        <ul class="custom-options-list" id="options-list-color"></ul>
-                        <div class="custom-add-box">
-                            <input type="text" id="add-input-color" placeholder="Nhập Màu sắc mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();casePcManager.addCustomOption('color', 'add-input-color');}" />
-                            <button type="button" onclick="casePcManager.addCustomOption('color', 'add-input-color')">+ Thêm</button>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Hỗ trợ Mainboard (Custom Dropdown) -->

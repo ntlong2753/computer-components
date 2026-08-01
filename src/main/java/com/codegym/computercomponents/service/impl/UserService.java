@@ -44,7 +44,7 @@ public class UserService {
         AppUser user = new AppUser();
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword())); // Mã hóa BCrypt
-        user.setFullName(dto.getFullName());
+        user.setFullName((dto.getFirstName().trim() + " " + dto.getLastName().trim()).trim());
         user.setEmail(dto.getEmail());
         user.setPhone(dto.getPhone());
         user.setAddress(dto.getAddress());

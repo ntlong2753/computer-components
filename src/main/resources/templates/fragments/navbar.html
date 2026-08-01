@@ -36,11 +36,15 @@
                 </li>
 
                 <!-- Chưa đăng nhập -->
-                <li class="nav-item" sec:authorize="!isAuthenticated()">
-                    <a class="nav-link text-white d-flex align-items-center gap-2 px-3 custom-nav-link bg-black bg-opacity-10 rounded" href="/login">
+                <li class="nav-item dropdown" sec:authorize="!isAuthenticated()">
+                    <a class="nav-link text-white d-flex align-items-center gap-2 px-3 custom-nav-link bg-black bg-opacity-10 rounded dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        <span class="lh-sm" style="font-size: 14px; font-weight: 500;">Đăng nhập<br>Tài khoản</span>
+                        <span class="lh-sm" style="font-size: 14px; font-weight: 500;">Tài khoản</span>
                     </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+                        <li><a class="dropdown-item py-2 fw-bold" href="/login">Đăng nhập</a></li>
+                        <li><a class="dropdown-item py-2" href="/register">Đăng ký tài khoản</a></li>
+                    </ul>
                 </li>
 
                 <!-- Đã đăng nhập -->
@@ -58,8 +62,8 @@
                         </li>
                         <li sec:authorize="hasRole('ADMIN')"><hr class="dropdown-divider"></li>
                         
-                        <li><a class="dropdown-item py-2" href="#">Thông tin tài khoản</a></li>
-                        <li><a class="dropdown-item py-2" href="#">Đơn hàng của tôi</a></li>
+                        <li><a class="dropdown-item py-2" href="/profile">Thông tin tài khoản</a></li>
+                        <li sec:authorize="!hasRole('ADMIN')"><a class="dropdown-item py-2" href="#">Đơn hàng của tôi</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <form th:action="@{/logout}" method="post" class="m-0 px-2 pb-1">

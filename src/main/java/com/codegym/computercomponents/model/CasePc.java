@@ -32,6 +32,4 @@ public class CasePc extends Product {
     @Column(length = 100)
     private String motherboardSupport;
 
-    @Column(length = 50)
-    private String color;
 }

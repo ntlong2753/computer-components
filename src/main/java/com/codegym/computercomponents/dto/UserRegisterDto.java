@@ -20,8 +20,16 @@ public class UserRegisterDto {
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[@#$%^&+=!]).*$", message = "Mật khẩu nên chứa ít nhất 1 chữ hoa và 1 ký tự đặc biệt")
     private String password;
 
-    @NotBlank(message = "Họ tên không được để trống")
-    private String fullName;
+    @NotBlank(message = "Họ không được để trống")
+    @Pattern(regexp = "^[^!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]*$", message = "Họ không được chứa ký tự đặc biệt")
+    private String firstName;
+
+    @NotBlank(message = "Tên không được để trống")
+    @Pattern(regexp = "^[^!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]*$", message = "Tên không được chứa ký tự đặc biệt")
+    private String lastName;
+
+    @NotBlank(message = "Xác nhận mật khẩu không được để trống")
+    private String confirmPassword;
 
     @NotBlank(message = "Email không được để trống")
     @Email(message = "Email không đúng định dạng")

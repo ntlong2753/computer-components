@@ -17,7 +17,7 @@
             <button id="openCreateModalBtn" class="btn btn-primary mb-3">+ Thêm Case mới</button>
             
             <div class="table-responsive bg-white rounded shadow-sm border">
-                <table class="table table-hover mb-0 align-middle" id="casePcTable">
+                <table class="table table-hover mb-0 align-middle" id="casepcTable">
     <thead class="table-light">
     <tr>
         <th>STT</th>
@@ -26,7 +26,6 @@
         <th>Model</th>
         <th>Kích thước</th>
         <th>Hỗ trợ Mainboard</th>
-        <th>Màu sắc</th>
         <th>Giá</th>
         <th>Tồn kho</th>
         <th>Mô tả</th>
@@ -41,7 +40,6 @@
         <td th:text="${casePc.model}"></td>
         <td th:text="${casePc.formFactor}"></td>
         <td th:text="${casePc.motherboardSupport}"></td>
-        <td th:text="${casePc.color}"></td>
         <td th:text="${casePc.price}"></td>
         <td th:text="${casePc.stock}"></td>
         <td th:text="${casePc.description != null && !casePc.description.isBlank() ? casePc.description : 'không có mô tả'}"></td>
@@ -55,7 +53,7 @@
         </td>
     </tr>
     <tr th:if="${#lists.isEmpty(casePcs)}" id="emptyRow">
-        <td colspan="11" class="text-center py-4 text-muted">Chưa có Case nào.</td>
+        <td colspan="10" class="text-center py-4 text-muted">Chưa có Case nào.</td>
     </tr>
     </tbody>
 </table>

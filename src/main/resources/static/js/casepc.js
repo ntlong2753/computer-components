@@ -1,24 +1,19 @@
 const casePcManager = new ComponentFormManager({
     prefix: 'casepc',
     apiEndpoint: '/admin/casepc/api',
-    dropdownKeys: ['brand', 'model', 'formFactor', 'motherboardSupport', 'color'],
+    dropdownKeys: ['brand', 'model', 'formFactor', 'motherboardSupport'],
     placeholders: {
         brand: "-- Chọn Hãng --",
         model: "-- Chọn Model --",
         formFactor: "-- Chọn Kích thước --",
-        motherboardSupport: "-- Chọn Hỗ trợ Mainboard --",
-        color: "-- Chọn Màu sắc --"
+        motherboardSupport: "-- Chọn Hỗ trợ Mainboard --"
     },
     generateNameCallback: function() {
         const brand = document.getElementById("casepcBrand").value || "";
         const model = document.getElementById("casepcModel").value || "";
-        const color = document.getElementById("casepcColor").value || "";
         const formFactor = document.getElementById("casepcFormFactor").value || "";
 
         const parts = [brand, model];
-        if (color && color.trim() !== "") {
-            parts.push(color.trim());
-        }
         if (formFactor && formFactor.trim() !== "") {
             parts.push(formFactor.trim());
         }
@@ -41,7 +36,6 @@ const casePcManager = new ComponentFormManager({
             <td>${casePc.model || ''}</td>
             <td>${casePc.formFactor || ''}</td>
             <td>${casePc.motherboardSupport || ''}</td>
-            <td>${casePc.color || ''}</td>
             <td>${casePc.price}</td>
             <td>${casePc.stock}</td>
             <td>${descDisplay}</td>
@@ -61,7 +55,7 @@ const casePcManager = new ComponentFormManager({
 if (typeof existingCasePcs !== 'undefined' && Array.isArray(existingCasePcs)) {
     let changed = false;
     existingCasePcs.forEach(casePc => {
-        ['brand', 'model', 'formFactor', 'motherboardSupport', 'color'].forEach(key => {
+        ['brand', 'model', 'formFactor', 'motherboardSupport'].forEach(key => {
             const val = casePc[key];
             if (val && val.trim() !== "" && !casePcManager.customDropdownData[key].includes(val)) {
                 casePcManager.customDropdownData[key].push(val);
