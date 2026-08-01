@@ -1,0 +1,26 @@
+<div class="tab-pane fade" id="v-pills-address" role="tabpanel" tabindex="0" th:fragment="tab_address">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <h4 class="mb-0">Sổ địa chỉ</h4>
+        <button type="button" class="btn btn-primary btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+            + Thêm địa chỉ mới
+        </button>
+    </div>
+
+    <div th:if="${addresses != null and not #lists.isEmpty(addresses)}">
+        <div class="address-card" th:each="addr : ${addresses}">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6 class="mb-1 fw-bold">
+                        <span th:text="${addr.receiverName}"></span>
+                        <span th:if="${addr.isDefault}" class="badge bg-success ms-2">Mặc định</span>
+                    </h6>
+                    <p class="mb-1 text-muted small">Điện thoại: <span th:text="${addr.phone}"></span></p>
+                    <p class="mb-0 text-muted small">Địa chỉ: <span th:text="${addr.streetAddress}"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:if="${addresses == null or #lists.isEmpty(addresses)}" class="text-center py-5">
+        <p class="text-muted">Bạn chưa lưu địa chỉ nào.</p>
+    </div>
+</div>

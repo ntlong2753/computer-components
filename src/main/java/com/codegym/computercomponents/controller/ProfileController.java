@@ -21,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import com.codegym.computercomponents.security.CustomUserDetails;
 import com.codegym.computercomponents.model.UserAvatar;
 import com.codegym.computercomponents.service.impl.CustomUserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Controller
 @RequestMapping("/profile")
@@ -30,6 +31,24 @@ public class ProfileController {
     private final UserRepository userRepository;
     private final IFileUploadService fileUploadService;
     private final CustomUserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
+
+    private String maskEmail(String email) {
+        if (email == null || !email.contains("@")) return email;
+        String[] parts = email.split("@");
+        String name = parts[0];
+        if (name.length() <= 3) {
+            name = "***";
+        } else {
+            name = name.substring(0, 3) + "***";
+        }
+        return name + "@" + parts[1];
+    }
+
+    private String maskPhone(String phone) {
+        if (phone == null || phone.length() < 7) return phone;
+        return phone.substring(0, 3) + "****" + phone.substring(phone.length() - 3);
+    }
 
     @GetMapping
     public String viewProfile(Model model, @AuthenticationPrincipal UserDetails userDetails) {
@@ -46,9 +65,8 @@ public class ProfileController {
             UserProfileDto dto = new UserProfileDto();
             dto.setUsername(user.getUsername());
             dto.setFullName(user.getFullName());
-            dto.setEmail(user.getEmail());
-            dto.setPhone(user.getPhone());
-            dto.setAddress(user.getAddress());
+            dto.setEmail(maskEmail(user.getEmail()));
+            dto.setPhone(maskPhone(user.getPhone()));
             String currentAvatar = user.getUserAvatar() != null ? user.getUserAvatar().getImageUrl() : null;
             dto.setAvatar(currentAvatar);
             model.addAttribute("userDto", dto);
@@ -56,6 +74,7 @@ public class ProfileController {
         
         String currentAvatar = user.getUserAvatar() != null ? user.getUserAvatar().getImageUrl() : null;
         model.addAttribute("currentAvatar", currentAvatar);
+        model.addAttribute("addresses", user.getAddresses());
 
         return "user/profile";
     }
@@ -76,11 +95,23 @@ public class ProfileController {
             return "redirect:/login";
         }
 
+        // Restore original values if they are masked
+        String newEmail = userDto.getEmail();
+        if (newEmail != null && newEmail.contains("***")) {
+            newEmail = user.getEmail();
+            userDto.setEmail(newEmail);
+        }
+        String newPhone = userDto.getPhone();
+        if (newPhone != null && newPhone.contains("****")) {
+            newPhone = user.getPhone();
+            userDto.setPhone(newPhone);
+        }
+
         // Custom duplicate check
-        if (!user.getEmail().equals(userDto.getEmail()) && userRepository.existsByEmail(userDto.getEmail())) {
+        if (!user.getEmail().equals(newEmail) && userRepository.existsByEmail(newEmail)) {
             result.rejectValue("email", "error.userDto", "Email đã được sử dụng bởi tài khoản khác!");
         }
-        if (!user.getPhone().equals(userDto.getPhone()) && userRepository.existsByPhone(userDto.getPhone())) {
+        if (!user.getPhone().equals(newPhone) && userRepository.existsByPhone(newPhone)) {
             result.rejectValue("phone", "error.userDto", "Số điện thoại đã được sử dụng bởi tài khoản khác!");
         }
 
@@ -92,6 +123,10 @@ public class ProfileController {
 
         // Process File Upload
         if (avatarFile != null && !avatarFile.isEmpty()) {
+            if (avatarFile.getSize() > 10 * 1024 * 1024) {
+                redirectAttributes.addFlashAttribute("error", "Ảnh đại diện có dung lượng không được quá 10MB");
+                return "redirect:/profile";
+            }
             try {
                 String avatarUrl = fileUploadService.storeFile(avatarFile);
                 if (user.getUserAvatar() == null) {
@@ -108,9 +143,8 @@ public class ProfileController {
         }
 
         user.setFullName(userDto.getFullName().trim());
-        user.setEmail(userDto.getEmail().trim());
-        user.setPhone(userDto.getPhone().trim());
-        user.setAddress(userDto.getAddress().trim());
+        user.setEmail(newEmail.trim());
+        user.setPhone(newPhone.trim());
 
         userRepository.save(user);
 
@@ -121,6 +155,74 @@ public class ProfileController {
         SecurityContextHolder.getContext().setAuthentication(newAuth);
 
         redirectAttributes.addFlashAttribute("success", "Cập nhật thông tin thành công!");
+        return "redirect:/profile";
+    }
+
+    @PostMapping("/address/add")
+    public String addAddress(@RequestParam("receiverName") String receiverName,
+                             @RequestParam("phone") String phone,
+                             @RequestParam("streetAddress") String streetAddress,
+                             @RequestParam(value = "isDefault", required = false) boolean isDefault,
+                             @AuthenticationPrincipal UserDetails userDetails,
+                             RedirectAttributes redirectAttributes) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+
+        AppUser user = userRepository.findByUsername(userDetails.getUsername()).orElse(null);
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        com.codegym.computercomponents.model.UserAddress newAddress = new com.codegym.computercomponents.model.UserAddress();
+        newAddress.setUser(user);
+        newAddress.setReceiverName(receiverName);
+        newAddress.setPhone(phone);
+        newAddress.setStreetAddress(streetAddress);
+        
+        if (isDefault || user.getAddresses().isEmpty()) {
+            for (com.codegym.computercomponents.model.UserAddress addr : user.getAddresses()) {
+                addr.setDefault(false);
+            }
+            newAddress.setDefault(true);
+        }
+        
+        user.getAddresses().add(newAddress);
+        userRepository.save(user);
+
+        redirectAttributes.addFlashAttribute("success", "Thêm địa chỉ thành công!");
+        return "redirect:/profile";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam("oldPassword") String oldPassword,
+                                 @RequestParam("newPassword") String newPassword,
+                                 @RequestParam("confirmPassword") String confirmPassword,
+                                 @AuthenticationPrincipal UserDetails userDetails,
+                                 RedirectAttributes redirectAttributes) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+
+        AppUser user = userRepository.findByUsername(userDetails.getUsername()).orElse(null);
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            redirectAttributes.addFlashAttribute("error", "Mật khẩu cũ không chính xác!");
+            return "redirect:/profile";
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            redirectAttributes.addFlashAttribute("error", "Mật khẩu xác nhận không khớp!");
+            return "redirect:/profile";
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        redirectAttributes.addFlashAttribute("success", "Thay đổi mật khẩu thành công!");
         return "redirect:/profile";
     }
 }

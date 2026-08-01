@@ -25,8 +25,7 @@ public class UserProfileDto {
              message = "Số điện thoại không hợp lệ")
     private String phone;
 
-    @NotBlank(message = "Địa chỉ không được để trống")
-    private String address;
+
     
     private String avatar;
 }

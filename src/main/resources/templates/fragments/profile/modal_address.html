@@ -1,0 +1,36 @@
+<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true" th:fragment="modal_address">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form th:action="@{/profile/address/add}" method="post">
+          <div class="modal-header border-bottom-0">
+            <h1 class="modal-title fs-5 fw-bold" id="addAddressModalLabel">Thêm địa chỉ mới</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="mb-3">
+                  <label class="form-label fw-bold">Tên người nhận</label>
+                  <input type="text" class="form-control" name="receiverName" required>
+              </div>
+              <div class="mb-3">
+                  <label class="form-label fw-bold">Số điện thoại</label>
+                  <input type="text" class="form-control" name="phone" required>
+              </div>
+              <div class="mb-3">
+                  <label class="form-label fw-bold">Địa chỉ cụ thể</label>
+                  <input type="text" class="form-control" name="streetAddress" required placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố">
+              </div>
+              <div class="form-check mt-3">
+                  <input class="form-check-input" type="checkbox" value="true" name="isDefault" id="isDefaultCheck">
+                  <label class="form-check-label" for="isDefaultCheck">
+                      Đặt làm địa chỉ mặc định
+                  </label>
+              </div>
+          </div>
+          <div class="modal-footer border-top-0">
+            <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Trở lại</button>
+            <button type="submit" class="btn btn-primary fw-bold px-4">Lưu địa chỉ</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>

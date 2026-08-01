@@ -47,7 +47,7 @@ public class UserService {
         user.setFullName((dto.getFirstName().trim() + " " + dto.getLastName().trim()).trim());
         user.setEmail(dto.getEmail());
         user.setPhone(dto.getPhone());
-        user.setAddress(dto.getAddress());
+
 
         // Gán Role mặc định
         Role userRole = roleRepository.findByName("ROLE_USER").orElseGet(() -> {

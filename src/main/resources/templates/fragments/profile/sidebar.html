@@ -1,0 +1,8 @@
+<div class="col-md-3 border-end pe-4" th:fragment="sidebar">
+    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <button class="nav-link active text-start" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-selected="true">Thông tin tài khoản</button>
+        <button class="nav-link text-start" id="v-pills-orders-tab" data-bs-toggle="pill" data-bs-target="#v-pills-orders" type="button" role="tab" aria-selected="false" sec:authorize="!hasAuthority('ROLE_ADMIN')">Thông tin đơn hàng</button>
+        <button class="nav-link text-start" id="v-pills-address-tab" data-bs-toggle="pill" data-bs-target="#v-pills-address" type="button" role="tab" aria-selected="false" sec:authorize="!hasAuthority('ROLE_ADMIN')">Các địa chỉ được lưu</button>
+        <button class="nav-link text-start" id="v-pills-password-tab" data-bs-toggle="pill" data-bs-target="#v-pills-password" type="button" role="tab" aria-selected="false">Thay đổi mật khẩu</button>
+    </div>
+</div>

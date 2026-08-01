@@ -40,6 +40,5 @@ public class UserRegisterDto {
              message = "Số điện thoại không hợp lệ (Phải là 10 số thuộc mạng Viettel, Mobi hoặc Vina)")
     private String phone;
 
-    @NotBlank(message = "Địa chỉ không được để trống")
-    private String address;
+
 }

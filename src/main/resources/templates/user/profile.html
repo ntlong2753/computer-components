@@ -2,130 +2,50 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="~{fragments/head :: head('Thông tin tài khoản - NexGen PC')}"></div>
-    <style>
-        .profile-container {
-            max-width: 800px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        .profile-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .avatar-preview {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--primary);
-            margin-bottom: 15px;
-            background-color: #f0f0f0;
-        }
-        .form-group label {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #333;
-        }
-        .form-control:read-only {
-            background-color: #e9ecef;
-        }
-        .btn-update {
-            background-color: var(--primary);
-            color: #fff;
-            padding: 10px 25px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            width: 100%;
-            transition: all 0.3s;
-        }
-        .btn-update:hover {
-            background-color: #2b00ff;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
 </head>
 <body class="bg-light">
     <!-- Navbar -->
     <div th:replace="~{fragments/navbar :: navbar}" th:with="isAdminPage=false"></div>
 
     <div class="container">
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show mt-4" role="alert">
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
         <div class="profile-container">
-            <div class="profile-header">
-                <h2>Thông tin tài khoản</h2>
-                <p class="text-muted">Quản lý thông tin cá nhân của bạn</p>
-            </div>
+            <div class="row">
+                <!-- Sidebar -->
+                <div th:replace="~{fragments/profile/sidebar :: sidebar}"></div>
 
-            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
-                <span th:text="${success}"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-                <span th:text="${error}"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+                <!-- Content -->
+                <div class="col-md-9 ps-md-5 mt-4 mt-md-0">
+                    <div class="tab-content" id="v-pills-tabContent">
+                        <!-- 1. Thông tin tài khoản -->
+                        <div th:replace="~{fragments/profile/tab_info :: tab_info}"></div>
 
-            <form th:action="@{/profile/update}" method="post" th:object="${userDto}" enctype="multipart/form-data">
-                
-                <div class="text-center mb-4">
-                    <img id="avatarPreview" th:src="${currentAvatar != null ? currentAvatar : '/images/default-avatar.png'}" class="avatar-preview" alt="Avatar">
-                    <div class="mt-2">
-                        <label for="avatarFile" class="btn btn-outline-secondary btn-sm">Chọn ảnh mới</label>
-                        <input type="file" id="avatarFile" name="avatarFile" class="d-none" accept="image/*" onchange="previewImage(this)">
+                        <!-- 2. Thông tin đơn hàng -->
+                        <div th:replace="~{fragments/profile/tab_orders :: tab_orders}" sec:authorize="!hasAuthority('ROLE_ADMIN')"></div>
+
+                        <!-- 3. Các địa chỉ được lưu -->
+                        <div th:replace="~{fragments/profile/tab_address :: tab_address}" sec:authorize="!hasAuthority('ROLE_ADMIN')"></div>
+
+                        <!-- 4. Thay đổi mật khẩu -->
+                        <div th:replace="~{fragments/profile/tab_password :: tab_password}"></div>
                     </div>
                 </div>
-
-                <div class="row g-3">
-                    <div class="col-md-6 form-group">
-                        <label>Tên đăng nhập</label>
-                        <input type="text" class="form-control" th:field="*{username}" readonly title="Tên đăng nhập không thể thay đổi">
-                    </div>
-
-                    <div class="col-md-6 form-group">
-                        <label>Họ và tên đầy đủ</label>
-                        <input type="text" class="form-control" th:field="*{fullName}">
-                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
-                    </div>
-
-                    <div class="col-md-6 form-group">
-                        <label>Email</label>
-                        <input type="email" class="form-control" th:field="*{email}">
-                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-                    </div>
-
-                    <div class="col-md-6 form-group">
-                        <label>Số điện thoại</label>
-                        <input type="text" class="form-control" th:field="*{phone}">
-                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
-                    </div>
-
-                    <div class="col-12 form-group">
-                        <label>Địa chỉ giao hàng</label>
-                        <input type="text" class="form-control" th:field="*{address}">
-                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
-                    </div>
-                </div>
-
-                <div class="mt-4">
-                    <button type="submit" class="btn-update">Cập nhật thông tin</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
-    <!-- Script for Avatar Preview -->
-    <script>
-        function previewImage(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('avatarPreview').src = e.target.result;
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-    </script>
+    <!-- Add Address Modal -->
+    <div th:replace="~{fragments/profile/modal_address :: modal_address}"></div>
+
+    <script th:src="@{/js/profile.js(v=1)}"></script>
 </body>
 </html>

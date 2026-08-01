@@ -44,7 +44,6 @@ public class DataSeeder implements CommandLineRunner {
             adminUser.setFullName("System Administrator");
             adminUser.setEmail("admin@nexgenpc.com");
             adminUser.setPhone("0999999999");
-            adminUser.setAddress("System Address");
             adminUser.addRole(adminRole);
             
             userRepository.save(adminUser);

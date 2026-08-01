@@ -36,8 +36,8 @@ public class AppUser {
     @Column(length = 15)
     private String phone;
 
-    @Column(length = 255)
-    private String address;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<UserAddress> addresses = new java.util.ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "avatar_id", referencedColumnName = "id")

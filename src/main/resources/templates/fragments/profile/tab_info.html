@@ -1,0 +1,50 @@
+<div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" tabindex="0" th:fragment="tab_info">
+    <h4 class="mb-4 pb-2 border-bottom">Hồ sơ của tôi</h4>
+    <form th:action="@{/profile/update}" method="post" th:object="${userDto}" enctype="multipart/form-data" id="profileForm">
+        
+        <div class="row">
+            <div class="col-md-8 order-2 order-md-1">
+                <div class="row g-3">
+                    <div class="col-12 form-group">
+                        <label>Tên đăng nhập</label>
+                        <input type="text" class="form-control" th:field="*{username}" readonly>
+                    </div>
+
+                    <div class="col-12 form-group">
+                        <label>Họ và tên đầy đủ</label>
+                        <input type="text" class="form-control editable-field" th:field="*{fullName}" readonly>
+                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
+                    </div>
+
+                    <div class="col-12 form-group" id="emailGroup">
+                        <label>Email</label>
+                        <input type="text" class="form-control editable-field" th:field="*{email}" readonly>
+                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                    </div>
+
+                    <div class="col-12 form-group" id="phoneGroup">
+                        <label>Số điện thoại</label>
+                        <input type="text" class="form-control editable-field" th:field="*{phone}" readonly>
+                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                    </div>
+                </div>
+
+                <div class="mt-4" id="actionButtons">
+                    <button type="button" class="btn btn-outline-primary fw-bold px-4" onclick="enableEdit()">Chỉnh sửa thông tin</button>
+                </div>
+                <div class="mt-4 d-none" id="saveButtons">
+                    <button type="submit" class="btn btn-primary fw-bold px-4 me-2">Lưu</button>
+                    <button type="button" class="btn btn-light fw-bold px-4" onclick="cancelEdit()">Hủy</button>
+                </div>
+            </div>
+            
+            <div class="col-md-4 order-1 order-md-2 text-center mb-4">
+                <img id="avatarPreview" th:src="${currentAvatar != null ? currentAvatar : 'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22150%22%20height%3D%22150%22%20viewBox%3D%220%200%20150%20150%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22150%22%20height%3D%22150%22%20fill%3D%22%23cccccc%22%2F%3E%3Ccircle%20cx%3D%2275%22%20cy%3D%2260%22%20r%3D%2235%22%20fill%3D%22%23f0f0f0%22%2F%3E%3Ccircle%20cx%3D%2275%22%20cy%3D%22170%22%20r%3D%2280%22%20fill%3D%22%23f0f0f0%22%2F%3E%3C%2Fsvg%3E'}" class="avatar-preview" alt="Avatar">
+                <div class="mt-2" id="avatarUploadBtn" style="display: none;">
+                    <label for="avatarFile" class="btn btn-outline-secondary btn-sm">Chọn ảnh mới</label>
+                    <input type="file" id="avatarFile" name="avatarFile" class="d-none" accept="image/*" onchange="previewImage(this)">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
