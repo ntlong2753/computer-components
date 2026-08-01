@@ -1,78 +1,57 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <div th:replace="~{fragments/head :: head('Danh sách Bo mạch chủ (Mainboard)')}"></div>
-    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <meta charset="UTF-8">
+    <title>Danh sách Bo mạch chủ (Mainboard)</title>
 </head>
 <body>
-    <div th:replace="~{fragments/navbar :: navbar}" th:with="isAdminPage=true"></div>
+<h1>Quản lý Bo mạch chủ (Mainboard)</h1>
+<button id="openCreateModalBtn">+ Thêm Mainboard mới</button>
+<table border="1" cellpadding="8" cellspacing="0" style="margin-top:16px; border-collapse: collapse; width: 100%;" id="mainboardTable">
+    <thead>
+    <tr>
+        <th>STT</th>
+        <th>Tên Mainboard</th>
+        <th>Hãng</th>
+        <th>Model</th>
+        <th>Socket</th>
+        <th>Chipset</th>
+        <th>Chuẩn RAM</th>
+        <th>Kích thước</th>
+        <th>Giá</th>
+        <th>Tồn kho</th>
+        <th>Mô tả</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item, iterStat : ${mainboards}" th:id="'mainboard-row-' + ${item.id}">
+        <td th:text="${iterStat.count}"></td>
+        <td th:text="${item.name}"></td>
+        <td th:text="${item.brand}"></td>
+        <td th:text="${item.model}"></td>
+        <td th:text="${item.socket}"></td>
+        <td th:text="${item.chipset}"></td>
+        <td th:text="${item.ramType}"></td>
+        <td th:text="${item.formFactor}"></td>
+        <td th:text="${item.price}"></td>
+        <td th:text="${item.stock}"></td>
+        <td th:text="${item.description != null && !item.description.isBlank() ? item.description : 'không có mô tả'}"></td>
+        <td>
+            <button type="button" style="cursor:pointer;" th:onclick="'mainboardManager.editItemModal(' + ${item.id} + ')'">Sửa</button>
+            &nbsp;|&nbsp;
+            <form th:action="@{/admin/mainboard/{id}/delete(id=${item.id})}" method="post" style="display:inline">
+                <button type="submit" onclick="return confirm('Xóa Mainboard này?')">Xóa</button>
+            </form>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(mainboards)}" id="emptyRow">
+        <td colspan="12">Chưa có Mainboard nào.</td>
+    </tr>
+    </tbody>
+</table>
 
-    <div class="d-flex" style="min-height: calc(100vh - 70px);">
-        <div th:replace="~{fragments/admin_sidebar :: adminSidebar('mainboard')}"></div>
-        
-        <main class="flex-grow-1 p-4 bg-light">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="fs-3 fw-bold mb-0">Quản lý Bo mạch chủ (Mainboard)</h1>
-                <button id="openCreateModalBtn" class="btn btn-primary fw-bold" style="border-radius: 8px;">+ Thêm Mainboard mới</button>
-            </div>
-            
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered align-middle mb-0" id="mainboardTable">
-                            <thead class="table-light text-center">
-                            <tr>
-                                <th>STT</th>
-                                <th>Tên Mainboard</th>
-                                <th>Hãng</th>
-                                <th>Model</th>
-                                <th>Socket</th>
-                                <th>Chipset</th>
-                                <th>Chuẩn RAM</th>
-                                <th>Kích thước</th>
-                                <th>Giá</th>
-                                <th>Tồn kho</th>
-                                <th>Mô tả</th>
-                                <th>Hành động</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="item, iterStat : ${mainboards}" th:id="'mainboard-row-' + ${item.id}" class="text-center">
-                                <td th:text="${iterStat.count}"></td>
-                                <td class="fw-bold text-start" th:text="${item.name}"></td>
-                                <td th:text="${item.brand}"></td>
-                                <td th:text="${item.model}"></td>
-                                <td th:text="${item.socket}"></td>
-                                <td th:text="${item.chipset}"></td>
-                                <td th:text="${item.ramType}"></td>
-                                <td th:text="${item.formFactor}"></td>
-                                <td class="text-primary fw-bold" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
-                                <td>
-                                    <span th:if="${item.stock > 0}" class="badge bg-success rounded-pill" th:text="${item.stock}"></span>
-                                    <span th:if="${item.stock <= 0}" class="badge bg-danger rounded-pill">Hết</span>
-                                </td>
-                                <td class="text-start" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${item.description != null && !item.description.isBlank() ? item.description : '-'}"></td>
-                                <td>
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <button type="button" class="btn btn-sm btn-outline-primary" th:onclick="'mainboardManager.editItemModal(' + ${item.id} + ')'">Sửa</button>
-                                        <form th:action="@{/admin/mainboard/{id}/delete(id=${item.id})}" method="post" class="m-0">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa Mainboard này?')">Xóa</button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr th:if="${#lists.isEmpty(mainboards)}" id="emptyRow">
-                                <td colspan="12" class="text-center text-muted py-4">Chưa có Mainboard nào trong hệ thống.</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Nhúng Modal Form vào đây -->
-            <div th:replace="~{mainboard/form :: mainboardModalForm}"></div>
-        </main>
-    </div>
+<!-- Nhúng Modal Form vào đây -->
+<div th:replace="~{mainboard/form :: mainboardModalForm}"></div>
 </body>
 </html>

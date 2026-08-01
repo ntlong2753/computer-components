@@ -8,90 +8,80 @@
     <div th:replace="~{fragments/navbar :: navbar}"></div>
 
     <!-- Main Layout Wrapper -->
-    <div class="container my-4">
-        <div class="row g-3">
-            <!-- Sidebar Menu -->
-            <div class="col-lg-3">
-                <aside class="sidebar-menu h-100">
-                    <a href="/?category=cpu" class="sidebar-item">
-                        <div class="sidebar-item-icon">🔲 <span>Vi xử lý (CPU)</span></div>
-                        <span class="sidebar-arrow">❯</span>
-                    </a>
-                    <a href="/?category=mainboard" class="sidebar-item">
-                        <div class="sidebar-item-icon">🛠️ <span>Bo mạch chủ (Mainboard)</span></div>
-                        <span class="sidebar-arrow">❯</span>
-                    </a>
-                    <a href="/?category=ram" class="sidebar-item">
-                        <div class="sidebar-item-icon">📼 <span>Bộ nhớ trong (RAM)</span></div>
-                        <span class="sidebar-arrow">❯</span>
-                    </a>
-                    <a href="/?category=vga" class="sidebar-item">
-                        <div class="sidebar-item-icon">🎮 <span>Card màn hình (VGA)</span></div>
-                        <span class="sidebar-arrow">❯</span>
-                    </a>
-                    <a href="/?category=storage" class="sidebar-item">
-                        <div class="sidebar-item-icon">💾 <span>Ổ cứng (SSD/HDD)</span></div>
-                        <span class="sidebar-arrow">❯</span>
-                    </a>
-                    <a href="/?category=psu" class="sidebar-item">
-                        <div class="sidebar-item-icon">⚡ <span>Nguồn máy tính (PSU)</span></div>
-                        <span class="sidebar-arrow">❯</span>
-                    </a>
-                </aside>
-            </div>
+    <div class="main-wrapper">
+        <!-- Sidebar Menu -->
+        <aside class="sidebar-menu">
+            <a href="/?category=cpu" class="sidebar-item">
+                <div class="sidebar-item-icon">🔲 <span>Vi xử lý (CPU)</span></div>
+                <span class="sidebar-arrow">❯</span>
+            </a>
+            <a href="/?category=mainboard" class="sidebar-item">
+                <div class="sidebar-item-icon">🛠️ <span>Bo mạch chủ (Mainboard)</span></div>
+                <span class="sidebar-arrow">❯</span>
+            </a>
+            <a href="/?category=ram" class="sidebar-item">
+                <div class="sidebar-item-icon">📼 <span>Bộ nhớ trong (RAM)</span></div>
+                <span class="sidebar-arrow">❯</span>
+            </a>
+            <a href="/?category=vga" class="sidebar-item">
+                <div class="sidebar-item-icon">🎮 <span>Card màn hình (VGA)</span></div>
+                <span class="sidebar-arrow">❯</span>
+            </a>
+            <a href="/?category=storage" class="sidebar-item">
+                <div class="sidebar-item-icon">💾 <span>Ổ cứng (SSD/HDD)</span></div>
+                <span class="sidebar-arrow">❯</span>
+            </a>
+            <a href="/?category=psu" class="sidebar-item">
+                <div class="sidebar-item-icon">⚡ <span>Nguồn máy tính (PSU)</span></div>
+                <span class="sidebar-arrow">❯</span>
+            </a>
+        </aside>
 
-            <!-- Hero Section -->
-            <div class="col-lg-9">
-                <section class="hero w-100 h-100 d-flex align-items-end rounded overflow-hidden position-relative" style="background: url('/images/hero_banner.png') center/cover no-repeat; background-color: #000; min-height: 420px; box-shadow: 0 1px 5px rgba(0,0,0,0.05);">
-                    <div class="hero-content w-100 p-4 text-white" style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
-                        <h1 class="fs-2 mb-2">Xây Dựng Cỗ Máy Trong Mơ Của Bạn</h1>
-                        <p class="fs-6 text-light mb-3" style="max-width: 600px;">Khám phá bộ sưu tập linh kiện PC cao cấp nhất, từ CPU đa nhân, Card đồ họa cực khủng đến những hệ thống tản nhiệt tối tân. Sẵn sàng phá vỡ mọi giới hạn hiệu năng.</p>
-                        <a href="#catalog" class="btn btn-primary px-4 py-2 fw-bold border-0">Khám Phá Ngay</a>
-                    </div>
-                </section>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Xây Dựng Cỗ Máy Trong Mơ Của Bạn</h1>
+                <p>Khám phá bộ sưu tập linh kiện PC cao cấp nhất, từ CPU đa nhân, Card đồ họa cực khủng đến những hệ thống tản nhiệt tối tân. Sẵn sàng phá vỡ mọi giới hạn hiệu năng.</p>
+                <a href="#catalog" class="btn-primary">Khám Phá Ngay</a>
             </div>
-        </div>
+        </section>
     </div>
 
     <!-- Products Catalog -->
-    <section id="catalog" class="container my-5">
-        <h2 class="fs-4 mb-4 fw-bold text-uppercase" style="color: var(--text-main);">Linh Kiện Tuyển Chọn</h2>
+    <section id="catalog" class="products-section">
+        <h2 class="section-title">Linh Kiện Tuyển Chọn</h2>
         
-        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">
+        <div class="product-grid">
             <!-- Thymeleaf Loop cho toàn bộ Product -->
-            <div class="col" th:each="product : ${products}">
-                <div class="product-card h-100">
-                    <div class="product-badge" th:text="${product.class.simpleName}">Loại</div>
-                    
-                    <!-- Ảnh sản phẩm -->
-                    <img th:if="${product.imageUrl != null and !product.imageUrl.isBlank()}" 
-                         th:src="${product.imageUrl.split(',')[0]}" 
-                         alt="Product Image" class="product-image" onerror="this.src='https://via.placeholder.com/300x200/1e293b/ffffff?text=No+Image'">
-                    <img th:unless="${product.imageUrl != null and !product.imageUrl.isBlank()}" 
-                         src="https://via.placeholder.com/300x200/1e293b/ffffff?text=No+Image" 
-                         alt="No Image" class="product-image">
+            <div class="product-card" th:each="product : ${products}">
+                <div class="product-badge" th:text="${product.class.simpleName}">Loại</div>
+                
+                <!-- Ảnh sản phẩm: Lấy URL đầu tiên, hoặc ảnh mặc định nếu rỗng -->
+                <img th:if="${product.imageUrl != null and !product.imageUrl.isBlank()}" 
+                     th:src="${product.imageUrl.split(',')[0]}" 
+                     alt="Product Image" class="product-image" onerror="this.src='https://via.placeholder.com/300x200/1e293b/ffffff?text=No+Image'">
+                <img th:unless="${product.imageUrl != null and !product.imageUrl.isBlank()}" 
+                     src="https://via.placeholder.com/300x200/1e293b/ffffff?text=No+Image" 
+                     alt="No Image" class="product-image">
 
-                    <div class="product-brand" th:text="${product.brand}">Hãng</div>
-                    <h3 class="product-name" th:text="${product.name}">Tên sản phẩm</h3>
-                    
-                    <div class="product-footer mt-auto d-flex justify-content-between align-items-end">
-                        <div class="product-price fs-5 fw-bold text-primary" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</div>
-                        <div class="product-stock fw-bold" th:if="${product.stock > 0}" style="color: #22c55e; font-size: 12px;">Còn hàng</div>
-                        <div class="product-stock fw-bold" th:if="${product.stock <= 0}" style="color: #ef4444; font-size: 12px;">Hết hàng</div>
-                    </div>
-                    
-                    <!-- Nút thao tác -->
-                    <div class="product-actions d-flex gap-2 mt-3">
-                        <button class="btn btn-outline-danger btn-sm flex-grow-1 fw-bold">Chi tiết</button>
-                        <button class="btn btn-danger btn-sm flex-grow-1 fw-bold">Thêm vào giỏ</button>
-                    </div>
+                <div class="product-brand" th:text="${product.brand}">Hãng</div>
+                <h3 class="product-name" th:text="${product.name}">Tên sản phẩm</h3>
+                
+                <div class="product-footer">
+                    <div class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</div>
+                    <div class="product-stock" th:if="${product.stock > 0}" style="color: #22c55e;">Còn hàng</div>
+                    <div class="product-stock" th:if="${product.stock <= 0}" style="color: #ef4444;">Hết hàng</div>
+                </div>
+                
+                <!-- Nút thao tác dành cho người dùng -->
+                <div class="product-actions">
+                    <button class="btn-detail">Chi tiết</button>
+                    <button class="btn-cart">Thêm vào giỏ</button>
                 </div>
             </div>
             
-            <div class="col-12" th:if="${#lists.isEmpty(products)}">
-                <div class="text-center text-muted w-100 py-5">
-                    Chưa có sản phẩm nào trong hệ thống. Hãy truy cập trang quản trị để thêm sản phẩm!
-                </div>
+            <div th:if="${#lists.isEmpty(products)}" style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">
+                Chưa có sản phẩm nào trong hệ thống. Hãy truy cập trang quản trị để thêm sản phẩm!
             </div>
         </div>
     </section>

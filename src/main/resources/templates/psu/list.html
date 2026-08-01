@@ -1,76 +1,53 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <div th:replace="~{fragments/head :: head('Danh sách Nguồn máy tính (PSU)')}"></div>
-    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <meta charset="UTF-8">
+    <title>Danh sách Nguồn máy tính (PSU)</title>
 </head>
 <body>
-    <div th:replace="~{fragments/navbar :: navbar}" th:with="isAdminPage=true"></div>
+<h1>Quản lý Nguồn (PSU)</h1>
+<button id="openCreateModalBtn">+ Thêm Nguồn mới</button>
+<table border="1" cellpadding="8" cellspacing="0" style="margin-top:16px; border-collapse: collapse; width: 100%;" id="psuTable">
+    <thead>
+    <tr>
+        <th>STT</th>
+        <th>Tên PSU</th>
+        <th>Hãng</th>
+        <th>Công suất</th>
+        <th>Chuẩn nguồn</th>
+        <th>Kích thước</th>
+        <th>Giá</th>
+        <th>Tồn kho</th>
+        <th>Mô tả</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item, iterStat : ${psus}" th:id="'psu-row-' + ${item.id}">
+        <td th:text="${iterStat.count}"></td>
+        <td th:text="${item.name}"></td>
+        <td th:text="${item.brand}"></td>
+        <td th:text="${item.wattage != null ? item.wattage + 'W' : ''}"></td>
+        <td th:text="${item.efficiency}"></td>
+        <td th:text="${item.formFactor}"></td>
+        <td th:text="${item.price}"></td>
+        <td th:text="${item.stock}"></td>
+        <td th:text="${item.description != null && !item.description.isBlank() ? item.description : 'không có mô tả'}"></td>
+        <td>
+            <button type="button" style="cursor:pointer;" th:onclick="'psuManager.editItemModal(' + ${item.id} + ')'">Sửa</button>
+            &nbsp;|&nbsp;
+            <form th:action="@{/admin/psu/{id}/delete(id=${item.id})}" method="post" style="display:inline">
+                <button type="submit" onclick="return confirm('Xóa Nguồn này?')">Xóa</button>
+            </form>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(psus)}" id="emptyRow">
+        <td colspan="10">Chưa có Nguồn nào.</td>
+    </tr>
+    </tbody>
+</table>
 
-    <div class="d-flex" style="min-height: calc(100vh - 70px);">
-        <div th:replace="~{fragments/admin_sidebar :: adminSidebar('psu')}"></div>
-        
-        <main class="flex-grow-1 p-4 bg-light">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="fs-3 fw-bold mb-0">Quản lý Nguồn (PSU)</h1>
-                <button id="openCreateModalBtn" class="btn btn-primary fw-bold" style="border-radius: 8px;">+ Thêm Nguồn mới</button>
-            </div>
-            
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered align-middle mb-0" id="psuTable">
-                            <thead class="table-light text-center">
-                            <tr>
-                                <th>STT</th>
-                                <th>Tên PSU</th>
-                                <th>Hãng</th>
-                                <th>Công suất</th>
-                                <th>Chuẩn nguồn</th>
-                                <th>Kích thước</th>
-                                <th>Giá</th>
-                                <th>Tồn kho</th>
-                                <th>Mô tả</th>
-                                <th>Hành động</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="item, iterStat : ${psus}" th:id="'psu-row-' + ${item.id}" class="text-center">
-                                <td th:text="${iterStat.count}"></td>
-                                <td class="fw-bold text-start" th:text="${item.name}"></td>
-                                <td th:text="${item.brand}"></td>
-                                <td th:text="${item.wattage != null ? item.wattage + 'W' : ''}"></td>
-                                <td>
-                                    <span class="badge bg-secondary rounded-pill" th:text="${item.efficiency}"></span>
-                                </td>
-                                <td th:text="${item.formFactor}"></td>
-                                <td class="text-primary fw-bold" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
-                                <td>
-                                    <span th:if="${item.stock > 0}" class="badge bg-success rounded-pill" th:text="${item.stock}"></span>
-                                    <span th:if="${item.stock <= 0}" class="badge bg-danger rounded-pill">Hết</span>
-                                </td>
-                                <td class="text-start" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${item.description != null && !item.description.isBlank() ? item.description : '-'}"></td>
-                                <td>
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <button type="button" class="btn btn-sm btn-outline-primary" th:onclick="'psuManager.editItemModal(' + ${item.id} + ')'">Sửa</button>
-                                        <form th:action="@{/admin/psu/{id}/delete(id=${item.id})}" method="post" class="m-0">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa Nguồn này?')">Xóa</button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr th:if="${#lists.isEmpty(psus)}" id="emptyRow">
-                                <td colspan="10" class="text-center text-muted py-4">Chưa có Nguồn nào trong hệ thống.</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Nhúng Modal Form vào đây -->
-            <div th:replace="~{psu/form :: psuModalForm}"></div>
-        </main>
-    </div>
+<!-- Nhúng Modal Form vào đây -->
+<div th:replace="~{psu/form :: psuModalForm}"></div>
 </body>
 </html>

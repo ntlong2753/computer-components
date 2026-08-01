@@ -5,159 +5,153 @@
     <link rel="stylesheet" th:href="@{/css/modal.css}" />
 
     <!-- The Modal -->
-    <div class="modal fade" id="mainboardModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg" style="background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 16px;">
-                <div class="modal-header border-0 pb-0">
-                    <h2 class="modal-title fs-4 fw-bold text-primary" id="modalTitle">Thêm Mainboard mới</h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalBtn"></button>
+    <div id="mainboardModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModalBtn">&times;</span>
+            <h2 id="modalTitle">Thêm Mainboard mới</h2>
+            
+            <div class="success-alert" id="successAlert">Lưu thành công!</div>
+
+            <form id="mainboardAjaxForm">
+                <input type="hidden" name="id" id="mainboardId" />
+                <input type="hidden" name="deletedImageIds" id="deletedImageIds" value="" />
+
+                <!-- 1. Tên Mainboard -->
+                <div class="form-group">
+                    <label>Tên Mainboard (*):</label>
+                    <input type="text" name="name" id="mainboardName" placeholder="Tự sinh, có thể sửa" />
+                    <span class="error-msg" id="err-name"></span>
                 </div>
-                
-                <div class="modal-body">
-                    <div class="alert alert-success d-none" id="successAlert" role="alert">Lưu thành công!</div>
 
-                    <form id="mainboardAjaxForm">
-                        <input type="hidden" name="id" id="mainboardId" />
-                        <input type="hidden" name="deletedImageIds" id="deletedImageIds" value="" />
-
-                        <!-- 1. Tên Mainboard -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Tên Mainboard (*):</label>
-                            <input type="text" name="name" id="mainboardName" class="form-control" placeholder="Tự sinh, có thể sửa" />
-                            <span class="text-danger small" id="err-name"></span>
+                <!-- 2. Hãng (Custom Dropdown) -->
+                <div class="form-group">
+                    <label>Hãng (*):</label>
+                    <div class="custom-select-container" id="select-container-brand">
+                        <input type="hidden" name="brand" id="mainboardBrand" value="" />
+                        <div class="custom-select-trigger" onclick="mainboardManager.toggleDropdown('brand')">
+                            <span id="trigger-text-brand">-- Chọn Hãng --</span>
+                            <span>▼</span>
                         </div>
-
-                        <!-- 2. Hãng (Custom Dropdown) -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Hãng (*):</label>
-                            <div class="custom-select-container" id="select-container-brand">
-                                <input type="hidden" name="brand" id="mainboardBrand" value="" />
-                                <div class="custom-select-trigger form-control d-flex justify-content-between align-items-center" onclick="mainboardManager.toggleDropdown('brand')">
-                                    <span id="trigger-text-brand">-- Chọn Hãng --</span>
-                                    <span>▼</span>
-                                </div>
-                                <div class="custom-dropdown-panel shadow-sm border rounded mt-1 bg-white">
-                                    <ul class="custom-options-list list-unstyled m-0" id="options-list-brand"></ul>
-                                    <div class="custom-add-box d-flex p-2 border-top">
-                                        <input type="text" id="add-input-brand" class="form-control form-control-sm me-2" placeholder="Nhập Hãng mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();mainboardManager.addCustomOption('brand', 'add-input-brand');}" />
-                                        <button type="button" class="btn btn-sm btn-primary text-nowrap" onclick="mainboardManager.addCustomOption('brand', 'add-input-brand')">+ Thêm</button>
-                                    </div>
-                                </div>
+                        <div class="custom-dropdown-panel">
+                            <ul class="custom-options-list" id="options-list-brand"></ul>
+                            <div class="custom-add-box">
+                                <input type="text" id="add-input-brand" placeholder="Nhập Hãng mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();mainboardManager.addCustomOption('brand', 'add-input-brand');}" />
+                                <button type="button" onclick="mainboardManager.addCustomOption('brand', 'add-input-brand')">+ Thêm</button>
                             </div>
-                            <span class="text-danger small" id="err-brand"></span>
                         </div>
-
-                        <!-- 3. Model -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Model (*):</label>
-                            <div class="custom-select-container" id="select-container-model">
-                                <input type="hidden" name="model" id="mainboardModel" value="" />
-                                <div class="custom-select-trigger form-control d-flex justify-content-between align-items-center" onclick="mainboardManager.toggleDropdown('model')">
-                                    <span id="trigger-text-model">-- Chọn Model --</span>
-                                    <span>▼</span>
-                                </div>
-                                <div class="custom-dropdown-panel shadow-sm border rounded mt-1 bg-white">
-                                    <ul class="custom-options-list list-unstyled m-0" id="options-list-model"></ul>
-                                    <div class="custom-add-box d-flex p-2 border-top">
-                                        <input type="text" id="add-input-model" class="form-control form-control-sm me-2" placeholder="Nhập Model mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();mainboardManager.addCustomOption('model', 'add-input-model');}" />
-                                        <button type="button" class="btn btn-sm btn-primary text-nowrap" onclick="mainboardManager.addCustomOption('model', 'add-input-model')">+ Thêm</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="text-danger small" id="err-model"></span>
-                        </div>
-
-                        <!-- 4. Socket -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Socket (*):</label>
-                            <div class="custom-select-container" id="select-container-socket">
-                                <input type="hidden" name="socket" id="mainboardSocket" value="" />
-                                <div class="custom-select-trigger form-control d-flex justify-content-between align-items-center" onclick="mainboardManager.toggleDropdown('socket')">
-                                    <span id="trigger-text-socket">-- Chọn Socket --</span>
-                                    <span>▼</span>
-                                </div>
-                                <div class="custom-dropdown-panel shadow-sm border rounded mt-1 bg-white">
-                                    <ul class="custom-options-list list-unstyled m-0" id="options-list-socket"></ul>
-                                    <div class="custom-add-box d-flex p-2 border-top">
-                                        <input type="text" id="add-input-socket" class="form-control form-control-sm me-2" placeholder="Nhập Socket mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();mainboardManager.addCustomOption('socket', 'add-input-socket');}" />
-                                        <button type="button" class="btn btn-sm btn-primary text-nowrap" onclick="mainboardManager.addCustomOption('socket', 'add-input-socket')">+ Thêm</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="text-danger small" id="err-socket"></span>
-                        </div>
-
-                        <!-- 5. Chipset -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Chipset (*):</label>
-                            <div class="custom-select-container" id="select-container-chipset">
-                                <input type="hidden" name="chipset" id="mainboardChipset" value="" />
-                                <div class="custom-select-trigger form-control d-flex justify-content-between align-items-center" onclick="mainboardManager.toggleDropdown('chipset')">
-                                    <span id="trigger-text-chipset">-- Chọn Chipset --</span>
-                                    <span>▼</span>
-                                </div>
-                                <div class="custom-dropdown-panel shadow-sm border rounded mt-1 bg-white">
-                                    <ul class="custom-options-list list-unstyled m-0" id="options-list-chipset"></ul>
-                                    <div class="custom-add-box d-flex p-2 border-top">
-                                        <input type="text" id="add-input-chipset" class="form-control form-control-sm me-2" placeholder="Nhập Chipset mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();mainboardManager.addCustomOption('chipset', 'add-input-chipset');}" />
-                                        <button type="button" class="btn btn-sm btn-primary text-nowrap" onclick="mainboardManager.addCustomOption('chipset', 'add-input-chipset')">+ Thêm</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="text-danger small" id="err-chipset"></span>
-                        </div>
-
-                        <!-- 6. Chuẩn RAM -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Chuẩn RAM (*):</label>
-                            <div class="custom-select-container" id="select-container-ramType">
-                                <input type="hidden" name="ramType" id="mainboardRamType" value="" />
-                                <div class="custom-select-trigger form-control d-flex justify-content-between align-items-center" onclick="mainboardManager.toggleDropdown('ramType')">
-                                    <span id="trigger-text-ramType">-- Chọn Chuẩn RAM --</span>
-                                    <span>▼</span>
-                                </div>
-                                <div class="custom-dropdown-panel shadow-sm border rounded mt-1 bg-white">
-                                    <ul class="custom-options-list list-unstyled m-0" id="options-list-ramType"></ul>
-                                    <div class="custom-add-box d-flex p-2 border-top">
-                                        <input type="text" id="add-input-ramType" class="form-control form-control-sm me-2" placeholder="Nhập Chuẩn RAM mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();mainboardManager.addCustomOption('ramType', 'add-input-ramType');}" />
-                                        <button type="button" class="btn btn-sm btn-primary text-nowrap" onclick="mainboardManager.addCustomOption('ramType', 'add-input-ramType')">+ Thêm</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="text-danger small" id="err-ramType"></span>
-                        </div>
-
-                        <!-- 7. Kích thước -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Kích thước (*):</label>
-                            <div class="custom-select-container" id="select-container-formFactor">
-                                <input type="hidden" name="formFactor" id="mainboardFormFactor" value="" />
-                                <div class="custom-select-trigger form-control d-flex justify-content-between align-items-center" onclick="mainboardManager.toggleDropdown('formFactor')">
-                                    <span id="trigger-text-formFactor">-- Chọn Kích thước --</span>
-                                    <span>▼</span>
-                                </div>
-                                <div class="custom-dropdown-panel shadow-sm border rounded mt-1 bg-white">
-                                    <ul class="custom-options-list list-unstyled m-0" id="options-list-formFactor"></ul>
-                                    <div class="custom-add-box d-flex p-2 border-top">
-                                        <input type="text" id="add-input-formFactor" class="form-control form-control-sm me-2" placeholder="Nhập Kích thước mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();mainboardManager.addCustomOption('formFactor', 'add-input-formFactor');}" />
-                                        <button type="button" class="btn btn-sm btn-primary text-nowrap" onclick="mainboardManager.addCustomOption('formFactor', 'add-input-formFactor')">+ Thêm</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="text-danger small" id="err-formFactor"></span>
-                        </div>
-
-                        <!-- Fragment chứa Giá, Tồn kho, Ảnh, Mô tả -->
-                        <div th:replace="~{common/product-fields :: fields(prefix='mainboard')}"></div>
-                        <span class="text-danger small" id="err-general"></span>
-
-                        <div class="modal-footer border-0 px-0 pb-0">
-                            <button type="button" class="btn btn-secondary fw-bold px-4" id="cancelModalBtn" data-bs-dismiss="modal">Hủy</button>
-                            <button type="submit" class="btn btn-primary fw-bold px-4">Lưu</button>
-                        </div>
-                    </form>
+                    </div>
+                    <span class="error-msg" id="err-brand"></span>
                 </div>
-            </div>
+
+                <!-- 3. Model -->
+                <div class="form-group">
+                    <label>Model (*):</label>
+                    <div class="custom-select-container" id="select-container-model">
+                        <input type="hidden" name="model" id="mainboardModel" value="" />
+                        <div class="custom-select-trigger" onclick="mainboardManager.toggleDropdown('model')">
+                            <span id="trigger-text-model">-- Chọn Model --</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="custom-dropdown-panel">
+                            <ul class="custom-options-list" id="options-list-model"></ul>
+                            <div class="custom-add-box">
+                                <input type="text" id="add-input-model" placeholder="Nhập Model mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();mainboardManager.addCustomOption('model', 'add-input-model');}" />
+                                <button type="button" onclick="mainboardManager.addCustomOption('model', 'add-input-model')">+ Thêm</button>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="error-msg" id="err-model"></span>
+                </div>
+
+                <!-- 4. Socket -->
+                <div class="form-group">
+                    <label>Socket (*):</label>
+                    <div class="custom-select-container" id="select-container-socket">
+                        <input type="hidden" name="socket" id="mainboardSocket" value="" />
+                        <div class="custom-select-trigger" onclick="mainboardManager.toggleDropdown('socket')">
+                            <span id="trigger-text-socket">-- Chọn Socket --</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="custom-dropdown-panel">
+                            <ul class="custom-options-list" id="options-list-socket"></ul>
+                            <div class="custom-add-box">
+                                <input type="text" id="add-input-socket" placeholder="Nhập Socket mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();mainboardManager.addCustomOption('socket', 'add-input-socket');}" />
+                                <button type="button" onclick="mainboardManager.addCustomOption('socket', 'add-input-socket')">+ Thêm</button>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="error-msg" id="err-socket"></span>
+                </div>
+
+                <!-- 5. Chipset -->
+                <div class="form-group">
+                    <label>Chipset (*):</label>
+                    <div class="custom-select-container" id="select-container-chipset">
+                        <input type="hidden" name="chipset" id="mainboardChipset" value="" />
+                        <div class="custom-select-trigger" onclick="mainboardManager.toggleDropdown('chipset')">
+                            <span id="trigger-text-chipset">-- Chọn Chipset --</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="custom-dropdown-panel">
+                            <ul class="custom-options-list" id="options-list-chipset"></ul>
+                            <div class="custom-add-box">
+                                <input type="text" id="add-input-chipset" placeholder="Nhập Chipset mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();mainboardManager.addCustomOption('chipset', 'add-input-chipset');}" />
+                                <button type="button" onclick="mainboardManager.addCustomOption('chipset', 'add-input-chipset')">+ Thêm</button>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="error-msg" id="err-chipset"></span>
+                </div>
+
+                <!-- 6. Chuẩn RAM -->
+                <div class="form-group">
+                    <label>Chuẩn RAM (*):</label>
+                    <div class="custom-select-container" id="select-container-ramType">
+                        <input type="hidden" name="ramType" id="mainboardRamType" value="" />
+                        <div class="custom-select-trigger" onclick="mainboardManager.toggleDropdown('ramType')">
+                            <span id="trigger-text-ramType">-- Chọn Chuẩn RAM --</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="custom-dropdown-panel">
+                            <ul class="custom-options-list" id="options-list-ramType"></ul>
+                            <div class="custom-add-box">
+                                <input type="text" id="add-input-ramType" placeholder="Nhập Chuẩn RAM mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();mainboardManager.addCustomOption('ramType', 'add-input-ramType');}" />
+                                <button type="button" onclick="mainboardManager.addCustomOption('ramType', 'add-input-ramType')">+ Thêm</button>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="error-msg" id="err-ramType"></span>
+                </div>
+
+                <!-- 7. Kích thước -->
+                <div class="form-group">
+                    <label>Kích thước (*):</label>
+                    <div class="custom-select-container" id="select-container-formFactor">
+                        <input type="hidden" name="formFactor" id="mainboardFormFactor" value="" />
+                        <div class="custom-select-trigger" onclick="mainboardManager.toggleDropdown('formFactor')">
+                            <span id="trigger-text-formFactor">-- Chọn Kích thước --</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="custom-dropdown-panel">
+                            <ul class="custom-options-list" id="options-list-formFactor"></ul>
+                            <div class="custom-add-box">
+                                <input type="text" id="add-input-formFactor" placeholder="Nhập Kích thước mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();mainboardManager.addCustomOption('formFactor', 'add-input-formFactor');}" />
+                                <button type="button" onclick="mainboardManager.addCustomOption('formFactor', 'add-input-formFactor')">+ Thêm</button>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="error-msg" id="err-formFactor"></span>
+                </div>
+
+                <!-- Fragment chứa Giá, Tồn kho, Ảnh, Mô tả -->
+                <div th:replace="~{common/product-fields :: fields(prefix='mainboard')}"></div>
+                <span class="error-msg" id="err-general"></span>
+
+                <div class="modal-footer">
+                    <button type="button" id="cancelModalBtn">Hủy</button>
+                    <button type="submit">Lưu</button>
+                </div>
+            </form>
         </div>
     </div>
 

@@ -5,76 +5,65 @@
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
-    <div th:replace="~{fragments/navbar :: navbar}" th:with="isAdminPage=true"></div>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <div class="d-flex" style="min-height: calc(100vh - 70px);">
+    <div class="admin-layout">
         <div th:replace="~{fragments/admin_sidebar :: adminSidebar('storage')}"></div>
         
-        <main class="flex-grow-1 p-4 bg-light">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="fs-3 fw-bold mb-0">Quản lý Ổ cứng (Storage)</h1>
-                <button id="openCreateModalBtn" class="btn btn-primary fw-bold" style="border-radius: 8px;">+ Thêm Ổ cứng mới</button>
+        <main class="admin-content">
+            <div class="admin-header">
+                <h1>Quản lý Ổ cứng (Storage)</h1>
             </div>
-            
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered align-middle mb-0" id="storageTable">
-                            <thead class="table-light text-center">
-                            <tr>
-                                <th>STT</th>
-                                <th>Tên Ổ cứng</th>
-                                <th>Hãng</th>
-                                <th>Loại</th>
-                                <th>Dung lượng</th>
-                                <th>Chuẩn kết nối (SSD)</th>
-                                <th>Thông số kỹ thuật</th>
-                                <th>Giá</th>
-                                <th>Tồn kho</th>
-                                <th>Mô tả</th>
-                                <th>Hành động</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="item, iterStat : ${storages}" th:id="'storage-row-' + ${item.id}" class="text-center">
-                                <td th:text="${iterStat.count}"></td>
-                                <td class="fw-bold text-start" th:text="${item.name}"></td>
-                                <td th:text="${item.brand}"></td>
-                                <td>
-                                    <span th:class="${item.type == 'HDD' ? 'badge bg-primary rounded-pill' : 'badge bg-success rounded-pill'}" th:text="${item.type}"></span>
-                                </td>
-                                <td th:text="${item.capacity + ' ' + item.capacityUnit}"></td>
-                                <td th:text="${item.type == 'SSD' ? ((item.connectionType != null ? item.connectionType : '') + ' ' + (item.pcieGen != null ? item.pcieGen : '')) : '-'}"></td>
-                                <td class="text-start">
-                                    <small th:if="${item.type == 'HDD'}" th:text="'RPM: ' + ${item.rpm != null ? item.rpm : '?'} + ' | Cache: ' + ${item.cache != null ? item.cache : '?'} + ${item.cacheUnit != null ? item.cacheUnit : ''}"></small>
-                                    <small th:if="${item.type == 'SSD'}" th:text="'Read: ' + ${item.readSpeed != null ? item.readSpeed : '?'} + 'MB/s | Write: ' + ${item.writeSpeed != null ? item.writeSpeed : '?'} + 'MB/s | Cache: ' + ${item.cache != null ? item.cache : '?'} + ${item.cacheUnit != null ? item.cacheUnit : ''}"></small>
-                                </td>
-                                <td class="text-primary fw-bold" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
-                                <td>
-                                    <span th:if="${item.stock > 0}" class="badge bg-success rounded-pill" th:text="${item.stock}"></span>
-                                    <span th:if="${item.stock <= 0}" class="badge bg-danger rounded-pill">Hết</span>
-                                </td>
-                                <td class="text-start" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${item.description != null && !item.description.isBlank() ? item.description : '-'}"></td>
-                                <td>
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <button type="button" class="btn btn-sm btn-outline-primary" th:onclick="'storageManager.editItemModal(' + ${item.id} + ')'">Sửa</button>
-                                        <form th:action="@{/admin/storage/{id}/delete(id=${item.id})}" method="post" class="m-0">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa Ổ cứng này?')">Xóa</button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr th:if="${#lists.isEmpty(storages)}" id="emptyRow">
-                                <td colspan="11" class="text-center text-muted py-4">Chưa có Ổ cứng nào trong hệ thống.</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+<button id="openCreateModalBtn" class="btn-primary" style="margin-bottom: 1rem;">+ Thêm Ổ cứng mới</button>
+<table border="1" cellpadding="8" cellspacing="0" style="margin-top:16px; border-collapse: collapse; width: 100%;" id="storageTable">
+    <thead>
+    <tr>
+        <th>STT</th>
+        <th>Tên Ổ cứng</th>
+        <th>Hãng</th>
+        <th>Loại</th>
+        <th>Dung lượng</th>
+        <th>Chuẩn kết nối (SSD)</th>
+        <th>Thông số kỹ thuật</th>
+        <th>Giá</th>
+        <th>Tồn kho</th>
+        <th>Mô tả</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item, iterStat : ${storages}" th:id="'storage-row-' + ${item.id}">
+        <td th:text="${iterStat.count}"></td>
+        <td th:text="${item.name}"></td>
+        <td th:text="${item.brand}"></td>
+        <td>
+            <span th:class="${item.type == 'HDD' ? 'badge badge-primary' : 'badge badge-success'}" th:text="${item.type}"></span>
+        </td>
+        <td th:text="${item.capacity + ' ' + item.capacityUnit}"></td>
+        <td th:text="${item.type == 'SSD' ? ((item.connectionType != null ? item.connectionType : '') + ' ' + (item.pcieGen != null ? item.pcieGen : '')) : '-'}"></td>
+        <td>
+            <small th:if="${item.type == 'HDD'}" th:text="'RPM: ' + ${item.rpm != null ? item.rpm : '?'} + ' | Cache: ' + ${item.cache != null ? item.cache : '?'} + ${item.cacheUnit != null ? item.cacheUnit : ''}"></small>
+            <small th:if="${item.type == 'SSD'}" th:text="'Read: ' + ${item.readSpeed != null ? item.readSpeed : '?'} + 'MB/s | Write: ' + ${item.writeSpeed != null ? item.writeSpeed : '?'} + 'MB/s | Cache: ' + ${item.cache != null ? item.cache : '?'} + ${item.cacheUnit != null ? item.cacheUnit : ''}"></small>
+        </td>
+        <td th:text="${item.price}"></td>
+        <td th:text="${item.stock}"></td>
+        <td th:text="${item.description != null && !item.description.isBlank() ? item.description : 'không có mô tả'}"></td>
+        <td>
+            <button type="button" style="cursor:pointer;" th:onclick="'storageManager.editItemModal(' + ${item.id} + ')'">Sửa</button>
+            &nbsp;|&nbsp;
+            <form th:action="@{/admin/storage/{id}/delete(id=${item.id})}" method="post" style="display:inline">
+                <button type="submit" onclick="return confirm('Xóa Ổ cứng này?')">Xóa</button>
+            </form>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(storages)}" id="emptyRow">
+        <td colspan="11">Chưa có Ổ cứng nào.</td>
+    </tr>
+    </tbody>
+</table>
 
-            <!-- Nhúng Modal Form vào đây -->
-            <div th:replace="~{storage/form :: storageModalForm}"></div>
+<!-- Nhúng Modal Form vào đây -->
+<div th:replace="~{storage/form :: storageModalForm}"></div>
         </main>
     </div>
 </body>
