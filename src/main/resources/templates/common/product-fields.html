@@ -5,32 +5,32 @@
     <hr style="margin: 20px 0; border: 1px solid #eee;" />
 
     <!-- Giá -->
-    <div class="form-group">
-        <label>Giá (VNĐ):</label>
-        <input type="number" name="price" th:id="${prefix} + 'Price'" step="0.01" />
-        <span class="error-msg" th:id="'err-price'"></span>
+    <div class="mb-3">
+        <label class="form-label fw-bold">Giá (VNĐ):</label>
+        <input type="number" name="price" th:id="${prefix} + 'Price'" class="form-control" step="0.01" />
+        <span class="text-danger small" th:id="'err-price'"></span>
     </div>
 
     <!-- Tồn kho -->
-    <div class="form-group">
-        <label>Tồn kho (Chiếc):</label>
-        <input type="number" name="stock" th:id="${prefix} + 'Stock'" min="0" />
-        <span class="error-msg" th:id="'err-stock'"></span>
+    <div class="mb-3">
+        <label class="form-label fw-bold">Tồn kho (Chiếc):</label>
+        <input type="number" name="stock" th:id="${prefix} + 'Stock'" class="form-control" min="0" />
+        <span class="text-danger small" th:id="'err-stock'"></span>
     </div>
 
     <!-- Ảnh -->
-    <div class="form-group">
-        <label>Ảnh sản phẩm (Có thể chọn nhiều ảnh):</label>
-        <input type="file" th:id="${prefix} + 'ImagesInput'" name="files" accept="image/*" multiple />
-        <div class="image-preview-container" id="imagePreviewContainer">
+    <div class="mb-3">
+        <label class="form-label fw-bold">Ảnh sản phẩm (Có thể chọn nhiều ảnh):</label>
+        <input type="file" th:id="${prefix} + 'ImagesInput'" name="files" class="form-control" accept="image/*" multiple />
+        <div class="image-preview-container d-flex flex-wrap gap-2 mt-2" id="imagePreviewContainer">
             <!-- Danh sách ảnh (có sẵn hoặc tải lên) sẽ hiển thị ở đây qua JS -->
         </div>
     </div>
 
     <!-- Mô tả -->
-    <div class="form-group">
-        <label>Mô tả:</label>
-        <textarea name="description" th:id="${prefix} + 'Desc'" rows="4"></textarea>
+    <div class="mb-3">
+        <label class="form-label fw-bold">Mô tả:</label>
+        <textarea name="description" th:id="${prefix} + 'Desc'" class="form-control" rows="4"></textarea>
     </div>
 </div>
 </body>

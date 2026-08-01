@@ -3,118 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <title>Đăng ký - NexGen PC</title>
-    <link rel="stylesheet" th:href="@{/css/home.css}">
-    <style>
-        .auth-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 80vh;
-            padding: 40px 0;
-        }
-        .auth-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
-            padding: 40px;
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .auth-card h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 2rem;
-            background: linear-gradient(to right, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 8px; color: var(--text-muted); }
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border-card);
-            background: rgba(0,0,0,0.2);
-            color: white;
-            font-size: 1rem;
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        .error-msg { color: #fca5a5; font-size: 0.85rem; margin-top: 5px; display: block;}
-        .btn-submit {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-        }
-        .btn-submit:hover {
-            box-shadow: 0 0 15px var(--primary);
-        }
-        .auth-links { text-align: center; margin-top: 15px; }
-        .auth-links a { color: var(--primary); text-decoration: none; }
-        .alert-error { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center; }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/auth-page.css}">
 </head>
-<body>
-    <nav class="navbar">
-        <div class="logo">NexGen PC</div>
-        <div class="nav-links"><a href="/">Quay lại Trang chủ</a></div>
-    </nav>
-    <div class="auth-container">
-        <div class="auth-card">
-            <h2>Đăng ký tài khoản</h2>
-            
-            <div th:if="${error}" class="alert-error" th:text="${error}"></div>
+<body class="auth-page-body">
 
-            <form th:action="@{/register}" method="post" th:object="${userDto}">
-                <div class="form-group">
-                    <label>Tên đăng nhập</label>
-                    <input type="text" th:field="*{username}" />
-                    <span class="error-msg" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+    <div class="auth-page-wrapper">
+        <!-- Bên trái: Banner ảnh -->
+        <div class="auth-banner">
+            <h1>Xây dựng<br>cỗ máy trong mơ<br><span>cùng NexGen.</span></h1>
+            <p>Trải nghiệm mua sắm linh kiện PC đỉnh cao với hiệu năng vượt trội và dịch vụ chuyên nghiệp hàng đầu.</p>
+        </div>
+
+        <!-- Bên phải: Form đăng ký -->
+        <div class="auth-form-wrapper" style="overflow-y: auto;">
+            <a href="/" class="back-link" style="top: 1.5rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Trang chủ
+            </a>
+            
+            <div class="auth-form-container" style="margin-top: 3rem; margin-bottom: 2rem;">
+                <div class="auth-header">
+                    <h2>Đăng ký tài khoản</h2>
+                    <p>Khởi tạo tài khoản để tận hưởng các ưu đãi đặc quyền từ NexGen PC.</p>
                 </div>
-                <div class="form-group">
-                    <label>Mật khẩu</label>
-                    <input type="password" th:field="*{password}" />
-                    <span class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+
+                <div th:if="${error}" class="alert-error" th:text="${error}"></div>
+
+                <form th:action="@{/register}" method="post" th:object="${userDto}">
+                    <div class="form-group">
+                        <label>Tên đăng nhập</label>
+                        <input type="text" th:field="*{username}" placeholder="Viết liền không dấu" />
+                        <span class="error-msg" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Mật khẩu</label>
+                        <input type="password" th:field="*{password}" placeholder="Tối thiểu 6 ký tự" />
+                        <span class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Họ và tên</label>
+                        <input type="text" th:field="*{fullName}" placeholder="Ví dụ: Nguyễn Văn A" />
+                        <span class="error-msg" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" th:field="*{email}" placeholder="Địa chỉ email hợp lệ" />
+                        <span class="error-msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Số điện thoại</label>
+                        <input type="text" th:field="*{phone}" placeholder="Nhập số điện thoại" />
+                        <span class="error-msg" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Địa chỉ</label>
+                        <input type="text" th:field="*{address}" placeholder="Địa chỉ giao hàng" />
+                        <span class="error-msg" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+                    </div>
+                    <button type="submit" class="btn-submit">Đăng ký ngay</button>
+                </form>
+
+                <div class="auth-footer">
+                    Đã có tài khoản? <a href="/login">Đăng nhập tại đây</a>
                 </div>
-                <div class="form-group">
-                    <label>Họ và tên</label>
-                    <input type="text" th:field="*{fullName}" />
-                    <span class="error-msg" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" th:field="*{email}" />
-                    <span class="error-msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-                </div>
-                <div class="form-group">
-                    <label>Số điện thoại</label>
-                    <input type="text" th:field="*{phone}" />
-                    <span class="error-msg" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
-                </div>
-                <div class="form-group">
-                    <label>Địa chỉ</label>
-                    <input type="text" th:field="*{address}" />
-                    <span class="error-msg" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
-                </div>
-                <button type="submit" class="btn-submit">Đăng ký</button>
-            </form>
-            <div class="auth-links">
-                <p>Đã có tài khoản? <a href="/login">Đăng nhập</a></p>
             </div>
         </div>
     </div>
+
+    <!-- Script giữ nguyên logic báo lỗi API trùng lặp cũ -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const checkDuplicate = (fieldId, paramName, url, errorMessage) => {
+                const input = document.getElementById(fieldId);
+                if (!input) {
+                    console.log("Could not find input with id:", fieldId);
+                    return;
+                }
+
+                let errorSpan = input.parentNode.querySelector('.error-msg');
+                if (!errorSpan) {
+                    errorSpan = document.createElement('span');
+                    errorSpan.className = 'error-msg';
+                    errorSpan.style.display = 'none';
+                    input.parentNode.appendChild(errorSpan);
+                }
+
+                input.addEventListener("blur", async function() {
+                    const value = this.value.trim();
+                    if (value === "") {
+                        if (!errorSpan.getAttribute('data-backend-error')) {
+                            errorSpan.style.display = 'none';
+                        }
+                        return;
+                    }
+
+                    try {
+                        console.log(`Checking ${paramName}: ${value} at ${url}`);
+                        const response = await fetch(`${url}?${paramName}=${encodeURIComponent(value)}`);
+                        if (!response.ok) {
+                            console.error("API returned error:", response.status);
+                            if (response.status === 404 || response.status === 401 || response.status === 403) {
+                                console.warn("Make sure the Spring Boot application was RESTARTED after adding the new Controller.");
+                            }
+                            return;
+                        }
+                        const data = await response.json();
+                        console.log(`Response for ${paramName}:`, data);
+                        if (data.exists) {
+                            errorSpan.textContent = errorMessage;
+                            errorSpan.style.display = 'block';
+                            input.classList.add('input-error');
+                        } else {
+                            if (!errorSpan.getAttribute('data-backend-error')) {
+                                errorSpan.style.display = 'none';
+                            }
+                            input.classList.remove('input-error');
+                        }
+                    } catch (error) {
+                        console.error("Error checking duplicate", error);
+                    }
+                });
+
+                input.addEventListener("input", function() {
+                    if (!errorSpan.getAttribute('data-backend-error')) {
+                        errorSpan.style.display = 'none';
+                    }
+                    input.classList.remove('input-error');
+                });
+            };
+
+            document.querySelectorAll('.error-msg').forEach(el => {
+                if (el.textContent.trim().length > 0) {
+                    el.setAttribute('data-backend-error', 'true');
+                    el.style.display = 'block';
+                }
+            });
+
+            checkDuplicate('username', 'username', '/api/auth/check-username', 'Tên đăng nhập đã tồn tại!');
+            checkDuplicate('email', 'email', '/api/auth/check-email', 'Email đã được sử dụng!');
+            checkDuplicate('phone', 'phone', '/api/auth/check-phone', 'Số điện thoại đã được sử dụng!');
+        });
+    </script>
 </body>
 </html>

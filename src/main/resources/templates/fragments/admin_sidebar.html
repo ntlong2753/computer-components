@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+        <!-- Sidebar -->
+        <aside class="d-flex flex-column bg-white border-end py-4" style="width: 250px; flex-shrink: 0;" th:fragment="adminSidebar(active)">
+            <a href="/admin" class="admin-nav-item" th:classappend="${active == 'dashboard'} ? 'active'">
+                📊 Dashboard
+            </a>
+            
+            <div class="text-uppercase text-muted fw-bold px-4 mb-2 mt-4" style="font-size: 0.875rem;">Quản lý linh kiện</div>
+            <a href="/admin/cpu" class="admin-nav-item" th:classappend="${active == 'cpu'} ? 'active'">🔲 Vi xử lý (CPU)</a>
+            <a href="/admin/mainboard" class="admin-nav-item" th:classappend="${active == 'mainboard'} ? 'active'">🛠️ Bo mạch chủ</a>
+            <a href="/admin/ram" class="admin-nav-item" th:classappend="${active == 'ram'} ? 'active'">📼 Bộ nhớ trong (RAM)</a>
+            <a href="/admin/vga" class="admin-nav-item" th:classappend="${active == 'vga'} ? 'active'">🎮 Card màn hình (VGA)</a>
+            <a href="/admin/storage" class="admin-nav-item" th:classappend="${active == 'storage'} ? 'active'">💾 Ổ cứng (SSD/HDD)</a>
+            <a href="/admin/psu" class="admin-nav-item" th:classappend="${active == 'psu'} ? 'active'">⚡ Nguồn máy tính</a>
+            
+            <div class="text-uppercase text-muted fw-bold px-4 mb-2 mt-4" style="font-size: 0.875rem;">Kinh doanh</div>
+            <a href="#" class="admin-nav-item" onclick="alert('Tính năng đang phát triển')">📦 Quản lý Đơn hàng</a>
+            <a href="#" class="admin-nav-item" onclick="alert('Tính năng đang phát triển')">📈 Báo cáo Số liệu</a>
+        </aside>
+</body>
+</html>

@@ -20,13 +20,30 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/home", "/login", "/register", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+                .requestMatchers("/", "/home", "/login", "/register", "/css/**", "/js/**", "/images/**", "/uploads/**", "/api/auth/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                .defaultSuccessUrl("/", true) // Always redirect to home after login for now
+                .successHandler((request, response, authentication) -> {
+                    if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+                        response.setStatus(200);
+                        response.setContentType("application/json;charset=UTF-8");
+                        response.getWriter().write("{\"success\":true}");
+                    } else {
+                        response.sendRedirect("/");
+                    }
+                })
+                .failureHandler((request, response, exception) -> {
+                    if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+                        response.setStatus(401);
+                        response.setContentType("application/json;charset=UTF-8");
+                        response.getWriter().write("{\"error\":\"Tên đăng nhập hoặc mật khẩu không chính xác\"}");
+                    } else {
+                        response.sendRedirect("/login?error");
+                    }
+                })
                 .permitAll()
             )
             .logout(logout -> logout

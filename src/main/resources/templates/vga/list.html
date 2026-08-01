@@ -1,55 +1,76 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Danh sách VGA</title>
+    <div th:replace="~{fragments/head :: head('Danh sách VGA')}"></div>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
-<h1>Quản lý VGA</h1>
-<button id="openCreateModalBtn">+ Thêm VGA mới</button>
-<table border="1" cellpadding="8" cellspacing="0" style="margin-top:16px; border-collapse: collapse; width: 100%;" id="vgaTable">
-    <thead>
-    <tr>
-        <th>STT</th>
-        <th>Tên VGA</th>
-        <th>Hãng GPU</th>
-        <th>Model GPU</th>
-        <th>Hãng card</th>
-        <th>Dung lượng VRAM</th>
-        <th>Loại VRAM</th>
-        <th>Giá</th>
-        <th>Tồn kho</th>
-        <th>Mô tả</th>
-        <th>Hành động</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="vga, iterStat : ${vgas}" th:id="'vga-row-' + ${vga.id}">
-        <td th:text="${iterStat.count}"></td>
-        <td th:text="${vga.name}"></td>
-        <td th:text="${vga.gpuBrand}"></td>
-        <td th:text="${vga.gpuModel}"></td>
-        <td th:text="${vga.brand}"></td>
-        <td th:text="${vga.vram != null ? vga.vram + ' GB' : ''}"></td>
-        <td th:text="${vga.memoryType != null && !vga.memoryType.isBlank() ? vga.memoryType : ''}"></td>
-        <td th:text="${vga.price}"></td>
-        <td th:text="${vga.stock}"></td>
-        <td th:text="${vga.description != null && !vga.description.isBlank() ? vga.description : 'không có mô tả'}"></td>
-        <td>
-            <button type="button" style="cursor:pointer;" th:onclick="'vgaManager.editItemModal(' + ${vga.id} + ')'">Sửa</button>
-            &nbsp;|&nbsp;
-            <form th:action="@{/admin/vga/{id}/delete(id=${vga.id})}" method="post" style="display:inline">
-                <button type="submit" onclick="return confirm('Xóa VGA này?')">Xóa</button>
-            </form>
-        </td>
-    </tr>
-    <tr th:if="${#lists.isEmpty(vgas)}" id="emptyRow">
-        <td colspan="11">Chưa có VGA nào.</td>
-    </tr>
-    </tbody>
-</table>
+    <div th:replace="~{fragments/navbar :: navbar}" th:with="isAdminPage=true"></div>
 
-<!-- Nhúng Modal Form vào đây -->
-<div th:replace="~{vga/form :: vgaModalForm}"></div>
+    <div class="d-flex" style="min-height: calc(100vh - 70px);">
+        <div th:replace="~{fragments/admin_sidebar :: adminSidebar('vga')}"></div>
+        
+        <main class="flex-grow-1 p-4 bg-light">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="fs-3 fw-bold mb-0">Quản lý VGA</h1>
+                <button id="openCreateModalBtn" class="btn btn-primary fw-bold" style="border-radius: 8px;">+ Thêm VGA mới</button>
+            </div>
+            
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered align-middle mb-0" id="vgaTable">
+                            <thead class="table-light text-center">
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên VGA</th>
+                                <th>Hãng GPU</th>
+                                <th>Model GPU</th>
+                                <th>Hãng card</th>
+                                <th>Dung lượng VRAM</th>
+                                <th>Loại VRAM</th>
+                                <th>Giá</th>
+                                <th>Tồn kho</th>
+                                <th>Mô tả</th>
+                                <th>Hành động</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="vga, iterStat : ${vgas}" th:id="'vga-row-' + ${vga.id}" class="text-center">
+                                <td th:text="${iterStat.count}"></td>
+                                <td class="fw-bold text-start" th:text="${vga.name}"></td>
+                                <td th:text="${vga.gpuBrand}"></td>
+                                <td th:text="${vga.gpuModel}"></td>
+                                <td th:text="${vga.brand}"></td>
+                                <td th:text="${vga.vram != null ? vga.vram + ' GB' : ''}"></td>
+                                <td th:text="${vga.memoryType != null && !vga.memoryType.isBlank() ? vga.memoryType : ''}"></td>
+                                <td class="text-primary fw-bold" th:text="${#numbers.formatDecimal(vga.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
+                                <td>
+                                    <span th:if="${vga.stock > 0}" class="badge bg-success rounded-pill" th:text="${vga.stock}"></span>
+                                    <span th:if="${vga.stock <= 0}" class="badge bg-danger rounded-pill">Hết</span>
+                                </td>
+                                <td class="text-start" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${vga.description != null && !vga.description.isBlank() ? vga.description : '-'}"></td>
+                                <td>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" th:onclick="'vgaManager.editItemModal(' + ${vga.id} + ')'">Sửa</button>
+                                        <form th:action="@{/admin/vga/{id}/delete(id=${vga.id})}" method="post" class="m-0">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa VGA này?')">Xóa</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(vgas)}" id="emptyRow">
+                                <td colspan="11" class="text-center text-muted py-4">Chưa có VGA nào trong hệ thống.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nhúng Modal Form vào đây -->
+            <div th:replace="~{vga/form :: vgaModalForm}"></div>
+        </main>
+    </div>
 </body>
 </html>

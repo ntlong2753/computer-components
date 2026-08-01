@@ -8,18 +8,27 @@ import com.codegym.computercomponents.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public boolean existsByPhone(String phone) {
+        return userRepository.existsByPhone(phone);
+    }
 
     public void registerNewUserAccount(UserRegisterDto dto) throws Exception {
         if (userRepository.existsByUsername(dto.getUsername())) {
@@ -27,6 +36,9 @@ public class UserService {
         }
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new Exception("Email đã được sử dụng!");
+        }
+        if (userRepository.existsByPhone(dto.getPhone())) {
+            throw new Exception("Số điện thoại đã được sử dụng!");
         }
 
         AppUser user = new AppUser();

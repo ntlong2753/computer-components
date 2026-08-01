@@ -3,16 +3,16 @@ package com.codegym.computercomponents.service.impl;
 import com.codegym.computercomponents.model.Mainboard;
 import com.codegym.computercomponents.repository.IMainboardRepository;
 import com.codegym.computercomponents.service.IMainboardService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MainboardService implements IMainboardService {
 
-    @Autowired
-    private IMainboardRepository mainboardRepository;
+    private final IMainboardRepository mainboardRepository;
 
     @Override
     public List<Mainboard> findAll() {

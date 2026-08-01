@@ -1,53 +1,74 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Danh sách RAM</title>
+    <div th:replace="~{fragments/head :: head('Danh sách RAM')}"></div>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
-<h1>Quản lý RAM</h1>
-<button id="openCreateModalBtn">+ Thêm RAM mới</button>
-<table border="1" cellpadding="8" cellspacing="0" style="margin-top:16px; border-collapse: collapse; width: 100%;" id="ramTable">
-    <thead>
-    <tr>
-        <th>STT</th>
-        <th>Tên RAM</th>
-        <th>Hãng</th>
-        <th>Dung lượng (GB)</th>
-        <th>Chuẩn RAM</th>
-        <th>Bus RAM (MHz)</th>
-        <th>Giá</th>
-        <th>Tồn kho</th>
-        <th>Mô tả</th>
-        <th>Hành động</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="ram, iterStat : ${rams}" th:id="'ram-row-' + ${ram.id}">
-        <td th:text="${iterStat.count}"></td>
-        <td th:text="${ram.name}"></td>
-        <td th:text="${ram.brand}"></td>
-        <td th:text="${ram.capacity}"></td>
-        <td th:text="${ram.ramType}"></td>
-        <td th:text="${ram.busSpeed}"></td>
-        <td th:text="${ram.price}"></td>
-        <td th:text="${ram.stock}"></td>
-        <td th:text="${ram.description != null && !ram.description.isBlank() ? ram.description : 'không có mô tả'}"></td>
-        <td>
-            <button type="button" style="cursor:pointer;" th:onclick="'ramManager.editItemModal(' + ${ram.id} + ')'">Sửa</button>
-            &nbsp;|&nbsp;
-            <form th:action="@{/admin/ram/{id}/delete(id=${ram.id})}" method="post" style="display:inline">
-                <button type="submit" onclick="return confirm('Xóa RAM này?')">Xóa</button>
-            </form>
-        </td>
-    </tr>
-    <tr th:if="${#lists.isEmpty(rams)}" id="emptyRow">
-        <td colspan="10">Chưa có RAM nào.</td>
-    </tr>
-    </tbody>
-</table>
+    <div th:replace="~{fragments/navbar :: navbar}" th:with="isAdminPage=true"></div>
 
-<!-- Nhúng Modal Form vào đây -->
-<div th:replace="~{ram/form :: ramModalForm}"></div>
+    <div class="d-flex" style="min-height: calc(100vh - 70px);">
+        <div th:replace="~{fragments/admin_sidebar :: adminSidebar('ram')}"></div>
+        
+        <main class="flex-grow-1 p-4 bg-light">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="fs-3 fw-bold mb-0">Quản lý RAM</h1>
+                <button id="openCreateModalBtn" class="btn btn-primary fw-bold" style="border-radius: 8px;">+ Thêm RAM mới</button>
+            </div>
+            
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered align-middle mb-0" id="ramTable">
+                            <thead class="table-light text-center">
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên RAM</th>
+                                <th>Hãng</th>
+                                <th>Dung lượng (GB)</th>
+                                <th>Chuẩn RAM</th>
+                                <th>Bus RAM (MHz)</th>
+                                <th>Giá</th>
+                                <th>Tồn kho</th>
+                                <th>Mô tả</th>
+                                <th>Hành động</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="ram, iterStat : ${rams}" th:id="'ram-row-' + ${ram.id}" class="text-center">
+                                <td th:text="${iterStat.count}"></td>
+                                <td class="fw-bold text-start" th:text="${ram.name}"></td>
+                                <td th:text="${ram.brand}"></td>
+                                <td th:text="${ram.capacity}"></td>
+                                <td th:text="${ram.ramType}"></td>
+                                <td th:text="${ram.busSpeed}"></td>
+                                <td class="text-primary fw-bold" th:text="${#numbers.formatDecimal(ram.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
+                                <td>
+                                    <span th:if="${ram.stock > 0}" class="badge bg-success rounded-pill" th:text="${ram.stock}"></span>
+                                    <span th:if="${ram.stock <= 0}" class="badge bg-danger rounded-pill">Hết</span>
+                                </td>
+                                <td class="text-start" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${ram.description != null && !ram.description.isBlank() ? ram.description : '-'}"></td>
+                                <td>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" th:onclick="'ramManager.editItemModal(' + ${ram.id} + ')'">Sửa</button>
+                                        <form th:action="@{/admin/ram/{id}/delete(id=${ram.id})}" method="post" class="m-0">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa RAM này?')">Xóa</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(rams)}" id="emptyRow">
+                                <td colspan="10" class="text-center text-muted py-4">Chưa có RAM nào trong hệ thống.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nhúng Modal Form vào đây -->
+            <div th:replace="~{ram/form :: ramModalForm}"></div>
+        </main>
+    </div>
 </body>
 </html>

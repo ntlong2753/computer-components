@@ -3,7 +3,6 @@ package com.codegym.computercomponents.controller;
 import com.codegym.computercomponents.dto.UserRegisterDto;
 import com.codegym.computercomponents.service.impl.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,11 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping("/login")
     public String loginPage() {
@@ -32,6 +33,16 @@ public class AuthController {
     public String registerProcess(@Valid @ModelAttribute("userDto") UserRegisterDto userDto,
                                   BindingResult result,
                                   Model model) {
+        if (userService.existsByUsername(userDto.getUsername())) {
+            result.rejectValue("username", "error.userDto", "Tên đăng nhập đã tồn tại!");
+        }
+        if (userService.existsByEmail(userDto.getEmail())) {
+            result.rejectValue("email", "error.userDto", "Email đã được sử dụng!");
+        }
+        if (userService.existsByPhone(userDto.getPhone())) {
+            result.rejectValue("phone", "error.userDto", "Số điện thoại đã được sử dụng!");
+        }
+
         if (result.hasErrors()) {
             return "auth/register";
         }

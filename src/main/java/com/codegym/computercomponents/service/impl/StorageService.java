@@ -3,16 +3,16 @@ package com.codegym.computercomponents.service.impl;
 import com.codegym.computercomponents.model.Storage;
 import com.codegym.computercomponents.repository.IStorageRepository;
 import com.codegym.computercomponents.service.IStorageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class StorageService implements IStorageService {
 
-    @Autowired
-    private IStorageRepository storageRepository;
+    private final IStorageRepository storageRepository;
 
     @Override
     public List<Storage> findAll() {

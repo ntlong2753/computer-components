@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
 
-    @Autowired
-    private IProductService productService;
+    private final IProductService productService;
 
     @GetMapping({"/", "/home"})
     public String home(Model model) {

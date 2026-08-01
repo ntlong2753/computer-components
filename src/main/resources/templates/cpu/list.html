@@ -1,57 +1,78 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Danh sách CPU</title>
+    <div th:replace="~{fragments/head :: head('Danh sách CPU')}"></div>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
-<h1>Quản lý CPU</h1>
-<button id="openCreateModalBtn">+ Thêm CPU mới</button>
-<table border="1" cellpadding="8" cellspacing="0" style="margin-top:16px; border-collapse: collapse; width: 100%;" id="cpuTable">
-    <thead>
-    <tr>
-        <th>STT</th>
-        <th>Tên CPU</th>
-        <th>Hãng</th>
-        <th>Dòng</th>
-        <th>Phân khúc</th>
-        <th>Model</th>
-        <th>Hậu tố</th>
-        <th>Giá</th>
-        <th>Tồn kho</th>
-        <th>Socket</th>
-        <th>Mô tả</th>
-        <th>Hành động</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="cpu, iterStat : ${cpus}" th:id="'cpu-row-' + ${cpu.id}">
-        <td th:text="${iterStat.count}"></td>
-        <td th:text="${cpu.name}"></td>
-        <td th:text="${cpu.brand}"></td>
-        <td th:text="${cpu.series}"></td>
-        <td th:text="${cpu.segment}"></td>
-        <td th:text="${cpu.modelNumber}"></td>
-        <td th:text="${cpu.suffix != null && !cpu.suffix.isBlank() ? cpu.suffix : 'không có'}"></td>
-        <td th:text="${cpu.price}"></td>
-        <td th:text="${cpu.stock}"></td>
-        <td th:text="${cpu.socket}"></td>
-        <td th:text="${cpu.description != null && !cpu.description.isBlank() ? cpu.description : 'không có mô tả'}"></td>
-        <td>
-            <button type="button" style="cursor:pointer;" th:onclick="'cpuManager.editItemModal(' + ${cpu.id} + ')'">Sửa</button>
-            &nbsp;|&nbsp;
-            <form th:action="@{/admin/cpu/{id}/delete(id=${cpu.id})}" method="post" style="display:inline">
-                <button type="submit" onclick="return confirm('Xóa CPU này?')">Xóa</button>
-            </form>
-        </td>
-    </tr>
-    <tr th:if="${#lists.isEmpty(cpus)}" id="emptyRow">
-        <td colspan="12">Chưa có CPU nào.</td>
-    </tr>
-    </tbody>
-</table>
+    <div th:replace="~{fragments/navbar :: navbar}" th:with="isAdminPage=true"></div>
 
-<!-- Nhúng Modal Form vào đây -->
-<div th:replace="~{cpu/form :: cpuModalForm}"></div>
+    <div class="d-flex" style="min-height: calc(100vh - 70px);">
+        <div th:replace="~{fragments/admin_sidebar :: adminSidebar('cpu')}"></div>
+        
+        <main class="flex-grow-1 p-4 bg-light">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="fs-3 fw-bold mb-0">Quản lý CPU</h1>
+                <button id="openCreateModalBtn" class="btn btn-primary fw-bold" style="border-radius: 8px;">+ Thêm CPU mới</button>
+            </div>
+            
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered align-middle mb-0" id="cpuTable">
+                            <thead class="table-light text-center">
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên CPU</th>
+                                <th>Hãng</th>
+                                <th>Dòng</th>
+                                <th>Phân khúc</th>
+                                <th>Model</th>
+                                <th>Hậu tố</th>
+                                <th>Giá</th>
+                                <th>Tồn kho</th>
+                                <th>Socket</th>
+                                <th>Mô tả</th>
+                                <th>Hành động</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="cpu, iterStat : ${cpus}" th:id="'cpu-row-' + ${cpu.id}" class="text-center">
+                                <td th:text="${iterStat.count}"></td>
+                                <td class="fw-bold text-start" th:text="${cpu.name}"></td>
+                                <td th:text="${cpu.brand}"></td>
+                                <td th:text="${cpu.series}"></td>
+                                <td th:text="${cpu.segment}"></td>
+                                <td th:text="${cpu.modelNumber}"></td>
+                                <td th:text="${cpu.suffix != null && !cpu.suffix.isBlank() ? cpu.suffix : '-'}"></td>
+                                <td class="text-primary fw-bold" th:text="${#numbers.formatDecimal(cpu.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
+                                <td>
+                                    <span th:if="${cpu.stock > 0}" class="badge bg-success rounded-pill" th:text="${cpu.stock}"></span>
+                                    <span th:if="${cpu.stock <= 0}" class="badge bg-danger rounded-pill">Hết</span>
+                                </td>
+                                <td th:text="${cpu.socket}"></td>
+                                <td class="text-start" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${cpu.description != null && !cpu.description.isBlank() ? cpu.description : '-'}"></td>
+                                <td>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" th:onclick="'cpuManager.editItemModal(' + ${cpu.id} + ')'">Sửa</button>
+                                        <form th:action="@{/admin/cpu/{id}/delete(id=${cpu.id})}" method="post" class="m-0">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa CPU này?')">Xóa</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(cpus)}" id="emptyRow">
+                                <td colspan="12" class="text-center text-muted py-4">Chưa có CPU nào trong hệ thống.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nhúng Modal Form vào đây -->
+            <div th:replace="~{cpu/form :: cpuModalForm}"></div>
+        </main>
+    </div>
 </body>
 </html>

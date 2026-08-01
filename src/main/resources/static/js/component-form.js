@@ -291,11 +291,17 @@ class ComponentFormManager {
             this.generateNameCallback();
         }
         
-        if (this.modal) this.modal.style.display = "block";
+        if (this.modal) {
+            const bsModal = bootstrap.Modal.getOrCreateInstance(this.modal);
+            bsModal.show();
+        }
     }
 
     closeModal() {
-        if (this.modal) this.modal.style.display = "none";
+        if (this.modal) {
+            const bsModal = bootstrap.Modal.getOrCreateInstance(this.modal);
+            bsModal.hide();
+        }
         this.closeAllDropdowns();
     }
 
@@ -412,7 +418,10 @@ class ComponentFormManager {
 
                 this.isNameManuallyEdited = true;
                 this.renderPreviews();
-                if (this.modal) this.modal.style.display = "block";
+                if (this.modal) {
+                    const bsModal = bootstrap.Modal.getOrCreateInstance(this.modal);
+                    bsModal.show();
+                }
             })
             .catch(err => {
                 alert(err.message);
@@ -446,14 +455,10 @@ class ComponentFormManager {
         }
 
         if (this.openBtn) this.openBtn.onclick = () => this.openModal();
+        // Custom close buttons are handled by data-bs-dismiss="modal", but we can keep these just in case
         if (this.closeBtn) this.closeBtn.onclick = () => this.closeModal();
         if (this.cancelBtn) this.cancelBtn.onclick = () => this.closeModal();
 
-        window.addEventListener('click', (event) => {
-            if (event.target == this.modal) {
-                this.closeModal();
-            }
-        });
 
         if (this.form) {
             this.form.onsubmit = (e) => {
