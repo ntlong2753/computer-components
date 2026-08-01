@@ -1,7 +1,7 @@
 package com.codegym.computercomponents.service.impl;
 
 import com.codegym.computercomponents.model.Psu;
-import com.codegym.computercomponents.repository.IPsuRepository;
+import com.codegym.computercomponents.repository.PsuRepository;
 import com.codegym.computercomponents.service.IPsuService;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PsuService implements IPsuService {
 
-    private final IPsuRepository psuRepository;
+    private final PsuRepository psuRepository;
 
     @Override
     public List<Psu> findAll() {

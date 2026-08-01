@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragments/head :: head('Danh sách Vỏ máy tính (Case)')}"></div>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}" th:with="isAdminPage=true"></div>
+
+    <div class="admin-layout">
+        <div th:replace="~{fragments/admin_sidebar :: adminSidebar('casepc')}"></div>
+        
+        <main class="admin-content">
+            <div class="admin-header">
+                <h1>Quản lý Vỏ máy tính (Case)</h1>
+            </div>
+            <button id="openCreateModalBtn" class="btn btn-primary mb-3">+ Thêm Case mới</button>
+            
+            <div class="table-responsive bg-white rounded shadow-sm border">
+                <table class="table table-hover mb-0 align-middle" id="casePcTable">
+    <thead class="table-light">
+    <tr>
+        <th>STT</th>
+        <th>Tên Case</th>
+        <th>Hãng</th>
+        <th>Model</th>
+        <th>Kích thước</th>
+        <th>Hỗ trợ Mainboard</th>
+        <th>Màu sắc</th>
+        <th>Giá</th>
+        <th>Tồn kho</th>
+        <th>Mô tả</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="casePc, iterStat : ${casePcs}" th:id="'casepc-row-' + ${casePc.id}">
+        <td th:text="${iterStat.count}"></td>
+        <td th:text="${casePc.name}"></td>
+        <td th:text="${casePc.brand}"></td>
+        <td th:text="${casePc.model}"></td>
+        <td th:text="${casePc.formFactor}"></td>
+        <td th:text="${casePc.motherboardSupport}"></td>
+        <td th:text="${casePc.color}"></td>
+        <td th:text="${casePc.price}"></td>
+        <td th:text="${casePc.stock}"></td>
+        <td th:text="${casePc.description != null && !casePc.description.isBlank() ? casePc.description : 'không có mô tả'}"></td>
+        <td>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-sm btn-outline-primary" th:onclick="'casePcManager.editItemModal(' + ${casePc.id} + ')'">Sửa</button>
+                <form th:action="@{/admin/casepc/{id}/delete(id=${casePc.id})}" method="post" class="m-0">
+                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa Case này?')">Xóa</button>
+                </form>
+            </div>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(casePcs)}" id="emptyRow">
+        <td colspan="11" class="text-center py-4 text-muted">Chưa có Case nào.</td>
+    </tr>
+    </tbody>
+</table>
+</div>
+
+<!-- Nhúng Modal Form vào đây -->
+<div th:replace="~{casepc/form :: casePcModalForm}"></div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="casePcModalForm">
+    <link rel="stylesheet" th:href="@{/css/modal.css}" />
+<!-- The Modal -->
+<div id="casePcModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" id="closeModalBtn">&times;</span>
+        <h2 id="modalTitle">Thêm Case mới</h2>
+        
+        <div class="success-alert" id="successAlert">Lưu thành công!</div>
+
+        <form id="casePcAjaxForm">
+            <input type="hidden" name="id" id="casepcId" />
+            
+            <!-- Tên Case -->
+            <div class="form-group">
+                <label>Tên Case (*):</label>
+                <input type="text" name="name" id="casepcName" placeholder="Tên Case sẽ tự động sinh hoặc tự sửa..." />
+                <div class="hint-text">(Tự động sinh theo cấu trúc [Hãng] [Model] [Màu sắc] [Kích thước], có thể chỉnh sửa)</div>
+                <span class="error-msg" id="err-name"></span>
+            </div>
+
+            <!-- Hãng (Custom Dropdown) -->
+            <div class="form-group">
+                <label>Hãng (*):</label>
+                <div class="custom-select-container" id="select-container-brand">
+                    <input type="hidden" name="brand" id="casepcBrand" value="" />
+                    <div class="custom-select-trigger" onclick="casePcManager.toggleDropdown('brand')">
+                        <span id="trigger-text-brand">-- Chọn Hãng --</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="custom-dropdown-panel">
+                        <ul class="custom-options-list" id="options-list-brand"></ul>
+                        <div class="custom-add-box">
+                            <input type="text" id="add-input-brand" placeholder="Nhập Hãng mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();casePcManager.addCustomOption('brand', 'add-input-brand');}" />
+                            <button type="button" onclick="casePcManager.addCustomOption('brand', 'add-input-brand')">+ Thêm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model (Custom Dropdown) -->
+            <div class="form-group">
+                <label>Model (*):</label>
+                <div class="custom-select-container" id="select-container-model">
+                    <input type="hidden" name="model" id="casepcModel" value="" />
+                    <div class="custom-select-trigger" onclick="casePcManager.toggleDropdown('model')">
+                        <span id="trigger-text-model">-- Chọn Model --</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="custom-dropdown-panel">
+                        <ul class="custom-options-list" id="options-list-model"></ul>
+                        <div class="custom-add-box">
+                            <input type="text" id="add-input-model" placeholder="Nhập Model mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();casePcManager.addCustomOption('model', 'add-input-model');}" />
+                            <button type="button" onclick="casePcManager.addCustomOption('model', 'add-input-model')">+ Thêm</button>
+                        </div>
+                    </div>
+                </div>
+                <span class="error-msg" id="err-model"></span>
+            </div>
+
+            <!-- Kích thước (Custom Dropdown) -->
+            <div class="form-group">
+                <label>Kích thước (Form Factor) (*):</label>
+                <div class="custom-select-container" id="select-container-formFactor">
+                    <input type="hidden" name="formFactor" id="casepcFormFactor" value="" />
+                    <div class="custom-select-trigger" onclick="casePcManager.toggleDropdown('formFactor')">
+                        <span id="trigger-text-formFactor">-- Chọn Kích thước --</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="custom-dropdown-panel">
+                        <ul class="custom-options-list" id="options-list-formFactor"></ul>
+                        <div class="custom-add-box">
+                            <input type="text" id="add-input-formFactor" placeholder="Nhập Kích thước mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();casePcManager.addCustomOption('formFactor', 'add-input-formFactor');}" />
+                            <button type="button" onclick="casePcManager.addCustomOption('formFactor', 'add-input-formFactor')">+ Thêm</button>
+                        </div>
+                    </div>
+                </div>
+                <span class="error-msg" id="err-formFactor"></span>
+            </div>
+            
+            <!-- Màu sắc (Custom Dropdown) -->
+            <div class="form-group">
+                <label>Màu sắc:</label>
+                <div class="custom-select-container" id="select-container-color">
+                    <input type="hidden" name="color" id="casepcColor" value="" />
+                    <div class="custom-select-trigger" onclick="casePcManager.toggleDropdown('color')">
+                        <span id="trigger-text-color">-- Chọn Màu sắc --</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="custom-dropdown-panel">
+                        <ul class="custom-options-list" id="options-list-color"></ul>
+                        <div class="custom-add-box">
+                            <input type="text" id="add-input-color" placeholder="Nhập Màu sắc mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();casePcManager.addCustomOption('color', 'add-input-color');}" />
+                            <button type="button" onclick="casePcManager.addCustomOption('color', 'add-input-color')">+ Thêm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hỗ trợ Mainboard (Custom Dropdown) -->
+            <div class="form-group">
+                <label>Hỗ trợ Mainboard:</label>
+                <div class="custom-select-container" id="select-container-motherboardSupport">
+                    <input type="hidden" name="motherboardSupport" id="casepcMotherboardSupport" value="" />
+                    <div class="custom-select-trigger" onclick="casePcManager.toggleDropdown('motherboardSupport')">
+                        <span id="trigger-text-motherboardSupport">-- Chọn Hỗ trợ Mainboard --</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="custom-dropdown-panel">
+                        <ul class="custom-options-list" id="options-list-motherboardSupport"></ul>
+                        <div class="custom-add-box">
+                            <input type="text" id="add-input-motherboardSupport" placeholder="Nhập chuẩn Mainboard mới..." onkeypress="if(event.key==='Enter'){event.preventDefault();casePcManager.addCustomOption('motherboardSupport', 'add-input-motherboardSupport');}" />
+                            <button type="button" onclick="casePcManager.addCustomOption('motherboardSupport', 'add-input-motherboardSupport')">+ Thêm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;" />
+
+            <!-- Các trường thông tin chung được nhúng từ fragment -->
+            <div th:replace="~{common/product-fields :: fields(prefix='casepc')}"></div>
+            <span class="error-msg" id="err-general"></span>
+
+            <div class="modal-footer">
+                <button type="button" id="cancelModalBtn">Hủy</button>
+                <button type="submit">Lưu</button>
+            </div>
+        </form>
+    </div>
+</div>
+    <script th:src="@{/js/component-form.js}"></script>
+    <script th:src="@{/js/casepc.js}"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const existingCasePcs = /*[[${casePcs}]]*/ [];
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

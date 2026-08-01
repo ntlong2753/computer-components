@@ -1,7 +1,7 @@
 package com.codegym.computercomponents.service.impl;
 
 import com.codegym.computercomponents.model.Storage;
-import com.codegym.computercomponents.repository.IStorageRepository;
+import com.codegym.computercomponents.repository.StorageRepository;
 import com.codegym.computercomponents.service.IStorageService;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StorageService implements IStorageService {
 
-    private final IStorageRepository storageRepository;
+    private final StorageRepository storageRepository;
 
     @Override
     public List<Storage> findAll() {

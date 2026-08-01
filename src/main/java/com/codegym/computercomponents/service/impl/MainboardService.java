@@ -1,7 +1,7 @@
 package com.codegym.computercomponents.service.impl;
 
 import com.codegym.computercomponents.model.Mainboard;
-import com.codegym.computercomponents.repository.IMainboardRepository;
+import com.codegym.computercomponents.repository.MainboardRepository;
 import com.codegym.computercomponents.service.IMainboardService;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MainboardService implements IMainboardService {
 
-    private final IMainboardRepository mainboardRepository;
+    private final MainboardRepository mainboardRepository;
 
     @Override
     public List<Mainboard> findAll() {
