@@ -5,10 +5,10 @@ import com.codegym.computercomponents.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import com.codegym.computercomponents.security.CustomUserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -31,6 +31,14 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
 
-        return new User(appUser.getUsername(), appUser.getPassword(), authorities);
+        String avatarUrl = appUser.getUserAvatar() != null ? appUser.getUserAvatar().getImageUrl() : null;
+
+        return new CustomUserDetails(
+                appUser.getUsername(), 
+                appUser.getPassword(), 
+                authorities, 
+                appUser.getFullName(), 
+                avatarUrl
+        );
     }
 }

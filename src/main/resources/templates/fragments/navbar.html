@@ -50,9 +50,12 @@
                 <!-- Đã đăng nhập -->
                 <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                     <a class="nav-link text-white d-flex align-items-center gap-2 px-3 custom-nav-link bg-black bg-opacity-10 rounded dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <img th:if="${#authentication.principal instanceof T(com.codegym.computercomponents.security.CustomUserDetails) and #authentication.principal.avatarUrl != null}" 
+                             th:src="${#authentication.principal.avatarUrl}" 
+                             alt="Avatar" class="rounded-circle border border-white" style="width: 32px; height: 32px; object-fit: cover; background: #fff;">
+                        <svg th:unless="${#authentication.principal instanceof T(com.codegym.computercomponents.security.CustomUserDetails) and #authentication.principal.avatarUrl != null}" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="bg-white text-dark rounded-circle p-1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         <span class="lh-sm text-start" style="font-size: 14px; font-weight: 500;">
-                            Xin chào,<br><span sec:authentication="name" class="fw-bold">User</span>
+                            Xin chào,<br><span th:text="${#authentication.principal instanceof T(com.codegym.computercomponents.security.CustomUserDetails) ? #authentication.principal.fullName : #authentication.name}" class="fw-bold">User</span>
                         </span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">

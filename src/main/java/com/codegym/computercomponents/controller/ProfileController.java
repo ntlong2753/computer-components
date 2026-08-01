@@ -15,6 +15,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import com.codegym.computercomponents.security.CustomUserDetails;
+import com.codegym.computercomponents.model.UserAvatar;
+import com.codegym.computercomponents.service.impl.CustomUserDetailsService;
+
 @Controller
 @RequestMapping("/profile")
 @RequiredArgsConstructor
@@ -22,6 +29,7 @@ public class ProfileController {
 
     private final UserRepository userRepository;
     private final IFileUploadService fileUploadService;
+    private final CustomUserDetailsService userDetailsService;
 
     @GetMapping
     public String viewProfile(Model model, @AuthenticationPrincipal UserDetails userDetails) {
@@ -41,11 +49,13 @@ public class ProfileController {
             dto.setEmail(user.getEmail());
             dto.setPhone(user.getPhone());
             dto.setAddress(user.getAddress());
-            dto.setAvatar(user.getAvatar());
+            String currentAvatar = user.getUserAvatar() != null ? user.getUserAvatar().getImageUrl() : null;
+            dto.setAvatar(currentAvatar);
             model.addAttribute("userDto", dto);
         }
         
-        model.addAttribute("currentAvatar", user.getAvatar());
+        String currentAvatar = user.getUserAvatar() != null ? user.getUserAvatar().getImageUrl() : null;
+        model.addAttribute("currentAvatar", currentAvatar);
 
         return "user/profile";
     }
@@ -84,7 +94,13 @@ public class ProfileController {
         if (avatarFile != null && !avatarFile.isEmpty()) {
             try {
                 String avatarUrl = fileUploadService.storeFile(avatarFile);
-                user.setAvatar(avatarUrl);
+                if (user.getUserAvatar() == null) {
+                    UserAvatar newAvatar = new UserAvatar();
+                    newAvatar.setImageUrl(avatarUrl);
+                    user.setUserAvatar(newAvatar);
+                } else {
+                    user.getUserAvatar().setImageUrl(avatarUrl);
+                }
             } catch (Exception e) {
                 redirectAttributes.addFlashAttribute("error", "Lỗi tải ảnh: " + e.getMessage());
                 return "redirect:/profile";
@@ -97,6 +113,12 @@ public class ProfileController {
         user.setAddress(userDto.getAddress().trim());
 
         userRepository.save(user);
+
+        // Cập nhật lại Spring Security Context để Navbar update ngay lập tức
+        CustomUserDetails updatedUserDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(user.getUsername());
+        Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, currentAuth.getCredentials(), updatedUserDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
 
         redirectAttributes.addFlashAttribute("success", "Cập nhật thông tin thành công!");
         return "redirect:/profile";

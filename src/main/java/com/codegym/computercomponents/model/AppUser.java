@@ -39,8 +39,9 @@ public class AppUser {
     @Column(length = 255)
     private String address;
 
-    @Column(length = 255)
-    private String avatar;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "avatar_id", referencedColumnName = "id")
+    private UserAvatar userAvatar;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
