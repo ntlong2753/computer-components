@@ -52,43 +52,86 @@
     </div>
 
     <!-- Products Catalog -->
-    <section id="catalog" class="products-section">
-        <h2 class="section-title">Linh Kiện Tuyển Chọn</h2>
-        
-        <div class="product-grid">
-            <!-- Thymeleaf Loop cho toàn bộ Product -->
-            <div class="product-card" th:each="product : ${products}">
-                <div class="product-badge" th:text="${product.class.simpleName}">Loại</div>
-                
-                <!-- Ảnh sản phẩm: Lấy URL đầu tiên, hoặc ảnh mặc định nếu rỗng -->
-                <img th:if="${product.imageUrl != null and !product.imageUrl.isBlank()}" 
-                     th:src="${product.imageUrl.split(',')[0]}" 
-                     alt="Product Image" class="product-image" onerror="this.src='https://via.placeholder.com/300x200/1e293b/ffffff?text=No+Image'">
-                <img th:unless="${product.imageUrl != null and !product.imageUrl.isBlank()}" 
-                     src="https://via.placeholder.com/300x200/1e293b/ffffff?text=No+Image" 
-                     alt="No Image" class="product-image">
+    <div id="catalog" class="products-section">
+        <!-- Mode 1: Displaying a specific category -->
+        <div th:if="${currentCategory != null}">
+            <h2 class="section-title">
+                Linh Kiện: <span th:text="${currentCategory}"></span>
+                <a href="/" style="font-size: 14px; margin-left: 10px; color: var(--primary);">← Trở về trang chủ</a>
+            </h2>
+            <div class="product-grid">
+                <div class="product-card" th:each="product : ${products}">
+                    <div class="product-badge" th:text="${product.class.simpleName}">Loại</div>
+                    
+                    <img th:if="${product.imageUrl != null and !product.imageUrl.isBlank()}" 
+                         th:src="${product.imageUrl.split(',')[0]}" 
+                         alt="Product Image" class="product-image" onerror="this.src='https://via.placeholder.com/300x200/1e293b/ffffff?text=No+Image'">
+                    <img th:unless="${product.imageUrl != null and !product.imageUrl.isBlank()}" 
+                         src="https://via.placeholder.com/300x200/1e293b/ffffff?text=No+Image" 
+                         alt="No Image" class="product-image">
 
-                <div class="product-brand" th:text="${product.brand}">Hãng</div>
-                <h3 class="product-name" th:text="${product.name}">Tên sản phẩm</h3>
-                
-                <div class="product-footer">
-                    <div class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</div>
-                    <div class="product-stock" th:if="${product.stock > 0}" style="color: #22c55e;">Còn hàng</div>
-                    <div class="product-stock" th:if="${product.stock <= 0}" style="color: #ef4444;">Hết hàng</div>
+                    <div class="product-brand" th:text="${product.brand}">Hãng</div>
+                    <h3 class="product-name" th:text="${product.name}">Tên sản phẩm</h3>
+                    
+                    <div class="product-footer">
+                        <div class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</div>
+                        <div class="product-stock" th:if="${product.stock > 0}" style="color: #22c55e;">Còn hàng</div>
+                        <div class="product-stock" th:if="${product.stock <= 0}" style="color: #ef4444;">Hết hàng</div>
+                    </div>
+                    
+                    <div class="product-actions">
+                        <button class="btn-detail">Chi tiết</button>
+                        <button class="btn-cart">Thêm vào giỏ</button>
+                    </div>
                 </div>
                 
-                <!-- Nút thao tác dành cho người dùng -->
-                <div class="product-actions">
-                    <button class="btn-detail">Chi tiết</button>
-                    <button class="btn-cart">Thêm vào giỏ</button>
+                <div th:if="${#lists.isEmpty(products)}" style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">
+                    Không có sản phẩm nào trong danh mục này.
                 </div>
-            </div>
-            
-            <div th:if="${#lists.isEmpty(products)}" style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">
-                Chưa có sản phẩm nào trong hệ thống. Hãy truy cập trang quản trị để thêm sản phẩm!
             </div>
         </div>
-    </section>
+
+        <!-- Mode 2: Displaying grouped categories on homepage -->
+        <div th:if="${productsByCategory != null}">
+            <div th:if="${#maps.isEmpty(productsByCategory)}" style="text-align: center; color: var(--text-muted); padding: 40px;">
+                Chưa có sản phẩm nào trong hệ thống. Hãy truy cập trang quản trị để thêm sản phẩm!
+            </div>
+            
+            <div th:each="entry : ${productsByCategory}" style="margin-bottom: 40px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="section-title" style="margin-bottom: 0;" th:text="${entry.key}">Tên danh mục</h2>
+                    <a th:href="@{/(category=${entry.key})}" class="btn-primary" style="padding: 8px 16px; font-size: 14px;">Xem tất cả</a>
+                </div>
+                
+                <div class="product-grid">
+                    <div class="product-card" th:each="product : ${entry.value}">
+                        <div class="product-badge" th:text="${product.class.simpleName}">Loại</div>
+                        
+                        <img th:if="${product.imageUrl != null and !product.imageUrl.isBlank()}" 
+                             th:src="${product.imageUrl.split(',')[0]}" 
+                             alt="Product Image" class="product-image" onerror="this.src='https://via.placeholder.com/300x200/1e293b/ffffff?text=No+Image'">
+                        <img th:unless="${product.imageUrl != null and !product.imageUrl.isBlank()}" 
+                             src="https://via.placeholder.com/300x200/1e293b/ffffff?text=No+Image" 
+                             alt="No Image" class="product-image">
+
+                        <div class="product-brand" th:text="${product.brand}">Hãng</div>
+                        <h3 class="product-name" th:text="${product.name}">Tên sản phẩm</h3>
+                        
+                        <div class="product-footer">
+                            <div class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</div>
+                            <div class="product-stock" th:if="${product.stock > 0}" style="color: #22c55e;">Còn hàng</div>
+                            <div class="product-stock" th:if="${product.stock <= 0}" style="color: #ef4444;">Hết hàng</div>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn-detail">Chi tiết</button>
+                            <button class="btn-cart">Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <div th:replace="~{fragments/footer :: footer}"></div>
