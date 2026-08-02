@@ -9,7 +9,7 @@
         <div class="d-none d-lg-block mx-4 position-relative" style="flex: 1; max-width: 500px;">
             <div class="input-group">
                 <input type="text" id="searchInput" class="form-control border-0" placeholder="Bạn cần tìm linh kiện gì (tên, mã, hãng)..." autocomplete="off" style="border-radius: 8px; padding-left: 15px;">
-                <button class="btn bg-white border-0 text-primary" style="border-top-right-radius: 8px; border-bottom-right-radius: 8px;">
+                <button id="searchBtn" class="btn bg-white border-0 text-primary" style="border-top-right-radius: 8px; border-bottom-right-radius: 8px;">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </button>
             </div>
@@ -122,6 +122,26 @@
         searchInput.addEventListener('focus', function() {
             if (this.value.trim().length > 0) {
                 searchResults.style.display = 'block';
+            }
+        });
+
+        // Thực hiện tìm kiếm khi click nút hoặc nhấn Enter
+        const executeSearch = () => {
+            const query = searchInput.value.trim();
+            if (query.length > 0) {
+                window.location.href = '/?keyword=' + encodeURIComponent(query);
+            }
+        };
+
+        const searchBtn = document.getElementById('searchBtn');
+        if (searchBtn) {
+            searchBtn.addEventListener('click', executeSearch);
+        }
+
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                executeSearch();
             }
         });
 

@@ -10,4 +10,5 @@ public interface IProductService {
     List<Product> findAll();
     Product findById(Long id);
     Page<Product> findByCategory(String category, Pageable pageable);
+    Page<Product> findByCategoryAndKeyword(String category, String keyword, Pageable pageable);
 }

@@ -10,35 +10,162 @@
     <!-- Main Layout Wrapper -->
     <div class="main-wrapper">
         <!-- Sidebar Menu -->
-        <aside class="sidebar-menu">
-            <a href="/?category=cpu" class="sidebar-item">
-                <div class="sidebar-item-icon">🔲 <span>Vi xử lý (CPU)</span></div>
-                <span class="sidebar-arrow">❯</span>
-            </a>
-            <a href="/?category=mainboard" class="sidebar-item">
-                <div class="sidebar-item-icon">🛠️ <span>Bo mạch chủ (Mainboard)</span></div>
-                <span class="sidebar-arrow">❯</span>
-            </a>
-            <a href="/?category=ram" class="sidebar-item">
-                <div class="sidebar-item-icon">📼 <span>Bộ nhớ trong (RAM)</span></div>
-                <span class="sidebar-arrow">❯</span>
-            </a>
-            <a href="/?category=vga" class="sidebar-item">
-                <div class="sidebar-item-icon">🎮 <span>Card màn hình (VGA)</span></div>
-                <span class="sidebar-arrow">❯</span>
-            </a>
-            <a href="/?category=storage" class="sidebar-item">
-                <div class="sidebar-item-icon">💾 <span>Ổ cứng (SSD/HDD)</span></div>
-                <span class="sidebar-arrow">❯</span>
-            </a>
-            <a href="/?category=psu" class="sidebar-item">
-                <div class="sidebar-item-icon">⚡ <span>Nguồn máy tính (PSU)</span></div>
-                <span class="sidebar-arrow">❯</span>
-            </a>
-            <a href="/?category=casepc" class="sidebar-item">
-                <div class="sidebar-item-icon">🗄️ <span>Vỏ máy tính (Case)</span></div>
-                <span class="sidebar-arrow">❯</span>
-            </a>
+        <aside class="sidebar-menu position-relative">
+            <!-- CPU -->
+            <div class="sidebar-item-container">
+                <a href="/?category=cpu" class="sidebar-item">
+                    <div class="sidebar-item-icon">🔲 <span>Vi xử lý (CPU)</span></div>
+                    <span class="sidebar-arrow">❯</span>
+                </a>
+                <div class="mega-menu">
+                    <div class="mega-column">
+                        <h4 class="text-danger fw-bold fs-6 mb-3">CPU - Bộ vi xử lý Intel</h4>
+                        <a href="/?category=cpu&keyword=ultra">CPU Intel Core Ultra Series 2</a>
+                        <a href="/?category=cpu&keyword=i9">CPU Intel Core i9</a>
+                        <a href="/?category=cpu&keyword=i7">CPU Intel Core i7</a>
+                        <a href="/?category=cpu&keyword=i5">CPU Intel Core i5</a>
+                        <a href="/?category=cpu&keyword=i3">CPU Intel Core i3</a>
+                    </div>
+                    <div class="mega-column">
+                        <h4 class="text-danger fw-bold fs-6 mb-3">CPU - Bộ vi xử lý AMD</h4>
+                        <a href="/?category=cpu&keyword=threadripper">CPU AMD Ryzen Threadripper</a>
+                        <a href="/?category=cpu&keyword=ryzen 9">CPU AMD Ryzen 9</a>
+                        <a href="/?category=cpu&keyword=ryzen 7">CPU AMD Ryzen 7</a>
+                        <a href="/?category=cpu&keyword=ryzen 5">CPU AMD Ryzen 5</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAINBOARD -->
+            <div class="sidebar-item-container">
+                <a href="/?category=mainboard" class="sidebar-item">
+                    <div class="sidebar-item-icon">🛠️ <span>Bo mạch chủ (Mainboard)</span></div>
+                    <span class="sidebar-arrow">❯</span>
+                </a>
+                <div class="mega-menu">
+                    <div class="mega-column">
+                        <h4 class="text-danger fw-bold fs-6 mb-3">Bo mạch chủ Intel</h4>
+                        <a href="/?category=mainboard&keyword=z890">Z890 (Mới)</a>
+                        <a href="/?category=mainboard&keyword=z790">Z790</a>
+                        <a href="/?category=mainboard&keyword=b760">B760</a>
+                        <a href="/?category=mainboard&keyword=h610">H610</a>
+                    </div>
+                    <div class="mega-column">
+                        <h4 class="text-danger fw-bold fs-6 mb-3">Bo mạch chủ AMD</h4>
+                        <a href="/?category=mainboard&keyword=x870">X870 (Mới)</a>
+                        <a href="/?category=mainboard&keyword=x670">X670</a>
+                        <a href="/?category=mainboard&keyword=b650">B650 (Mới)</a>
+                        <a href="/?category=mainboard&keyword=a520">A520 / A320</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RAM -->
+            <div class="sidebar-item-container">
+                <a href="/?category=ram" class="sidebar-item">
+                    <div class="sidebar-item-icon">📼 <span>Bộ nhớ trong (RAM)</span></div>
+                    <span class="sidebar-arrow">❯</span>
+                </a>
+                <div class="mega-menu">
+                    <div class="mega-column">
+                        <h4 class="text-danger fw-bold fs-6 mb-3">DDR5 Cao Cấp</h4>
+                        <a href="/?category=ram&keyword=dominator">Corsair Dominator</a>
+                        <a href="/?category=ram&keyword=trident">G.Skill Trident Z5</a>
+                        <a href="/?category=ram&keyword=renegade">Kingston Fury Renegade</a>
+                    </div>
+                    <div class="mega-column">
+                        <h4 class="text-danger fw-bold fs-6 mb-3">DDR4 Phổ Thông</h4>
+                        <a href="/?category=ram&keyword=vengeance">Corsair Vengeance</a>
+                        <a href="/?category=ram&keyword=beast">Kingston Fury Beast</a>
+                        <a href="/?category=ram&keyword=xpg">Adata XPG</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VGA -->
+            <div class="sidebar-item-container">
+                <a href="/?category=vga" class="sidebar-item">
+                    <div class="sidebar-item-icon">🎮 <span>Card màn hình (VGA)</span></div>
+                    <span class="sidebar-arrow">❯</span>
+                </a>
+                <div class="mega-menu">
+                    <div class="mega-column">
+                        <h4 class="text-danger fw-bold fs-6 mb-3">VGA RTX 40 SERIES</h4>
+                        <a href="/?category=vga&keyword=4090">RTX 4090 (24GB)</a>
+                        <a href="/?category=vga&keyword=4080">RTX 4080 SUPER</a>
+                        <a href="/?category=vga&keyword=4070 ti">RTX 4070 Ti SUPER</a>
+                        <a href="/?category=vga&keyword=4070">RTX 4070 SUPER</a>
+                        <a href="/?category=vga&keyword=4060">RTX 4060 Ti</a>
+                    </div>
+                    <div class="mega-column">
+                        <h4 class="text-danger fw-bold fs-6 mb-3">VGA AMD RADEON</h4>
+                        <a href="/?category=vga&keyword=7900">RX 7900 XTX</a>
+                        <a href="/?category=vga&keyword=7800">RX 7800 XT</a>
+                        <a href="/?category=vga&keyword=7700">RX 7700 XT</a>
+                        <a href="/?category=vga&keyword=7600">RX 7600 XT</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STORAGE -->
+            <div class="sidebar-item-container">
+                <a href="/?category=storage" class="sidebar-item">
+                    <div class="sidebar-item-icon">💾 <span>Ổ cứng (SSD/HDD)</span></div>
+                    <span class="sidebar-arrow">❯</span>
+                </a>
+                <div class="mega-menu">
+                    <div class="mega-column">
+                        <h4 class="text-danger fw-bold fs-6 mb-3">Ổ cứng SSD</h4>
+                        <a href="/?category=storage&keyword=ssd">SSD Sata III</a>
+                        <a href="/?category=storage&keyword=m.2">SSD M.2 Sata III</a>
+                        <a href="/?category=storage&keyword=nvme">SSD M.2 NVMe</a>
+                    </div>
+                    <div class="mega-column">
+                        <h4 class="text-danger fw-bold fs-6 mb-3">Ổ cứng HDD</h4>
+                        <a href="/?category=storage&keyword=hdd">HDD 1TB - 2TB</a>
+                        <a href="/?category=storage&keyword=hdd">HDD 4TB - 6TB</a>
+                        <a href="/?category=storage&keyword=nas">HDD Chuyên NAS/Camera</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PSU -->
+            <div class="sidebar-item-container">
+                <a href="/?category=psu" class="sidebar-item">
+                    <div class="sidebar-item-icon">⚡ <span>Nguồn máy tính (PSU)</span></div>
+                    <span class="sidebar-arrow">❯</span>
+                </a>
+                <div class="mega-menu">
+                    <div class="mega-column">
+                        <h4 class="text-danger fw-bold fs-6 mb-3">Công suất phổ thông</h4>
+                        <a href="/?category=psu&keyword=500w">Dưới 500W</a>
+                        <a href="/?category=psu&keyword=650w">500W - 650W</a>
+                    </div>
+                    <div class="mega-column">
+                        <h4 class="text-danger fw-bold fs-6 mb-3">Công suất cao</h4>
+                        <a href="/?category=psu&keyword=750w">700W - 850W</a>
+                        <a href="/?category=psu&keyword=1000w">1000W - 1200W</a>
+                        <a href="/?category=psu&keyword=1200w">Trên 1200W</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CASE -->
+            <div class="sidebar-item-container">
+                <a href="/?category=casepc" class="sidebar-item">
+                    <div class="sidebar-item-icon">🗄️ <span>Vỏ máy tính (Case)</span></div>
+                    <span class="sidebar-arrow">❯</span>
+                </a>
+                <div class="mega-menu">
+                    <div class="mega-column">
+                        <h4 class="text-danger fw-bold fs-6 mb-3">Kích thước (Form Factor)</h4>
+                        <a href="/?category=casepc&keyword=atx">ATX (Mid Tower / Full Tower)</a>
+                        <a href="/?category=casepc&keyword=micro">Micro-ATX (Mini Tower)</a>
+                        <a href="/?category=casepc&keyword=mini">Mini-ITX (SFF)</a>
+                        <a href="/?category=casepc&keyword=e-atx">E-ATX (Cỡ lớn)</a>
+                    </div>
+                </div>
+            </div>
         </aside>
 
         <!-- Hero Section -->
@@ -61,7 +188,7 @@
             </h2>
             <div class="product-grid">
                 <div class="product-card" th:each="product : ${productPage.content}">
-                    <div class="product-badge" th:text="${product.class.simpleName}">Loại</div>
+                    <div class="product-badge" th:text="${product.categoryName}">Loại</div>
                     
                     <img th:if="${product.imageUrl != null and !product.imageUrl.isBlank()}" 
                          th:src="${product.imageUrl.split(',')[0]}" 
@@ -80,7 +207,7 @@
                     </div>
                     
                     <div class="product-actions">
-                        <button class="btn-detail">Chi tiết</button>
+                        <button class="btn-detail" th:onclick="|window.location.href='/product/${product.id}'|">Chi tiết</button>
                         <button class="btn-cart" th:onclick="'addToCart(' + ${product.id} + ')'">Thêm vào giỏ</button>
                     </div>
                 </div>
@@ -93,17 +220,17 @@
             <!-- Pagination Controls -->
             <div th:if="${productPage.totalPages > 1}" style="margin-top: 30px; display: flex; justify-content: center; gap: 10px; align-items: center;">
                 <a th:if="${productPage.hasPrevious()}" 
-                   th:href="@{/(category=${currentCategory}, page=${productPage.number - 1})}" 
+                   th:href="@{/(category=${currentCategory}, keyword=${currentKeyword}, page=${productPage.number - 1})}" 
                    class="btn-primary" style="padding: 8px 16px; background-color: white; color: var(--primary); border: 1px solid var(--primary);">← Trước</a>
                 
                 <th:block th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}">
-                    <a th:href="@{/(category=${currentCategory}, page=${i})}" 
+                    <a th:href="@{/(category=${currentCategory}, keyword=${currentKeyword}, page=${i})}" 
                        th:text="${i + 1}"
                        th:style="${productPage.number == i} ? 'padding: 8px 16px; background-color: var(--primary); color: white; border-radius: 4px; font-weight: bold; text-decoration: none;' : 'padding: 8px 16px; background-color: white; color: var(--primary); border: 1px solid var(--primary); border-radius: 4px; text-decoration: none;'">1</a>
                 </th:block>
                 
                 <a th:if="${productPage.hasNext()}" 
-                   th:href="@{/(category=${currentCategory}, page=${productPage.number + 1})}" 
+                   th:href="@{/(category=${currentCategory}, keyword=${currentKeyword}, page=${productPage.number + 1})}" 
                    class="btn-primary" style="padding: 8px 16px; background-color: white; color: var(--primary); border: 1px solid var(--primary);">Sau →</a>
             </div>
         </div>
@@ -122,7 +249,7 @@
                 
                 <div class="product-grid">
                     <div class="product-card" th:each="product : ${entry.value}">
-                        <div class="product-badge" th:text="${product.class.simpleName}">Loại</div>
+                        <div class="product-badge" th:text="${product.categoryName}">Loại</div>
                         
                         <img th:if="${product.imageUrl != null and !product.imageUrl.isBlank()}" 
                              th:src="${product.imageUrl.split(',')[0]}" 
@@ -141,7 +268,7 @@
                         </div>
                         
                         <div class="product-actions">
-                            <button class="btn-detail" th:onclick="'window.location.href=\'/product/' + ${product.id} + '\''">Chi tiết</button>
+                            <button class="btn-detail" th:onclick="|window.location.href='/product/${product.id}'|">Chi tiết</button>
                             <th:block sec:authorize="!hasRole('ADMIN')">
                                 <button class="btn-cart" th:onclick="'addToCart(' + ${product.id} + ')'">Thêm vào giỏ</button>
                             </th:block>

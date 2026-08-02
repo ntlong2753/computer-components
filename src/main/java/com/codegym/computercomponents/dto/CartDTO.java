@@ -26,8 +26,6 @@ public class CartDTO implements Serializable {
     }
     
     public int getTotalItems() {
-        return items.stream()
-                .mapToInt(CartItemDTO::getQuantity)
-                .sum();
+        return items.size();
     }
 }

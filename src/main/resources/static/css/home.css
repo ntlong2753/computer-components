@@ -249,6 +249,55 @@ body {
     font-size: 10px;
     color: #9ca3af;
 }
+
+/* Mega Menu */
+.sidebar-menu.position-relative {
+    overflow: visible;
+}
+.sidebar-item-container {
+    position: static;
+}
+.mega-menu {
+    position: absolute;
+    left: 260px;
+    top: 0;
+    min-height: 100%;
+    min-width: 600px;
+    background-color: white;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+    display: none;
+    padding: 20px;
+    border-radius: 0 8px 8px 0;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+.sidebar-item-container:hover .mega-menu {
+    display: flex;
+}
+.sidebar-item-container:hover .sidebar-item {
+    background-color: var(--primary);
+    color: white;
+}
+.sidebar-item-container:hover .sidebar-arrow {
+    color: white;
+}
+.mega-column {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+}
+.mega-column a {
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 10px;
+    transition: color 0.2s;
+}
+.mega-column a:hover {
+    color: var(--primary);
+    font-weight: 500;
+}
 .sidebar-item:hover .sidebar-arrow {
     color: var(--primary);
 }

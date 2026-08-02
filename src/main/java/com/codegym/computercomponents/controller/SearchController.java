@@ -44,7 +44,7 @@ public class SearchController {
                 firstImage = p.getImageUrl().split(",")[0];
             }
             map.put("imageUrl", firstImage);
-            map.put("category", p.getClass().getSimpleName());
+            map.put("category", p.getCategoryName());
             return map;
         }).collect(Collectors.toList());
 

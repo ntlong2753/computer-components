@@ -5,6 +5,7 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,8 +52,10 @@ public abstract class Product {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Product)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof Product))
+            return false;
         Product product = (Product) o;
         return id != null && id.equals(product.getId());
     }
@@ -60,5 +63,10 @@ public abstract class Product {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Transient
+    public String getCategoryName() {
+        return org.hibernate.Hibernate.getClass(this).getSimpleName();
     }
 }
