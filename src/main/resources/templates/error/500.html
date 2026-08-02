@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="vi">
+<head th:replace="~{fragments/head :: head('Lỗi máy chủ - 500')}">
+</head>
+<body>
+    <!-- Navbar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <div class="main-wrapper" style="min-height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 40px 20px;">
+        <div>
+            <h1 style="font-size: 120px; font-weight: 900; color: #dc3545; line-height: 1; margin-bottom: 20px;">500</h1>
+            <h2 class="mb-3" style="font-size: 32px; font-weight: bold; color: #1e293b;">Lỗi Hệ Thống!</h2>
+            <p class="text-muted mb-4" style="font-size: 16px; max-width: 500px; margin: 0 auto;">Đã xảy ra lỗi ngoài ý muốn từ phía máy chủ. Xin vui lòng thông cảm và thử lại sau.</p>
+            <a href="/" class="btn-primary" style="display: inline-block; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 20px; background-color: #1e293b;">Trở Về Trang Chủ</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
