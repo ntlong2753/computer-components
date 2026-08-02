@@ -10,11 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-/**
- * Dùng khi cần thao tác/tìm kiếm trên TẤT CẢ loại linh kiện cùng lúc
- * (VD: trang danh mục công khai ở Phase 5). Hibernate tự UNION/JOIN
- * các bảng con (cpu, vga, ram...) nhờ chiến lược JOINED.
- */
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     
