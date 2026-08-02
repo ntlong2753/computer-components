@@ -51,7 +51,7 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/")
                 .permitAll()
             )
-            // Disable CSRF for simpler AJAX calls (in real projects, handle CSRF token properly)
+            // Tắt CSRF để việc gọi AJAX đơn giản hơn (trong dự án thực tế, hãy xử lý CSRF token đúng cách)
             .csrf(csrf -> csrf.disable());
 
         return http.build();
