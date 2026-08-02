@@ -2,13 +2,15 @@ package com.codegym.computercomponents.controller;
 
 import com.codegym.computercomponents.model.Product;
 import com.codegym.computercomponents.service.IProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -18,16 +20,18 @@ public class HomeController {
     private final IProductService productService;
 
     @GetMapping({"/", "/home"})
-    public String home(@org.springframework.web.bind.annotation.RequestParam(name = "category", required = false) String category, Model model) {
-        List<Product> allProducts = productService.findAll();
+    public String home(
+            @org.springframework.web.bind.annotation.RequestParam(name = "category", required = false) String category,
+            @org.springframework.web.bind.annotation.RequestParam(name = "page", defaultValue = "0") int page,
+            Model model) {
         
         if (category != null && !category.isEmpty()) {
-            List<Product> filteredProducts = allProducts.stream()
-                .filter(p -> p.getClass().getSimpleName().equalsIgnoreCase(category))
-                .collect(java.util.stream.Collectors.toList());
-            model.addAttribute("products", filteredProducts);
+            Pageable pageable = PageRequest.of(page, 10); // 10 products per page
+            Page<Product> productPage = productService.findByCategory(category, pageable);
+            model.addAttribute("productPage", productPage);
             model.addAttribute("currentCategory", category);
         } else {
+            List<Product> allProducts = productService.findAll();
             java.util.Map<String, List<Product>> productsByCategory = allProducts.stream()
                 .collect(java.util.stream.Collectors.groupingBy(p -> p.getClass().getSimpleName()));
                 

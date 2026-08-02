@@ -60,7 +60,7 @@
                 <a href="/" style="font-size: 14px; margin-left: 10px; color: var(--primary);">← Trở về trang chủ</a>
             </h2>
             <div class="product-grid">
-                <div class="product-card" th:each="product : ${products}">
+                <div class="product-card" th:each="product : ${productPage.content}">
                     <div class="product-badge" th:text="${product.class.simpleName}">Loại</div>
                     
                     <img th:if="${product.imageUrl != null and !product.imageUrl.isBlank()}" 
@@ -81,13 +81,30 @@
                     
                     <div class="product-actions">
                         <button class="btn-detail">Chi tiết</button>
-                        <button class="btn-cart">Thêm vào giỏ</button>
+                        <button class="btn-cart" th:onclick="'addToCart(' + ${product.id} + ')'">Thêm vào giỏ</button>
                     </div>
                 </div>
                 
-                <div th:if="${#lists.isEmpty(products)}" style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">
+                <div th:if="${#lists.isEmpty(productPage.content)}" style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">
                     Không có sản phẩm nào trong danh mục này.
                 </div>
+            </div>
+            
+            <!-- Pagination Controls -->
+            <div th:if="${productPage.totalPages > 1}" style="margin-top: 30px; display: flex; justify-content: center; gap: 10px; align-items: center;">
+                <a th:if="${productPage.hasPrevious()}" 
+                   th:href="@{/(category=${currentCategory}, page=${productPage.number - 1})}" 
+                   class="btn-primary" style="padding: 8px 16px; background-color: white; color: var(--primary); border: 1px solid var(--primary);">← Trước</a>
+                
+                <th:block th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}">
+                    <a th:href="@{/(category=${currentCategory}, page=${i})}" 
+                       th:text="${i + 1}"
+                       th:style="${productPage.number == i} ? 'padding: 8px 16px; background-color: var(--primary); color: white; border-radius: 4px; font-weight: bold; text-decoration: none;' : 'padding: 8px 16px; background-color: white; color: var(--primary); border: 1px solid var(--primary); border-radius: 4px; text-decoration: none;'">1</a>
+                </th:block>
+                
+                <a th:if="${productPage.hasNext()}" 
+                   th:href="@{/(category=${currentCategory}, page=${productPage.number + 1})}" 
+                   class="btn-primary" style="padding: 8px 16px; background-color: white; color: var(--primary); border: 1px solid var(--primary);">Sau →</a>
             </div>
         </div>
 
@@ -124,8 +141,10 @@
                         </div>
                         
                         <div class="product-actions">
-                            <button class="btn-detail">Chi tiết</button>
-                            <button class="btn-cart">Thêm vào giỏ</button>
+                            <button class="btn-detail" th:onclick="'window.location.href=\'/product/' + ${product.id} + '\''">Chi tiết</button>
+                            <th:block sec:authorize="!hasRole('ADMIN')">
+                                <button class="btn-cart" th:onclick="'addToCart(' + ${product.id} + ')'">Thêm vào giỏ</button>
+                            </th:block>
                         </div>
                     </div>
                 </div>

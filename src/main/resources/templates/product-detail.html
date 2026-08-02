@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="vi">
+<head>
+    <div th:replace="~{fragments/head :: head(${product.name} + ' - NexGen PC')}"></div>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/product-detail.css}">
+</head>
+<body style="background-color: #f9fafb;">
+
+    <!-- Navbar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <div class="product-detail-container">
+        <!-- Top Section: Image and Info -->
+        <div class="product-detail-top">
+            <!-- Left: Gallery -->
+            <div class="product-gallery">
+                <img th:if="${product.imageUrl != null and !product.imageUrl.isEmpty()}" 
+                     th:src="@{${#strings.arraySplit(product.imageUrl, ',')[0]}}" 
+                     id="mainImage" class="main-image" th:alt="${product.name}">
+                
+                <img th:unless="${product.imageUrl != null and !product.imageUrl.isEmpty()}" 
+                     th:src="@{/images/no-image.png}" 
+                     class="main-image" alt="No Image">
+
+                <!-- Thumbnails -->
+                <div class="thumbnail-list" th:if="${product.imageUrl != null and #strings.arraySplit(product.imageUrl, ',').length > 1}">
+                    <img th:each="img, iterStat : ${#strings.arraySplit(product.imageUrl, ',')}"
+                         th:src="@{${img}}" 
+                         class="thumbnail-item"
+                         th:onclick="'document.getElementById(\'mainImage\').src = \'' + @{${img}} + '\''"
+                         alt="Thumbnail">
+                </div>
+            </div>
+
+            <!-- Right: Info -->
+            <div class="product-info">
+                <h1 class="product-title" th:text="${product.name}">Tên sản phẩm</h1>
+                
+                <div class="product-meta">
+                    <div>Mã SP: <span th:text="${product.id}">1</span></div>
+                    <div>Thương hiệu: <span th:text="${product.brand != null ? product.brand : 'Đang cập nhật'}">Brand</span></div>
+                    <div style="margin-left: auto;">
+                        <span class="stock-status" th:classappend="${product.stock > 0 ? 'stock-in' : 'stock-out'}" 
+                              th:text="${product.stock > 0 ? 'Còn hàng' : 'Hết hàng'}">Còn hàng</span>
+                    </div>
+                </div>
+
+                <div class="specs-box">
+                    <div class="specs-title">Thông số sản phẩm</div>
+                    <ul class="specs-list">
+                        <li th:each="entry : ${specs}" th:text="${entry.key + ': ' + entry.value}"></li>
+                        <li th:if="${#maps.isEmpty(specs)}">Đang cập nhật thông số...</li>
+                    </ul>
+                </div>
+
+                <div class="product-price-box">
+                    <div class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                        10,000,000 đ
+                    </div>
+                </div>
+
+                <!-- Ẩn nút thêm giỏ hàng với Admin -->
+                <th:block sec:authorize="!hasRole('ADMIN')">
+                    <button class="add-to-cart-btn" th:onclick="'addToCart(' + ${product.id} + ')'" th:disabled="${product.stock <= 0}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        Thêm vào giỏ hàng
+                    </button>
+                </th:block>
+            </div>
+        </div>
+
+        <!-- Bottom Section: Description -->
+        <div class="product-detail-bottom">
+            <h2 class="description-title">Đánh giá & Mô tả chi tiết: <span th:text="${product.name}"></span></h2>
+            <div class="description-content">
+                <th:block th:if="${product.description != null and !product.description.isEmpty()}">
+                    <div th:utext="${#strings.replace(product.description, '&#10;', '&lt;br&gt;')}"></div>
+                </th:block>
+                <th:block th:unless="${product.description != null and !product.description.isEmpty()}">
+                    <p style="color: #6b7280; font-style: italic;">Sản phẩm chưa có bài đánh giá chi tiết.</p>
+                </th:block>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    
+    <script th:src="@{/js/home.js}"></script>
+</body>
+</html>
